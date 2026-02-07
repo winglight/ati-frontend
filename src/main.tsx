@@ -16,9 +16,6 @@ globalWithEnv.__VITE_ENV__ = {
   ...globalWithEnv.__VITE_ENV__,
   ...runtimeEnv
 };
-console.log("VITE_API_BASE_URL =", import.meta.env.VITE_API_BASE_URL);
-console.log("VITE_WS_URL =", import.meta.env.VITE_WS_URL);
-console.log("MODE =", import.meta.env.MODE);
 
 const globalWithFlags = globalThis as typeof globalThis & { __ALGOTRADER_SKIP_AUTH__?: boolean };
 globalWithFlags.__ALGOTRADER_SKIP_AUTH__ = false;
