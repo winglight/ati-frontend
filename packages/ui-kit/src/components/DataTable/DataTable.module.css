@@ -1,0 +1,157 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tableWrapper {
+  width: 100%;
+  overflow: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  color: inherit;
+}
+
+.headerCell {
+  position: sticky;
+  top: 0;
+  background: rgba(255, 255, 255, 0.04);
+  text-align: left;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  z-index: 1;
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sortButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  color: inherit;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.sortButton:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.sortIndicator {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  font-size: 10px;
+}
+
+.sortArrow {
+  opacity: 0.3;
+}
+
+.sortArrowActive {
+  opacity: 1;
+}
+
+.filterSelect {
+  margin-top: 6px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  color: inherit;
+  padding: 4px 8px;
+  font: inherit;
+}
+
+.row {
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.row:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.rowSelected {
+  background: rgba(60, 140, 255, 0.16);
+}
+
+.cell {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  vertical-align: middle;
+}
+
+.alignCenter {
+  text-align: center;
+}
+
+.alignRight {
+  text-align: right;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 24px 12px;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.pageInfo {
+  color: rgba(255, 255, 255, 0.68);
+}
+
+.paginationControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.paginationButton {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: inherit;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.paginationButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pageSizeSelect {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 6px;
+  color: inherit;
+  padding: 4px 8px;
+  font: inherit;
+}
+
+.loadingRow {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.68);
+}

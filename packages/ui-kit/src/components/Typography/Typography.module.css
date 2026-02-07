@@ -1,0 +1,41 @@
+.heading {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.headingDisplay {
+  font-size: 1.75rem;
+  line-height: 1.3;
+}
+
+.headingSection {
+  font-size: 1.25rem;
+  line-height: 1.3;
+}
+
+.headingSubsection {
+  font-size: 1.05rem;
+  line-height: 1.4;
+}
+
+.text {
+  margin: 0;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+}
+
+.textStrong {
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.textMuted {
+  color: var(--color-text-tertiary);
+}
+
+.caption {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--color-text-tertiary);
+}
