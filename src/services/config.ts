@@ -52,8 +52,6 @@ const readRuntimeConfig = (): RuntimeConfig => {
   return runtimeConfig;
 };
 
-const metaEnv = readMetaEnv();
-
 const normalizeBase = (base: string): string => {
   if (!base) {
     return '';
@@ -67,12 +65,14 @@ const pickConfiguredBaseUrl = (primary?: string, fallback?: string): string => {
 
 const resolveConfiguredApiBaseUrl = (): string => {
   const runtimeConfig = readRuntimeConfig();
-  return pickConfiguredBaseUrl(metaEnv.VITE_API_BASE_URL, runtimeConfig.apiBaseUrl);
+  const currentEnv = readMetaEnv();
+  return pickConfiguredBaseUrl(currentEnv.VITE_API_BASE_URL, runtimeConfig.apiBaseUrl);
 };
 
 const resolveConfiguredWsBaseUrl = (): string => {
   const runtimeConfig = readRuntimeConfig();
-  return pickConfiguredBaseUrl(metaEnv.VITE_WS_URL, runtimeConfig.wsBaseUrl);
+  const currentEnv = readMetaEnv();
+  return pickConfiguredBaseUrl(currentEnv.VITE_WS_URL, runtimeConfig.wsBaseUrl);
 };
 
 const inferLocalBackendBaseUrl = (): string => {

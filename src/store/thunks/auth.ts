@@ -17,9 +17,12 @@ export const persistAccessToken = (token: string | null) => {
   }
   if (!token) {
     window.localStorage.removeItem(ACCESS_TOKEN_KEY);
+    document.cookie = 'access_token=; Max-Age=0; path=/; samesite=lax';
     return;
   }
-  window.localStorage.setItem(ACCESS_TOKEN_KEY, token);
+  const trimmed = token.trim();
+  window.localStorage.setItem(ACCESS_TOKEN_KEY, trimmed);
+  document.cookie = `access_token=${encodeURIComponent(trimmed)}; path=/; samesite=lax`;
 };
 
 export const readPersistedToken = (): string | null => {
