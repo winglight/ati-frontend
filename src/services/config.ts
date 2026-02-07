@@ -67,12 +67,12 @@ const pickConfiguredBaseUrl = (primary?: string, fallback?: string): string => {
 
 const resolveConfiguredApiBaseUrl = (): string => {
   const runtimeConfig = readRuntimeConfig();
-  return pickConfiguredBaseUrl(runtimeConfig.apiBaseUrl, metaEnv.VITE_API_BASE_URL);
+  return pickConfiguredBaseUrl(metaEnv.VITE_API_BASE_URL, runtimeConfig.apiBaseUrl);
 };
 
 const resolveConfiguredWsBaseUrl = (): string => {
   const runtimeConfig = readRuntimeConfig();
-  return pickConfiguredBaseUrl(runtimeConfig.wsBaseUrl, metaEnv.VITE_WS_URL);
+  return pickConfiguredBaseUrl(metaEnv.VITE_WS_URL, runtimeConfig.wsBaseUrl);
 };
 
 const inferLocalBackendBaseUrl = (): string => {
