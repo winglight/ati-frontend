@@ -1,0 +1,7 @@
+{
+  "name": "algo-trader-frontend",
+  "compatibility_date": "2026-02-07",
+  "assets": {
+    "directory": "./dist"
+  }
+}
