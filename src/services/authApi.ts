@@ -40,6 +40,7 @@ export const login = async (username: string, password: string): Promise<LoginRe
   const url = resolveRequestUrl('/login');
   const response = await fetch(url, {
     method: 'POST',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json'
     },
@@ -61,6 +62,7 @@ export const login = async (username: string, password: string): Promise<LoginRe
 export const fetchCurrentUser = async (token: string): Promise<SessionUser> => {
   const url = resolveRequestUrl('/auth/me');
   const response = await fetch(url, {
+    credentials: 'include',
     headers: {
       Authorization: `Bearer ${token}`
     }
