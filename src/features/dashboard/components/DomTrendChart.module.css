@@ -1,0 +1,16 @@
+.chart {
+  width: 100%;
+  display: block;
+}
+
+.empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 160px;
+  color: var(--color-text-tertiary);
+  background: #f8fafc;
+  border: 1px dashed var(--color-border-subtle);
+  border-radius: 12px;
+  font-size: 0.85rem;
+}

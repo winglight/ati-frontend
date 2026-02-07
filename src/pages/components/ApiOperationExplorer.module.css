@@ -1,0 +1,404 @@
+.section {
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.sectionDescription {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: 0.95rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.fieldLabel {
+  font-size: 0.85rem;
+  color: var(--color-text-tertiary);
+}
+
+.select,
+.input {
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  padding: 12px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.select:focus,
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+}
+
+.operationMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  align-items: center;
+}
+
+.methodBadge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: rgba(148, 163, 184, 0.2);
+  color: var(--color-text-secondary);
+}
+
+.methodGET { background: rgba(34, 197, 94, 0.14); color: #4ade80; }
+.methodPOST { background: rgba(59, 130, 246, 0.18); color: #60a5fa; }
+.methodPUT { background: rgba(147, 197, 253, 0.18); color: #bfdbfe; }
+.methodPATCH { background: rgba(236, 72, 153, 0.18); color: #f9a8d4; }
+.methodDELETE { background: rgba(248, 113, 113, 0.18); color: #fca5a5; }
+.methodOPTIONS { background: rgba(250, 204, 21, 0.18); color: #fbbf24; }
+.methodHEAD { background: rgba(148, 163, 184, 0.18); color: var(--color-text-secondary); }
+
+.path {
+  font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  background: var(--color-surface-hover);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+}
+
+.summary {
+  color: var(--color-text-secondary);
+}
+
+.description {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+.parametersSection,
+.bodySection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.subSectionTitle {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.parametersGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.parameterField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.parameterLabel {
+  font-size: 0.85rem;
+  color: var(--color-text-tertiary);
+}
+
+.parameterMeta {
+  margin-left: 4px;
+  font-size: 0.75rem;
+}
+
+.required {
+  color: #f87171;
+  margin-left: 4px;
+}
+
+.parameterHelp {
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+}
+
+.bodyHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-lg);
+  flex-wrap: wrap;
+}
+
+.bodyMeta {
+  font-size: 0.85rem;
+  color: var(--color-text-tertiary);
+}
+
+.textarea {
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  padding: 12px;
+  font-size: 0.95rem;
+  font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  resize: vertical;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+}
+
+.previewSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  padding: var(--spacing-lg);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.previewGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.previewRow {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.previewLabel {
+  font-size: 0.8rem;
+  color: var(--color-text-tertiary);
+}
+
+.previewValue {
+  font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  word-break: break-all;
+}
+
+.previewHint {
+  font-size: 0.85rem;
+  color: var(--color-success);
+}
+
+.previewDetails,
+.previewBody {
+  background: var(--color-surface-hover);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  color: var(--color-text-primary);
+}
+
+.previewHeadersTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.previewHeadersTable th,
+.previewHeadersTable td {
+  text-align: left;
+  padding: 4px 8px;
+}
+
+.previewHeadersTable th {
+  color: var(--color-text-tertiary);
+  white-space: nowrap;
+}
+
+.previewBody pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: 'JetBrains Mono', 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+}
+
+.previewIssues {
+  margin: 0;
+  padding-left: 20px;
+  color: #f97316;
+  font-size: 0.85rem;
+}
+
+.actionsRow {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.submitButton {
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 12px 28px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.2s ease;
+}
+
+.submitButton:disabled {
+  cursor: not-allowed;
+  background: rgba(37, 99, 235, 0.6);
+}
+
+.submitButton:not(:disabled):hover {
+  background: var(--color-primary-dark);
+}
+
+.errorBanner {
+  background: rgba(248, 113, 113, 0.12);
+  border: 1px solid rgba(248, 113, 113, 0.45);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  color: #fca5a5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+}
+
+.infoBanner {
+  background: rgba(59, 130, 246, 0.12);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  color: #93c5fd;
+}
+
+.retryButton {
+  background: transparent;
+  border: 1px solid rgba(248, 113, 113, 0.45);
+  color: #fca5a5;
+  border-radius: var(--radius-sm);
+  padding: 4px 12px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.retryButton:hover {
+  background: rgba(248, 113, 113, 0.1);
+}
+
+.responseSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.responseHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.statusBadge {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.statusSuccess {
+  background: rgba(34, 197, 94, 0.14);
+  color: #4ade80;
+}
+
+.statusError {
+  background: rgba(248, 113, 113, 0.14);
+  color: #fca5a5;
+}
+
+.responseMeta {
+  color: var(--color-text-tertiary);
+  font-size: 0.85rem;
+}
+
+.responseDetails {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.responseHeadersTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.responseHeadersTable th,
+.responseHeadersTable td {
+  text-align: left;
+  font-size: 0.85rem;
+  padding: 4px 8px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.responseBody {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  overflow-x: auto;
+  color: var(--color-text-primary);
+}
+
+.responseBody pre {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.emptyState {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+@media (max-width: 720px) {
+  .actionsRow {
+    justify-content: stretch;
+  }
+
+  .submitButton {
+    width: 100%;
+  }
+}

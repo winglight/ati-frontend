@@ -1,0 +1,900 @@
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--spacing-xl);
+}
+
+.statsSection,
+.chartsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.sectionTitle {
+  margin: 0 0 4px;
+  font-size: 18px;
+  color: var(--text-primary);
+}
+
+.sectionSubtitle {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.statsCard {
+  background: var(--panel-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 112px;
+  box-shadow: var(--shadow-sm);
+}
+
+.statsLabel {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.statsValue {
+  font-size: 20px;
+  color: var(--text-primary);
+}
+
+.statsFootnote {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.chartsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.chartCard,
+.chartCardWide {
+  background: var(--panel-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 320px;
+  box-shadow: var(--shadow-sm);
+}
+
+.chartCardWide {
+  grid-column: 1 / -1;
+}
+
+.chartHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.chartTitle {
+  margin: 0 0 4px;
+  font-size: 15px;
+  color: var(--text-primary);
+}
+
+.chartSubtitle {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.chartBody {
+  flex: 1;
+  min-height: 220px;
+}
+
+.emptyState {
+  padding: 32px;
+  border-radius: 16px;
+  border: 1px dashed var(--border-subtle);
+  color: var(--text-muted);
+  background: var(--panel-muted);
+  text-align: center;
+  font-size: 14px;
+}
+
+.filterToolbar {
+  background: var(--panel-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.filterRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+  flex: 1;
+}
+
+.toolbarActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.toolbarButton {
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 13px;
+  background: var(--panel-muted);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.toolbarButton:hover {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.toolbarButtonActive {
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+  border-color: var(--color-primary);
+}
+
+.filterField {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: auto;
+  flex: 0 1 auto;
+}
+
+.filterLabel {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.filterInput,
+.filterSelect {
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 8px 12px;
+  background: var(--panel-muted);
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.filterInput:focus,
+.filterSelect:focus {
+  outline: none;
+  border-color: var(--border-strong);
+}
+
+.dateInputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.dateSeparator {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.quickRanges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.quickButton {
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 12px;
+  background: var(--panel-muted);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.quickButton:hover {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.quickButtonActive {
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+  border-color: var(--color-primary);
+}
+
+.summaryCard {
+  background: var(--panel-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 120px;
+  box-shadow: var(--shadow-sm);
+}
+
+.summaryLabel {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.summaryValue {
+  font-size: 26px;
+  color: var(--text-primary);
+}
+
+.summaryFootnote {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.positive {
+  color: var(--color-success, #16a34a);
+}
+
+.negative {
+  color: var(--color-danger, #dc2626);
+}
+
+.calendarCard {
+  background: var(--panel-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.calendarLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 12px;
+  align-items: start;
+}
+
+.calendarLayoutExpanded {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.calendarHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.calendarTitle {
+  margin: 0;
+  font-size: 20px;
+  color: var(--text-primary);
+}
+
+.calendarActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.monthLabel {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+  min-width: 80px;
+  text-align: center;
+}
+
+.monthSummaryRow {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.monthSummaryItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+}
+
+.summaryLabel {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.summaryValueCompact {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.weekdayHeader {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) 200px;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.weekday {
+  text-align: left;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  padding: 8px 12px;
+  background: #f1f5f9;
+  border-radius: 8px;
+}
+
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr)) 200px;
+  gap: 12px;
+}
+
+.dayCell {
+  background: #f1f5f9;
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 8px;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+  box-shadow: var(--shadow-sm);
+}
+
+.dayCellActive {
+  cursor: pointer;
+  transition: border 0.2s ease, transform 0.2s ease;
+}
+
+.dayCellActive:hover {
+  border-color: var(--border-strong);
+  transform: translateY(-2px);
+}
+
+.dayCellWeekend {
+  background: var(--panel-bg);
+}
+
+.dayCellInactive {
+  opacity: 0.6;
+}
+
+.emptyCell {
+  border: 1px dashed var(--border-subtle);
+  border-radius: 16px;
+  min-height: 100px;
+  background: transparent;
+}
+
+.dayHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.dayHeaderActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dayNumber {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.dayBadge {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+}
+
+.logButton {
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  padding: 4px;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--panel-bg);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.logButton:hover {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.dayPnl {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.dayMeta {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.weekSummaryCell {
+  background: #e2e8f0;
+  border: 1px solid var(--border-subtle);
+  border-radius: 16px;
+  padding: 12px;
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.weekSummaryTitle {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.weekSummaryValue {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.weekSummaryMeta {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.logSidebar {
+  background: var(--panel-bg);
+  border-left: 1px solid var(--border-subtle);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.logHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.logTitle {
+  margin: 0 0 4px;
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+.logSubtitle {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.logSidebarWrapper {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: min(360px, 90vw);
+  height: 100vh;
+  z-index: 100;
+  background: var(--panel-bg);
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(0);
+}
+
+.logSidebarHidden {
+  transform: translateX(100%);
+  pointer-events: none;
+}
+
+.logSidebarBackdrop {
+  display: block;
+  position: fixed;
+  inset: 0;
+  border: none;
+  background: rgba(15, 23, 42, 0.35);
+  z-index: 90;
+  backdrop-filter: blur(2px);
+  cursor: pointer;
+}
+
+.logList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.logItems {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.logItem {
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--panel-muted);
+}
+
+.logItemActive {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 1px var(--color-primary-soft);
+}
+
+.logItemHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.logMeta {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.logSummary {
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.logTypeBadge {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--panel-bg);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  height: fit-content;
+}
+
+.logActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.logActionButton,
+.logActionButtonDanger,
+.logPrimaryButton,
+.logSecondaryButton {
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  border: 1px solid var(--border-subtle);
+  background: var(--panel-bg);
+  color: var(--text-secondary);
+}
+
+.logActionButton:hover,
+.logSecondaryButton:hover {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.logActionButtonDanger {
+  color: var(--color-danger, #dc2626);
+  border-color: rgba(220, 38, 38, 0.35);
+}
+
+.logActionButtonDanger:hover {
+  border-color: rgba(220, 38, 38, 0.6);
+}
+
+.logPrimaryButton {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: transparent;
+}
+
+.logPrimaryButton:hover {
+  filter: brightness(0.95);
+}
+
+.logPrimaryButtonDisabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.logSecondaryButton {
+  background: var(--panel-muted);
+}
+
+.logEmpty {
+  font-size: 13px;
+  color: var(--text-muted);
+  padding: 8px 0;
+}
+
+.logForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.logFormRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.logFormGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.logFormGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.logFormLabel {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.logFormInput,
+.logFormSelect,
+.logFormTextarea {
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 8px 10px;
+  background: var(--panel-muted);
+  color: var(--text-primary);
+  font-size: 13px;
+}
+
+.logFormTextarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.logFormHint {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.logFormActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.logSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 16px;
+  border: 1px solid var(--border-subtle);
+  background: var(--panel-muted);
+}
+
+.logSectionTitle {
+  margin: 0;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.logMetrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.logMetricItem {
+  background: var(--panel-bg);
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.logMetricItem strong {
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.modalNav {
+  display: flex;
+  gap: 10px;
+}
+
+.modalNavButton {
+  border: 1px solid var(--border-subtle);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 13px;
+  background: var(--panel-muted);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.modalNavButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modalSummary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  background: var(--panel-muted);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.modalSummaryItem {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.modalSummaryItem strong {
+  font-size: 18px;
+  color: var(--text-primary);
+}
+
+.detailSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.detailHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.detailTitle {
+  margin: 0;
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+.detailSubtitle {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.tableWrapper {
+  overflow: auto;
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+}
+
+.detailTable {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 640px;
+}
+
+.detailTable th,
+.detailTable td {
+  padding: 10px 12px;
+  font-size: 13px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.detailTable th {
+  background: var(--panel-muted);
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.detailTable tr:last-child td {
+  border-bottom: none;
+}
+
+.linkButton {
+  border: none;
+  background: none;
+  color: var(--color-primary);
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+}
+
+.linkButton:hover {
+  text-decoration: underline;
+}
+
+.modalEmpty {
+  font-size: 14px;
+  color: var(--text-muted);
+  padding: 20px 0;
+}
+
+@media (max-width: 768px) {
+  .calendarHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 1200px) {
+  /* Redundant styles removed */
+}
+
+@media (max-width: 960px) {
+  .chartsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .chartCardWide {
+    grid-column: auto;
+  }
+}

@@ -1,0 +1,841 @@
+{
+  "common": {
+    "loading": "加载中...",
+    "loading_app": "加载界面...",
+    "on": "开启",
+    "off": "关闭",
+    "boolean": { "yes": "是", "no": "否" },
+    "unconfigured": "未配置"
+  },
+  "topbar": {
+    "brand": { "title": "Algo Trader 控制台" },
+    "status": {
+      "connected": "WebSocket 已连接",
+      "connecting": "正在连接",
+      "offline": "WebSocket 离线"
+    },
+    "heartbeat": {
+      "prefix": "上次心跳：",
+      "handshake": "握手中",
+      "waiting": "等待连接"
+    },
+    "data": { "error": "加载订阅统计失败" },
+    "buttons": {
+      "config": "配置",
+      "notifications": "通知",
+      "logs": "日志",
+      "optimizerPlans": "优化计划"
+    },
+    "user": { "guest": "访客用户", "role_guest": "访客模式" },
+    "lang": {
+      "switch_to_en": "Switch to English",
+      "switch_to_zh": "切换为中文"
+    }
+  },
+  "logs": {
+    "modal": {
+      "title": "日志面板",
+      "filters": {
+        "module": "模块",
+        "range": "时间范围",
+        "level": "日志级别",
+        "request": "请求标识",
+        "search": "搜索文本",
+        "module_all": "全部模块",
+        "level_all": "全部",
+        "range_options": { "today": "今日", "week": "近一周", "custom": "自定义" },
+        "custom_start": "起始时间",
+        "custom_end": "结束时间"
+      },
+      "placeholders": { "request": "请求 ID / Trace", "search": "关键字 / 正则" },
+      "actions": { "reset": "重置" },
+      "hints": { "auto_refresh": "筛选条件变更后会自动刷新" },
+      "pagination": { "prev": "上一页", "next": "下一页" },
+      "tail": { "auto_follow": "自动跟随" },
+      "status": {
+        "failed": "实时日志更新失败",
+        "polling": "拉取最新日志…",
+        "active": "实时跟踪中",
+        "loading": "加载日志中…",
+        "ready": "准备就绪"
+      },
+      "empty": "暂无日志记录。",
+      "loading": "正在加载日志...",
+      "meta": {
+        "page_info": "第 {{page}} / {{total}} 页",
+        "source_files": "源文件：{{count}} 个",
+        "source_path": "源：{{path}}",
+        "updated_prefix": "更新：",
+        "snapshot_prefix": "快照："
+      }
+    }
+  },
+  "route_error": {
+    "title": "无法加载页面",
+    "default_message": "页面加载失败，请稍后再试。"
+  },
+  "settings": {
+    "refresh": "刷新",
+    "loading_info": "正在加载系统配置...",
+    "error_load_info": "无法加载系统信息",
+    "page": {
+      "title": "系统配置",
+      "description": "查看主程序版本与下游服务状态，并执行必要的配置检查。"
+    },
+    "kind": {
+      "application": "核心应用",
+      "gateway": "网关服务",
+      "service": "下游服务"
+    },
+    "info": {
+      "name": "系统名称",
+      "version": "版本号",
+      "debug": "调试模式",
+      "last_updated": "最近更新时间",
+      "openapi": "OpenAPI",
+      "swagger": "Swagger UI",
+      "redoc": "ReDoc"
+    },
+    "status": {
+      "online": "在线",
+      "error": "异常",
+      "unknown": "未知"
+    },
+    "risk": {
+      "title": "风控默认参数",
+      "subtitle": "以下参数来源于后端 .env 配置，供前端止盈止损计算参考。",
+      "stop_loss_ratio": "止损比例",
+      "take_profit_ratio": "止盈比例",
+      "price_threshold": "触发阈值",
+      "trailing_sl_tp": "跟踪止盈止损",
+      "leverage_index": "指数杠杆",
+      "leverage_index_micro": "微型指数杠杆",
+      "leverage_es": "ES 杠杆",
+      "leverage_mes": "MES 杠杆",
+      "leverage_nq": "NQ 杠杆",
+      "leverage_mnq": "MNQ 杠杆",
+      "leverage_ym": "YM 杠杆",
+      "leverage_mym": "MYM 杠杆",
+      "leverage_rty": "RTY 杠杆",
+      "leverage_m2k": "M2K 杠杆",
+      "leverage_vx": "VX 杠杆",
+      "cb_daily_r": "日亏损上限 (R)",
+      "cb_streak": "连续亏损次数",
+      "risk_per_trade_r": "单笔风险 (R)",
+      "rv_ref_value": "波动参考值",
+      "rv_ref_method": "波动计算方式",
+      "vol_window": "波动窗口",
+      "dd_step": "回撤步长",
+      "dd_max_steps": "最大回撤步数",
+      "dd_scale": "回撤缩放",
+      "contract_rounding": "合约取整方式",
+      "empty": "暂未加载到风控配置，请检查系统状态后刷新。"
+    },
+    "services": {
+      "title": "下游服务状态",
+      "last_refresh_prefix": "最近刷新：",
+      "empty": "尚未配置任何下游服务。",
+      "table": {
+        "name": "服务名称",
+        "type": "类型",
+        "status": "状态",
+        "doc": "文档地址",
+        "fetched_at": "最近获取",
+        "error": "错误"
+      }
+    }
+  },
+  "dashboard": {
+    "loading": "正在加载仪表盘数据...",
+    "error_load_failed": "仪表盘数据加载失败",
+    "error_data_missing": "仪表盘数据缺失",
+    "account_warning_prefix": "账户服务提醒：",
+    "model_fusion": {
+      "title": "模型融合状态",
+      "loading": "加载中",
+      "reload": "重新加载",
+      "loading_detail": "正在加载模型融合概览...",
+      "load_failed": "加载失败",
+      "no_data": "暂无数据",
+      "empty_hint": "暂未获取到模型训练概览，可稍后刷新查看。",
+      "active_version": "激活版本",
+      "inactive_model": "未激活模型",
+      "metrics": {
+        "fusion_strategy": "融合策略",
+        "news_model": "新闻模型",
+        "confidence_threshold": "信号阈值",
+        "news_weight": "新闻权重",
+        "unset": "未设置"
+      },
+      "latest_job": "最新任务",
+      "job_type": { "training": "训练", "tuning": "调优" },
+      "no_jobs": "暂无任务",
+      "latest_result": "最新结果",
+      "no_result": "暂无回传",
+      "activation_time": "激活时间"
+    },
+    "news_summary": {
+      "title": "新闻情绪摘要",
+      "loading": "加载中",
+      "reload": "重新加载",
+      "loading_detail": "正在聚合新闻情绪数据...",
+      "empty_hint": "暂无新闻数据，请稍后刷新。",
+      "view_details": "查看详情",
+      "active_model": "活跃模型",
+      "inactive": "未激活",
+      "pending_training_jobs": "待训练任务",
+      "hot_list": "热度榜",
+      "no_data": "暂无数据",
+      "focus_event": "焦点事件",
+      "none": "暂无",
+      "untagged": "未标注",
+      "no_realtime_signals": "暂无实时信号"
+    }
+    ,
+    "account": {
+      "title": "账户概览",
+      "actions": {
+        "analytics": "Analytics",
+        "refresh": "刷新",
+        "view_details": "资金明细"
+      },
+      "labels": {
+        "account": "账户",
+        "currency": "币种"
+      },
+      "metrics": {
+        "equity": "账户净值",
+        "balance": "账户余额",
+        "available": "可用资金",
+        "margin_used": "占用保证金",
+        "realized_pnl": "Realized PnL",
+        "unrealized_pnl": "Unrealized PnL"
+      },
+      "visibility": {
+        "show": "显示帐号",
+        "hide": "隐藏帐号"
+      },
+      "last_updated_prefix": "最近更新时间："
+    },
+    "kline": {
+      "title": "价格蜡烛图（含成交量）",
+      "monitor_paused": "当前监控已暂停，点击“监控”按钮将重新请求 K 线数据并恢复实时订阅。",
+      "controls": {
+        "hide": "隐藏",
+        "hide_aria": "隐藏面板",
+        "risk": "风控"
+      },
+      "subscription": {
+        "mode_ws": "实时模式：WebSocket 推送",
+        "connecting": "正在连接行情 WebSocket…",
+        "reconnecting": "连接中断，正在尝试重新连接…",
+        "pending_info": "等待订阅 {{symbol}}",
+        "pending_action": "正在订阅 {{symbol}}…",
+        "ready_lead": "实时订阅已激活",
+        "failed_prefix": "订阅失败：",
+        "failed_hint_default": "请稍后再试或联系运维",
+        "ws_failed_prefix": "行情 WebSocket 连接失败",
+        "retry_connect": "重试连接"
+      },
+      "duration": {
+        "1h": "1 小时",
+        "3h": "3 小时",
+        "1d": "1 天",
+        "1w": "1 周",
+        "1m": "1 个月"
+      },
+      "timeframe": {
+        "1m": "1m",
+        "5m": "5m",
+        "15m": "15m",
+        "1h": "1h"
+      },
+      "overlay": {
+        "latest": "最新",
+        "cost": "成本"
+      },
+      "risk": {
+        "title": "风险规则",
+        "enable": "激活",
+        "save": "保存",
+        "meta": {
+          "type_prefix": "类型：",
+          "disabled_suffix": " · 未启用",
+          "none": "当前未配置专属风险规则"
+        },
+        "type_labels": {
+          "fixed": "固定",
+          "trailing": "价格跟踪",
+          "atr_trailing": "ATR 跟踪"
+        },
+        "fields": {
+          "stop_loss": "止损",
+          "take_profit": "止盈"
+        },
+        "summary": {
+          "stop_loss_expectation": "止损预期",
+          "rrr": "RRR",
+          "take_profit_expectation": "止盈预期"
+        }
+      },
+      "chart": {
+        "no_data": "暂无数据",
+        "wait_first_tick": "等待首个行情推送…",
+        "aria_label": "K线图",
+        "y_axis_price": "价格",
+        "y_axis_volume": "成交量",
+        "tooltip": {
+          "time": "时间：",
+          "open": "开：",
+          "high": "高：",
+          "low": "低：",
+          "close": "收：",
+          "volume": "成交量："
+        }
+      },
+      "footer": {
+        "reference": "参考价",
+        "high_low": "最高 / 最低",
+        "volume": "成交量"
+      }
+    },
+    "positions": {
+      "title": "持仓信息",
+      "actions": { "refresh": "刷新" },
+      "empty": "暂无持仓记录",
+      "direction": { "long": "多头", "short": "空头" },
+      "labels": {
+        "quantity": "数量",
+        "avg_price": "均价",
+        "mark_price": "最新价",
+        "pnl": "浮动盈亏"
+      },
+      "quick": {
+        "close": "平仓",
+        "closing": "平仓中…",
+        "reverse": "反手",
+        "reversing": "反手中…"
+      },
+      "configure_risk": "Risk"
+    },
+    "risk_rules": {
+      "title": "风险规则",
+      "actions": { "refresh": "刷新", "enable": "启用", "disable": "停用" },
+      "columns": {
+        "symbol": "合约",
+        "status": "状态",
+        "type": "类型",
+        "position_limit": "仓位限制",
+        "stop_loss_offset": "止损偏移",
+        "take_profit_offset": "止盈偏移",
+        "trailing_params": "跟踪参数",
+        "latest_event": "最近事件",
+        "events_count": "事件数",
+        "actions": "操作"
+      },
+      "global": "全局",
+      "status": { "enabled": "启用", "disabled": "停用" }
+    },
+    "orders": {
+      "title": "订单列表",
+      "actions": {
+        "place_order": "下单",
+        "sync": "同步",
+        "syncing": "同步中…",
+        "refresh": "刷新"
+      },
+      "last_sync_prefix": "最近同步：",
+      "filter_all": "全部",
+      "filter_active": "有效",
+      "empty": "暂无委托记录",
+      "card": {
+        "status": {
+          "working": "挂单",
+          "pending": "待触发",
+          "filled": "已成交",
+          "cancelled": "已撤销",
+          "rejected": "拒单",
+          "inactive": "已失效"
+        },
+        "side": { "buy": "买入", "sell": "卖出" },
+        "order_type": { "market": "市价" },
+        "pnl_prefix": "PnL ",
+        "commission_prefix": "手续费 ",
+        "origin_prefix": "来源 ",
+        "origin": {
+          "manual": "手动",
+          "strategy_prefix": "策略",
+          "risk_prefix": "风控",
+          "risk": { "tp": "止盈", "time": "超时", "sl": "止损" },
+          "auto_stop": {
+            "default": "自动止损",
+            "reason": { "loss_breach": "亏损超限" }
+          },
+          "tags": { "reverse_order": "反向订单", "close_order": "平仓订单" }
+        },
+        "meta": { "last_updated_prefix": "最新更新 " },
+        "actions": { "cancel": "撤单", "cancelling": "撤单中…" },
+        "executed_tag": {
+          "today": "今天",
+          "yesterday": "昨天",
+          "day_before_yesterday": "前天",
+          "earlier": "更早"
+        }
+      }
+    }
+  },
+  "documentation": {
+    "loading": "正在加载接口文档聚合...",
+    "error_load_failed": "无法加载接口文档聚合",
+    "page": {
+      "title": "接口文档聚合",
+      "description": "查看主程序与各下游服务的 OpenAPI 状态与统计。"
+    },
+    "actions": {
+      "refresh": "刷新",
+      "download_json": "下载聚合 JSON"
+    },
+    "summary": {
+      "service_count": "服务总数",
+      "online_count": "在线服务",
+      "path_count": "路径数",
+      "operation_count": "操作总数",
+      "generated_at_prefix": "聚合生成时间："
+    },
+    "empty": "暂无可用的服务文档",
+    "table": {
+      "name": "服务信息",
+      "status": "状态",
+      "paths": "路径数",
+      "operations": "操作数",
+      "tags": "标签",
+      "last_synced": "最近同步"
+    },
+    "buttons": {
+      "open_json": "打开 OpenAPI JSON"
+    },
+    "labels": {
+      "doc_url_missing": "未配置文档地址"
+    },
+    "error_prefix": "错误："
+  },
+  
+  "orders": {
+    "page": {
+      "title": "订单管理",
+      "description": "查看并管理实时委托，支持过滤、批量撤单与状态监控。"
+    },
+    "actions": {
+      "new_order": "下单",
+      "refresh": "刷新数据",
+      "bulk_cancel": "批量撤单",
+      "bulk_cancelling": "撤单中…"
+    },
+    "filters": {
+      "status": "订单状态",
+      "symbol": "合约代码",
+      "symbol_placeholder": "如：MNQ",
+      "source": "来源/策略",
+      "source_placeholder": "策略名称或来源",
+      "include_deleted": "包含已删除",
+      "apply": "应用筛选",
+      "reset": "重置"
+    },
+    "meta": {
+      "last_sync_prefix": "上次同步：",
+      "total_prefix": "总计"
+    },
+    "empty": {
+      "loading": "正在加载订单数据…",
+      "no_records": "暂无符合条件的订单记录。"
+    },
+    "empty": {
+      "loading": "正在加载订单数据…",
+      "no_records": "暂无符合条件的订单记录。"
+    },
+    "pagination": {
+      "info": "第 {{page}} / {{total}} 页",
+      "prev": "上一页",
+      "next": "下一页",
+      "per_page": "每页 {{size}} 条"
+    },
+    "status": {
+      "all": "全部状态",
+      "working": "挂单",
+      "pending": "待触发",
+      "filled": "已成交",
+      "cancelled": "已撤销",
+      "rejected": "拒单",
+      "inactive": "已失效"
+    }
+  },
+  
+  "strategies": {
+    "loading": "正在加载策略数据...",
+    "error_load_failed": "加载策略数据失败",
+    "page": {
+      "title": "策略管理中心",
+      "description": "集中管理策略启停、参数与实时运行指标，支持回退轮询模式监控。"
+    },
+    "filters": {
+      "all": "全部"
+    },
+    "actions": {
+      "add": "新增策略",
+      "edit_current": "编辑当前",
+      "refresh_list": "刷新列表",
+      "reload_metrics": "重新加载指标"
+    },
+    "kline": {
+      "summary": {
+        "title": "K 线策略概览",
+        "labels": {
+          "primary_symbol": "主符号",
+          "data_feed": "数据源",
+          "kline_interval": "K 线周期",
+          "lookback_window": "回溯窗口",
+          "aggregation": "聚合",
+          "trading_window": "交易时段",
+          "timezone": "时区",
+          "description": "策略描述"
+        },
+        "placeholders": { "symbol": "例如：MNQ" },
+        "fallback": {
+          "default_all_day": "默认全天",
+          "market_data_feed": "Market Data Feed",
+          "description_none": "暂无描述"
+        },
+        "actions": {
+          "edit": "编辑",
+          "edit_symbol_aria": "编辑主符号"
+        },
+        "optimizer": {
+          "saved_with_path": "优化器输出已保存：{{path}}",
+          "saved": "优化器输出已保存"
+        }
+      }
+    },
+    "runtime": {
+      "common": {
+        "awaiting_text": "Awaiting {{label}} data…",
+        "awaiting_hint": "等待{{label}}数据…",
+        "last_data_timestamp": "上次{{label}} {{timestamp}}",
+        "not_enabled": "未启用"
+      },
+      "ui": {
+        "title": "运行指标",
+        "status_prefix": "状态：",
+        "last_refresh_prefix": "上次刷新：",
+        "refresh": "刷新",
+        "refreshing": "刷新中…",
+        "refreshing_hint": "刷新中，指标可能延迟。",
+        "last_run_label": "上次运行",
+        "empty_hint": "暂无运行信息",
+        "empty_body": "暂时无运行信息"
+      },
+      "kline": {
+        "phases": {
+          "subscription": "行情订阅",
+          "batch_aggregation": "批量聚合",
+          "signal_generation": "信号生成",
+          "order_execution": "订单执行"
+        }
+      },
+      "dynamic_orb": {
+        "stage_cache_title": "阶段进度",
+        "stage_status": {
+          "complete": "完成",
+          "pending": "构建中",
+          "disabled": "已禁用",
+          "unknown": "待更新"
+        },
+        "metrics": {
+          "atr_ratio": "ATR 比例",
+          "volume_ratio": "量能比例",
+          "breakout_up": "突破向上",
+          "breakout_down": "突破向下",
+          "retest": "回测次数",
+          "failures": "失败次数"
+        },
+        "stage_minutes_suffix": "{{minutes}}分钟",
+        "todays_trades_title": "今日交易",
+        "todays_trades": {
+          "wins_label": "胜 {{count}}",
+          "losses_label": "负 {{count}}",
+          "breakout_up": "突破向上",
+          "breakout_down": "突破向下",
+          "retest": "回测机会",
+          "total": "合计"
+        },
+        "win_rate_title": "胜率概览",
+        "win_rate": {
+          "breakout": "突破胜率",
+          "retest": "回测胜率",
+          "overall": "综合胜率"
+        },
+        "empty": "暂无 ORB 阶段统计。"
+      }
+    }
+  },
+
+  "dashboard_strategies": {
+    "title": "策略列表",
+    "actions": { "add": "新增", "refresh": "刷新" },
+    "empty": "暂无策略，点击“新增”快速创建。",
+    "card": {
+      "status": { "running": "运行中", "stopped": "已停止", "error": "异常", "starting": "启动中" },
+      "mode": { "live": "实盘", "paper": "模拟盘", "backtest": "回测" },
+      "metrics": { "daily_pnl": "日内 PnL", "daily_commission": "日内佣金", "daily_trades": "日内交易次数" },
+      "actions": { "edit": "编辑", "start": "启动", "stop": "停止" }
+    }
+  },
+
+  "modals": {
+    "common": {
+      "cancel": "取消",
+      "close": "关闭",
+      "save": "保存",
+      "saving": "保存中…"
+    },
+    "configuration": {
+      "title": "配置中心",
+      "subtitle": "集中管理系统配置、下游服务与实时连接状态",
+      "system": {
+        "title": "系统信息",
+        "last_refresh_prefix": "最近刷新：",
+        "services_refresh_prefix": "服务刷新："
+      },
+      "risk": {
+        "title": "风险默认配置",
+        "subtitle": "同步后端 .env 中的风控参数，供前端自动计算参考。",
+        "empty": "未能获取风控配置，请确认后端配置后重新刷新。"
+      }
+    },
+    "strategy_detail": {
+      "title": "策略详情",
+      "title_with_name": "策略详情 · {{name}}",
+      "confirm_delete": "确认删除策略 {{name}}? 删除后不可恢复。",
+      "actions": {
+        "delete": "删除",
+        "delete_aria": "删除策略 {{name}}",
+        "delete_aria_generic": "删除策略"
+      }
+    },
+    "order_entry": {
+      "title": "下单",
+      "subtitle": "填写委托信息",
+      "basic": {
+        "title": "基础信息",
+        "subtitle": "选择方向、类型与价格等字段"
+      },
+      "fields": {
+        "symbol": { "label": "交易合约" },
+        "side": { "label": "买卖方向" },
+        "type": { "label": "订单类型" },
+        "quantity": { "label": "数量" },
+        "limit_price": { "label": "限价" },
+        "stop_price": { "label": "触发价" },
+        "tag": { "label": "标签", "placeholder": "用于筛选或统计的标签" },
+        "comment": { "label": "备注", "placeholder": "补充说明该委托意图" },
+        "transmit": { "label": "立即发送到交易通道" }
+      },
+      "side": { "buy": "买入", "sell": "卖出" },
+      "type": { "limit": "限价", "market": "市价", "stop": "止损单" },
+      "select_symbol_placeholder": "请选择或输入合约代码",
+      "market": { "loading": "正在加载最新行情..." },
+      "chart": {
+        "no_data": "暂无行情数据",
+        "no_symbol_hint": "请选择合约后显示行情走势"
+      },
+      "summary": {
+        "title": "委托摘要",
+        "contract": "合约",
+        "security_type": "证券类型",
+        "side": "方向",
+        "order_type": "类型",
+        "rows": {
+          "quantity": "数量",
+          "price": "价格",
+          "market_exec": "按市价成交",
+          "notional": "名义价值",
+          "spread_risk": "价差风险"
+        },
+        "hint_label": "风控提示",
+        "hint_text": "下单前请确认风控规则与账户仓位。"
+      },
+      "footer": { "meta": "委托将提交至交易服务" },
+      "actions": { "submitting": "提交中…", "submit": "提交" }
+    },
+    "order_detail": {
+      "title": "订单详情",
+      "title_with_id": "订单详情 · {{id}}",
+      "subtitle": "查看委托的完整参数、成交进度与来源",
+      "summary": {
+        "contract": "合约",
+        "side_type": "方向 / 类型",
+        "quantity_filled_remaining": "数量 / 成交 / 剩余",
+        "limit_price": "委托价",
+        "fill_price": "成交价",
+        "status": "状态",
+        "pnl": "PnL",
+        "realized_unrealized": "已实现 / 未实现",
+        "commission": "佣金",
+        "rejection_reason": "拒单原因",
+        "origin": "来源",
+        "strategy_rule": "策略 / 规则",
+        "exchange_security_type": "交易所 / 品种",
+        "account": "账户",
+        "ib_order_id": "IB 订单号",
+        "client_order_id": "客户端订单号",
+        "parent_order_id": "父订单号",
+        "created_at": "创建时间",
+        "executed_at": "执行时间",
+        "updated_at": "更新时间"
+      },
+      "raw_section_title": "数据库字段",
+      "market_label": "市价"
+    },
+    "volatility": {
+      "labels": {
+        "low": "Low Volatility",
+        "normal": "Normal Volatility",
+        "high": "High Volatility"
+      },
+      "desc": {
+        "low": "当市场较为平静时",
+        "normal": "常规波动区间",
+        "high": "剧烈波动阶段"
+      }
+    },
+    "disabled_regimes": {
+      "title": "编辑“{{parameter}}”",
+      "subtitle": "选择需要禁用的波动率区间",
+      "empty_tag_hint": "当前未禁用任何区间"
+    },
+    "volatility_multipliers": {
+      "title": "编辑“{{parameter}}”",
+      "subtitle": "为不同波动率区间设置乘数",
+      "validation": {
+        "invalid_number": "请为所有波动率区间输入有效的数字"
+      }
+    },
+    "strategy_editor": {
+      "title_edit": "编辑策略",
+      "title_new": "新增策略",
+      "sections": {
+        "basic": { "title": "基本信息" },
+        "windows": { "title": "交易时段", "format_hint": "时间格式支持 HH:mm 或 HH:mm:ss" },
+        "parameters": { "title": "参数配置" },
+        "screener": { "title": "筛选器配置" },
+        "screener_filters": { "title": "动态过滤器" },
+        "screener_schedule": { "title": "调度配置" }
+      },
+      "fields": {
+        "name": { "label": "策略名称", "placeholder": "例如：趋势策略 A" },
+        "symbol": { "label": "交易合约", "placeholder": "例如：MNQ" },
+        "mode": { "label": "运行模式" },
+        "template": { "label": "策略模板" },
+        "file": { "label": "策略文件" },
+        "description": { "label": "策略说明", "placeholder": "简要描述策略逻辑与风险提示" },
+        "tags": { "label": "标签", "placeholder": "使用逗号分隔，例如：趋势,短线", "hint": "标签用于筛选与统计展示，可留空。" },
+        "window_start": { "label": "开始时间", "placeholder": "09:30" },
+        "window_end": { "label": "结束时间", "placeholder": "16:00" },
+        "param_name": { "label": "名称", "placeholder": "参数标识" },
+        "param_label": { "label": "显示名称", "placeholder": "界面展示名称" },
+        "param_type": { "label": "类型", "placeholder": "例如：number / string / boolean" },
+        "param_value": { "label": "取值", "placeholder": "请输入参数数值" },
+        "param_desc": { "label": "描述", "placeholder": "参数用途说明" }
+      },
+      "screener": {
+        "fields": {
+          "instrument": { "label": "Instrument", "placeholder": "例如：STK" },
+          "location": { "label": "Location", "placeholder": "例如：STK.US" },
+          "scan_code": { "label": "Scan Code", "placeholder": "例如：TOP_PERC_GAIN" },
+          "number_of_rows": { "label": "Number of Rows", "placeholder": "例如：25" }
+        },
+        "status": {
+          "loading": "正在加载筛选器元数据…",
+          "failed": "筛选器元数据加载失败。",
+          "ready": "元数据已就绪，可直接选择 IB 选项。"
+        }
+      },
+      "screener_filters": {
+        "empty": "暂无过滤器，点击“新增筛选条件”进行添加。",
+        "field": { "label": "字段", "placeholder": "选择筛选字段" },
+        "value": { "label": "取值", "placeholder": "请输入筛选值" }
+      },
+      "screener_schedule": {
+        "mode": {
+          "label": "调度模式",
+          "manual": "手动",
+          "hourly": "每小时",
+          "daily": "每日",
+          "weekly": "每周",
+          "monthly": "每月"
+        },
+        "minute": { "label": "分钟偏移", "placeholder": "0 - 59" },
+        "time": { "label": "运行时间" },
+        "weekday": {
+          "label": "星期",
+          "mon": "周一",
+          "tue": "周二",
+          "wed": "周三",
+          "thu": "周四",
+          "fri": "周五"
+        },
+        "day": { "label": "日期", "placeholder": "1 - 31" }
+      },
+      "mode": { "live": "实盘", "paper": "模拟盘", "backtest": "回测" },
+      "template": { "manual": "手动配置" },
+      "actions": { "refresh": "刷新", "add_window": "新增时段", "remove": "移除", "add_parameter": "新增参数", "add_filter": "新增筛选条件", "save": "保存", "saving": "保存中…" },
+      "status": { "loading_templates": "加载模板中...", "loading_files": "加载文件中..." },
+      "file": { "create_new": "创建新文件" },
+      "file_hint": { "new": "将创建文件：{{path}}", "selected": "已选择：{{path}}" },
+      "switches": { "enabled": "启用策略", "active": "立即进入运行态", "skip_weekends": "周末暂停" },
+      "parameters": {
+        "template_empty_hint": "模板 {{name}} 未提供可编辑参数，可根据实际需求新增。",
+        "default_label": "参数",
+        "type_unset": "未指定类型"
+      }
+    },
+    "account_analytics": {
+      "title": "账户分析",
+      "chart_aria_label": "账户净值与盈亏走势",
+      "empty": "暂无可用的分析数据。",
+      "legend": { "equity": "净值", "pnl": "PnL" },
+      "range": {
+        "1m": "1个月",
+        "3m": "3个月",
+        "1y": "1年"
+      },
+      "axis": {
+        "equity": "净值（{{currency}}）",
+        "pnl": "盈亏（{{currency}}）"
+      },
+      "metrics": {
+        "equity_change": "区间净值变化",
+        "pnl_change": "区间累计盈亏",
+        "avg_daily_pnl": "平均每日盈亏",
+        "max_drawdown": "最大回撤",
+        "max_drawdown_hint": "基于净值时间序列估算",
+        "avg_daily_pnl_delta": {
+          "1m": "近 1 个月估算",
+          "3m": "近 3 个月估算",
+          "1y": "近 1 年估算"
+        }
+      }
+    }
+  },
+  
+  "risk_rules": {
+    "loading": "正在加载风控规则与指标...",
+    "page": {
+      "title": "风险规则",
+      "description": "维护各标的的止损止盈与仓位控制策略。"
+    },
+    "actions": {
+      "add_rule": "新增规则",
+      "bulk_import": "批量导入"
+    }
+}
+}

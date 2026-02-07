@@ -1,0 +1,183 @@
+.pageContent {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.systemSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.riskSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--surface-elevated);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
+}
+
+.riskSection h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.riskSubtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted-text-color);
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.infoCard {
+  background: var(--surface-elevated);
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cardLabel {
+  font-size: 0.85rem;
+  color: var(--muted-text-color);
+  letter-spacing: 0.4px;
+}
+
+.cardValue {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color);
+  word-break: break-all;
+}
+
+.link {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.errorBanner {
+  background: rgba(220, 53, 69, 0.12);
+  color: #dc3545;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 0.95rem;
+}
+
+.servicesSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--surface-elevated);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.12);
+}
+
+.servicesHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.servicesHeader h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.timestamp {
+  font-size: 0.85rem;
+  color: var(--muted-text-color);
+}
+
+.tableWrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.servicesTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.servicesTable th,
+.servicesTable td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.servicesTable th {
+  font-size: 0.85rem;
+  color: var(--muted-text-color);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.servicesTable tr:last-child td {
+  border-bottom: none;
+}
+
+.emptyState {
+  padding: 24px;
+  text-align: center;
+  color: var(--muted-text-color);
+  background: rgba(148, 163, 184, 0.12);
+  border-radius: 8px;
+}
+
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 64px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.statusOnline {
+  background: rgba(34, 197, 94, 0.16);
+  color: #16a34a;
+}
+
+.statusError {
+  background: rgba(220, 53, 69, 0.16);
+  color: #dc3545;
+}
+
+.statusUnknown {
+  background: rgba(71, 85, 105, 0.16);
+  color: #475569;
+}
+
+@media (max-width: 768px) {
+  .servicesSection {
+    padding: 16px;
+  }
+
+  .infoGrid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+
+  .riskSection {
+    padding: 16px;
+  }
+}

@@ -1,0 +1,99 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.subtitle {
+  font-size: 0.85rem;
+  color: var(--color-text-tertiary);
+  margin-top: 4px;
+}
+
+.sectionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cardTitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.definitionList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+}
+
+.definitionRow {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) minmax(0, 2fr);
+  gap: 8px;
+  font-size: 0.8rem;
+  color: var(--color-text-primary);
+}
+
+.definitionRow dt {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.definitionRow dd {
+  margin: 0;
+  color: var(--color-text-primary);
+}
+
+.windowList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.windowBadge {
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+.description {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--color-text-primary);
+  line-height: 1.4;
+}
+
+.resultsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

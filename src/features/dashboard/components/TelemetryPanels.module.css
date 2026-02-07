@@ -1,0 +1,159 @@
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.panelBody {
+  position: relative;
+  min-height: 4.5rem;
+}
+
+.subtitle {
+  color: var(--text-muted, #6b7280);
+  font-size: 0.85rem;
+}
+
+.item {
+  border: 1px solid var(--border-subtle, #e5e7eb);
+  border-radius: 8px;
+  padding: 0.75rem 0.9rem;
+  background: var(--surface-elevated, #fff);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: space-between;
+}
+
+.stage {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  background: var(--badge-muted, #eef2ff);
+  color: var(--text-strong, #111827);
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+  font-size: 0.9rem;
+  color: var(--text-subtle, #4b5563);
+}
+
+.metric {
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.metric strong {
+  color: var(--text-strong, #111827);
+}
+
+.timestamp {
+  font-size: 0.85rem;
+  color: var(--text-muted, #6b7280);
+}
+
+.side {
+  font-weight: 700;
+  color: var(--text-strong, #111827);
+}
+
+.quantity {
+  color: var(--text-subtle, #4b5563);
+}
+
+.pass {
+  color: var(--status-success, #047857);
+  font-weight: 600;
+}
+
+.fail {
+  color: var(--status-error, #b91c1c);
+  font-weight: 600;
+}
+
+.empty {
+  color: var(--text-muted, #6b7280);
+  font-size: 0.95rem;
+}
+
+.loadingOverlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 45%,
+    rgba(255, 255, 255, 0.9) 60%,
+    rgba(255, 255, 255, 0.6) 75%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: shimmer 1.6s ease-in-out infinite;
+  border-radius: 10px;
+}
+
+.skeletonList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.skeletonItem {
+  border: 1px solid var(--border-subtle, #e5e7eb);
+  border-radius: 8px;
+  padding: 0.75rem 0.9rem;
+  background: var(--surface-elevated, #fff);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.skeletonLine {
+  height: 0.9rem;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    var(--skeleton-muted, #f3f4f6) 0%,
+    var(--skeleton, #e5e7eb) 50%,
+    var(--skeleton-muted, #f3f4f6) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+.skeletonMetaRow {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.skeletonPill {
+  width: 5.5rem;
+  height: 0.85rem;
+  border-radius: 999px;
+  background: var(--skeleton-muted, #f3f4f6);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}

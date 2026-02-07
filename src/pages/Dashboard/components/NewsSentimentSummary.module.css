@@ -1,0 +1,97 @@
+.card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 18px;
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.1);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.linkButton {
+  color: var(--color-accent, #2563eb);
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.listItem {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.sentimentPositive {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.sentimentNegative {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.empty {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+.signalList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.signalCard {
+  background: rgba(15, 23, 42, 0.04);
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.signalLabel {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+.signalValue {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.stateMessage {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+.error {
+  color: #ef4444;
+}
+
+@media (max-width: 720px) {
+  .card {
+    padding: 18px;
+  }
+}

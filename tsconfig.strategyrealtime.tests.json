@@ -1,0 +1,34 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./.tests-dist",
+    "rootDir": "./src",
+    "noEmit": false,
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "declaration": false,
+    "incremental": false,
+    "types": ["vite/client"],
+    "paths": {
+      "@i18n": ["i18n/index.ts"],
+      "@i18n/*": ["i18n/*"],
+      "@components/*": ["components/*"],
+      "@features/*": ["features/*"],
+      "@pages/*": ["pages/*"],
+      "@router": ["router/index.tsx"],
+      "@router/*": ["router/*"],
+      "@services/*": ["services/*"],
+      "@store/*": ["store/*"],
+      "@styles/*": ["styles/*"],
+      "@utils/*": ["utils/*"],
+      "@ui-kit": ["types/ui-kit.d.ts"],
+      "@ui-kit/*": ["types/ui-kit.d.ts"]
+    }
+  },
+  "include": [
+    "src/services/strategyRealtime.integration.test.ts",
+    "src/features/strategies/components/StrategyDetailPanel.integration.test.tsx",
+    "types/**/*.d.ts"
+  ],
+  "exclude": []
+}

@@ -1,0 +1,586 @@
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 70vh;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.statusLabel {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.statusHint {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.emptyState {
+  padding: 48px 16px;
+  text-align: center;
+  color: var(--color-text-secondary);
+  background: rgba(248, 250, 252, 0.8);
+  border-radius: 12px;
+}
+
+.reportList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.reportCard {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 10px 32px rgba(15, 23, 42, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.reportHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.reportHeader h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.subTitle {
+  margin: 4px 0 0;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+}
+
+.actionRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.statusPill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 72px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(59, 130, 246, 0.12);
+  color: rgba(37, 99, 235, 0.95);
+}
+
+.statusPill[data-status='completed'] {
+  background: rgba(34, 197, 94, 0.14);
+  color: #047857;
+}
+
+.statusPill[data-status='failed'] {
+  background: rgba(248, 113, 113, 0.16);
+  color: #b91c1c;
+}
+
+.statusPill[data-status='running'],
+.statusPill[data-status='pending'] {
+  background: rgba(250, 204, 21, 0.2);
+  color: #b45309;
+}
+
+.statusPill[data-status='stopped'] {
+  background: rgba(148, 163, 184, 0.18);
+  color: #475569;
+}
+
+.inlineButton {
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  background: transparent;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--color-text-primary);
+  transition: background 0.2s ease;
+}
+
+.inlineButton:hover:not(:disabled) {
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.inlineButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.headerButton {
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  border-radius: 6px;
+  padding: 6px 12px;
+  background: transparent;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.headerButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.tagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(15, 23, 42, 0.05);
+  color: var(--color-text-primary);
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.summarySection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.summaryGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.summaryCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(248, 250, 252, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.summaryLabel {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.summaryValue {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.muted {
+  color: var(--color-text-tertiary);
+  font-size: 13px;
+}
+
+.runtimeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.runtimeCard {
+  border-radius: 10px;
+  padding: 12px;
+  background: rgba(248, 250, 252, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.runtimeLabel {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.runtimeValue {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.chunkSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.downloadGroup {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chunkList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chunkCard {
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 12px;
+  background: rgba(248, 250, 252, 0.75);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chunkHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chunkTitleGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chunkTitleGroup h5 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.progressBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progressTrack {
+  flex: 1;
+  height: 8px;
+  background: rgba(148, 163, 184, 0.25);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progressValue {
+  height: 100%;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.9), rgba(59, 130, 246, 0.6));
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.progressLabel {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  min-width: 48px;
+  text-align: right;
+}
+
+.chunkMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.chunkSummary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.chunkActions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.comboSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.comboList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+}
+
+.comboCard {
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 10px;
+  padding: 12px;
+  background: rgba(248, 250, 252, 0.8);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.comboHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.comboHeader h5 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.horizonBlock {
+  border: 1px dashed rgba(148, 163, 184, 0.3);
+  border-radius: 8px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.horizonList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.horizonLabel {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.horizonValues {
+  color: var(--color-text-primary);
+  font-size: 12px;
+}
+
+.comboParams {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.comboParamBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.comboParamBlock h6 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.comboParamBlock pre {
+  margin: 0;
+  background: rgba(15, 23, 42, 0.04);
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 12px;
+  max-height: 200px;
+  overflow: auto;
+}
+
+.comboActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.loadingState,
+.errorState {
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.loadingState {
+  background: rgba(59, 130, 246, 0.08);
+  color: rgba(37, 99, 235, 0.95);
+}
+
+.errorState {
+  background: rgba(248, 113, 113, 0.12);
+  color: #b91c1c;
+}
+
+.runtimeSection,
+.distributionSection,
+.conclusionSection,
+.failSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.runtimeSection h4,
+.distributionSection h4,
+.conclusionSection h4,
+.failSection h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.distributionGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.distributionCard {
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 10px;
+  background: rgba(248, 250, 252, 0.7);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.distributionHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.distributionHeader h5 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.histogramWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.histogramChart {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 12px;
+  align-items: end;
+}
+
+.histogramAxis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 8px;
+  min-height: 120px;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+.histogramTick {
+  line-height: 1;
+}
+
+.histogramAxisLabel {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.histogramBars {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 140px;
+}
+
+.histogramBar {
+  flex: 1;
+  min-width: 8px;
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.6), rgba(59, 130, 246, 0.2));
+  border-radius: 6px 6px 0 0;
+  position: relative;
+}
+
+.histogramCount {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+
+.histogramScale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.failSection ul {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--color-text-secondary);
+}
+
+@media (max-width: 768px) {
+  .reportCard {
+    padding: 16px;
+  }
+
+  .chunkHeader {
+    gap: 8px;
+  }
+
+  .progressLabel {
+    min-width: 40px;
+    font-size: 11px;
+  }
+}

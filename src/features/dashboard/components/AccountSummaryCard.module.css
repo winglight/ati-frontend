@@ -1,0 +1,139 @@
+.card {
+  max-height: 32vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 0.15rem;
+  color: var(--color-text-secondary);
+  font-size: 0.78rem;
+}
+
+.accountGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.accountId {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.currency {
+  white-space: nowrap;
+}
+
+.metricsTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.2rem 0 0.6rem;
+  table-layout: fixed;
+}
+
+.metricsTable td {
+  border: 1px solid var(--color-border-subtle);
+  padding: 0.55rem 0.65rem;
+  vertical-align: top;
+}
+
+.metricCell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.label {
+  font-size: 0.68rem;
+  color: var(--color-text-tertiary);
+  letter-spacing: 0.02em;
+}
+
+.value,
+.metricValue {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.valueStrong,
+.metricValueStrong {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #34d399;
+}
+
+.valueStrong[data-positive='false'],
+.metricValueStrong[data-positive='false'] {
+  color: #f87171;
+}
+
+.metricValuePnl {
+  font-size: 0.94rem;
+  font-weight: 700;
+  color: #34d399;
+}
+
+.metricValuePnl[data-positive='false'] {
+  color: #f87171;
+}
+
+.metricValueAccent {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+}
+
+.timestamp {
+  margin-top: auto;
+  font-size: 0.72rem;
+  color: var(--color-text-tertiary);
+  text-align: right;
+  padding-top: 0.4rem;
+}
+
+.visibilityToggle {
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-surface-subtle);
+  color: var(--color-text-secondary);
+  border-radius: 8px;
+  padding: 2px 6px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.visibilityToggle:hover {
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+}
+
+.eyeIcon {
+  width: 16px;
+  height: 16px;
+}
+
+@media (max-width: 720px) {
+  .metricsTable,
+  .metricsTable tbody,
+  .metricsTable tr,
+  .metricsTable td {
+    display: block;
+    width: 100%;
+  }
+
+  .metricsTable td {
+    border-left: none;
+    border-right: none;
+  }
+
+  .metricsTable tr + tr td {
+    margin-top: 0.5rem;
+  }
+}

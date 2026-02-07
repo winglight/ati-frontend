@@ -1,0 +1,229 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+}
+
+.card {
+  background: #f8fafc;
+  border: 1px solid #d0d7f0;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+  border-radius: 12px;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  color: #1f2937;
+}
+
+.label {
+  font-size: 0.75rem;
+  color: #4b5563;
+}
+
+.value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.notes {
+  background: #f8fafc;
+  border: 1px solid #d0d7f0;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+  border-radius: 12px;
+  padding: 0.75rem;
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+  color: #1f2937;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: rgba(66, 99, 235, 0.18);
+  color: #c7d2fe;
+  border-radius: 999px;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.eventsSection {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.eventsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.eventsTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.eventsStatus {
+  font-size: 0.75rem;
+  color: rgba(226, 232, 240, 0.7);
+}
+
+.eventsTableWrapper {
+  max-height: 220px;
+  overflow: auto;
+  border: 1px solid rgba(122, 152, 255, 0.18);
+  border-radius: 10px;
+  background: rgba(8, 12, 22, 0.6);
+}
+
+.eventsTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.eventsTable th,
+.eventsTable td {
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid rgba(122, 152, 255, 0.12);
+  text-align: left;
+  vertical-align: top;
+}
+
+.eventsTable th {
+  font-size: 0.75rem;
+  color: rgba(226, 232, 240, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: rgba(12, 18, 32, 0.9);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.eventsTable tbody tr:nth-child(odd) {
+  background: rgba(14, 22, 36, 0.4);
+}
+
+.eventsTable tbody tr:hover {
+  background: rgba(66, 99, 235, 0.12);
+}
+
+.eventAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.16);
+  color: #bae6fd;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.eventMessage {
+  max-width: 220px;
+  word-break: break-word;
+}
+
+.eventsEmpty {
+  font-size: 0.8rem;
+  color: rgba(226, 232, 240, 0.75);
+  padding: 0.6rem 0.75rem;
+  border: 1px dashed rgba(122, 152, 255, 0.4);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.ordersSection {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ordersHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ordersTitle {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.ordersStatus {
+  font-size: 0.75rem;
+  color: #374151;
+}
+
+.ordersTableWrapper {
+  max-height: 240px;
+  overflow: auto;
+  border: 1px solid #d0d7f0;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+}
+
+.ordersTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.ordersTable th,
+.ordersTable td {
+  padding: 0.45rem 0.6rem;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+  color: #1f2937;
+}
+
+.ordersTable th {
+  font-size: 0.75rem;
+  color: #1f2937;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: #eef2ff;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.ordersTable tbody tr:nth-child(odd) {
+  background: #f8fafc;
+}
+
+.ordersTable tbody tr:hover {
+  background: #e0e7ff;
+}
+
+.ordersEmpty {
+  font-size: 0.8rem;
+  color: #374151;
+  padding: 0.6rem 0.75rem;
+  border: 1px dashed #c7d2fe;
+  border-radius: 10px;
+  text-align: center;
+  background: #f8fafc;
+}
+
+.error {
+  font-size: 0.8rem;
+  color: #fca5a5;
+  background: rgba(248, 113, 113, 0.12);
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+}

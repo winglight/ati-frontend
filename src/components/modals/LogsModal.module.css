@@ -1,0 +1,265 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.controlSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem;
+  border-radius: 12px;
+  background: #f9fafb;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1);
+}
+
+.controlRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.85rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #4b5563;
+}
+
+.select,
+.input {
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  color: #111827;
+  padding: 0.5rem 0.65rem;
+  font-size: 0.85rem;
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.06);
+}
+
+.actionsRow {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.primaryButton,
+.secondaryButton {
+  border-radius: 8px;
+  padding: 0.5rem 1.2rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+}
+
+.autoHint {
+  align-self: center;
+  font-size: 0.75rem;
+  color: rgba(233, 236, 255, 0.65);
+  line-height: 1.2;
+}
+
+.primaryButton {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.25);
+}
+
+.secondaryButton {
+  background: #e5e7eb;
+  color: #1f2937;
+}
+
+.primaryButton:hover,
+.secondaryButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.12);
+}
+
+.primaryButton:focus-visible,
+.secondaryButton:focus-visible {
+  outline: 2px solid #1d4ed8;
+  outline-offset: 2px;
+}
+
+.secondaryBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 0.25rem 0;
+  border-top: 1px solid #e5e7eb;
+  color: #374151;
+}
+
+.pagination {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.pageButton {
+  border: none;
+  background: #ffffff;
+  color: #1f2937;
+  border-radius: 6px;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.82rem;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+
+.pageButton:hover {
+  background: #f3f4f6;
+}
+
+.pageButton:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 1px;
+}
+
+.tailToggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: #374151;
+}
+
+.tailToggle input {
+  width: 18px;
+  height: 18px;
+}
+
+.tailLabel {
+  color: inherit;
+}
+
+.status {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.logStream {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  max-height: 420px;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+    monospace;
+  font-size: 0.8rem;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.12);
+}
+
+.logLine {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 0.45rem 0.55rem;
+  border-radius: 8px;
+  background: #f3f4f6;
+}
+
+.time {
+  width: 150px;
+  color: #6b7280;
+  flex-shrink: 0;
+}
+
+.level {
+  width: 64px;
+  text-align: center;
+  border-radius: 6px;
+  padding: 0.1rem 0.35rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.logger {
+  min-width: 160px;
+  color: #1f2937;
+}
+
+.request {
+  color: #0f766e;
+  font-weight: 600;
+}
+
+.message {
+  flex: 1;
+  white-space: pre-wrap;
+  color: #111827;
+}
+
+.logLine.level-info {
+  border-left: 3px solid #2563eb;
+}
+
+.logLine.level-info .level {
+  background: rgba(37, 99, 235, 0.12);
+  color: #1d4ed8;
+}
+
+.logLine.level-warning {
+  border-left: 3px solid #d97706;
+}
+
+.logLine.level-warning .level {
+  background: rgba(217, 119, 6, 0.14);
+  color: #b45309;
+}
+
+.logLine.level-error,
+.logLine.level-critical {
+  border-left: 3px solid #dc2626;
+}
+
+.logLine.level-error .level,
+.logLine.level-critical .level {
+  background: rgba(220, 38, 38, 0.14);
+  color: #b91c1c;
+}
+
+.logLine.level-debug {
+  border-left: 3px solid #3b82f6;
+}
+
+.logLine.level-debug .level {
+  background: rgba(59, 130, 246, 0.14);
+  color: #1d4ed8;
+}
+
+.empty,
+.loading {
+  text-align: center;
+  padding: 1.5rem 0;
+  color: #6b7280;
+}
+
+.metaRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: #6b7280;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 0.75rem;
+}
+
+.metaDetails {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}

@@ -1,0 +1,246 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem;
+  border-radius: 1.2rem;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: linear-gradient(160deg, rgba(250, 252, 255, 0.96), #ffffff);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+  transition: box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.cardInteractive {
+  cursor: pointer;
+}
+
+.cardInteractive:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 36px rgba(15, 23, 42, 0.16);
+}
+
+.cardFilledBuy {
+  border-color: rgba(74, 222, 128, 0.4);
+  background: linear-gradient(160deg, rgba(220, 252, 231, 0.92), #ffffff);
+}
+
+.cardFilledSell {
+  border-color: rgba(248, 113, 113, 0.4);
+  background: linear-gradient(160deg, rgba(254, 226, 226, 0.92), #ffffff);
+}
+
+.cardPending {
+  border-color: rgba(96, 165, 250, 0.4);
+  background: linear-gradient(160deg, rgba(219, 234, 254, 0.9), #ffffff);
+}
+
+.cardInactive {
+  border-color: rgba(250, 204, 21, 0.4);
+  background: linear-gradient(160deg, rgba(254, 249, 195, 0.9), #ffffff);
+  opacity: 0.95;
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.symbolGroup {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.symbolButton {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--color-primary);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.symbolButton:hover {
+  text-decoration: underline;
+}
+
+.statusChip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.statusWorking {
+  background: rgba(96, 165, 250, 0.16);
+  color: #1d4ed8;
+}
+
+.statusPending {
+  background: rgba(250, 204, 21, 0.22);
+  color: #b45309;
+}
+
+.statusFilled {
+  background: rgba(34, 197, 94, 0.2);
+  color: #15803d;
+}
+
+.statusCancelled {
+  background: rgba(148, 163, 184, 0.2);
+  color: #475569;
+}
+
+.statusRejected {
+  background: rgba(248, 113, 113, 0.2);
+  color: #b91c1c;
+}
+
+.statusInactive {
+  background: rgba(148, 163, 184, 0.18);
+  color: #334155;
+}
+
+.actionGroup {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.actionButton {
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 999px;
+  padding: 0.28rem 0.65rem;
+  background: rgba(15, 23, 42, 0.05);
+  color: var(--color-text-secondary);
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+
+.actionButton:hover:not(:disabled) {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(96, 165, 250, 0.5);
+  color: var(--color-primary);
+  transform: translateY(-1px);
+}
+
+.actionButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.dateTag {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  background: rgba(148, 163, 184, 0.2);
+  color: var(--color-text-secondary);
+}
+
+.line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.85rem;
+  color: var(--color-text-primary);
+}
+
+.item {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  line-height: 1.35;
+}
+
+.item:not(:first-child)::before {
+  content: '·';
+  color: var(--color-text-tertiary);
+  margin-right: 0.4rem;
+}
+
+.textMuted {
+  color: var(--color-text-secondary);
+}
+
+.textPositive {
+  color: #15803d;
+}
+
+.textNegative {
+  color: #b91c1c;
+}
+
+.metaItem {
+  color: var(--color-text-secondary);
+}
+
+.bottomRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8rem;
+}
+
+.bottomLeft {
+  color: var(--color-text-secondary);
+}
+
+.originPurple {
+  color: #7c3aed;
+}
+
+.originPrefix {
+  color: var(--color-text-primary);
+}
+
+.originNameEm {
+  color: #7c3aed;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.bottomRight {
+  font-weight: 600;
+}
+
+.timeDeep {
+  color: #b00020;
+}
+
+.timeMedium {
+  color: #d32f2f;
+}
+
+.timeLight {
+  color: #ef4444;
+}
+
+.timeVeryLight {
+  color: #fca5a5;
+}
+
+.actionStatus {
+  color: #16a34a;
+  font-size: 0.9rem;
+  font-weight: 600;
+}

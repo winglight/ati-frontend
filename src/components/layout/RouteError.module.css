@@ -1,0 +1,26 @@
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-xxl);
+  justify-content: center;
+}
+
+.badge {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  background: var(--color-primary-soft);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+}
+
+.title {
+  margin: 0 0 var(--spacing-sm) 0;
+  font-size: 1.4rem;
+}
+
+.message {
+  margin: 0;
+  color: var(--color-text-secondary);
+}

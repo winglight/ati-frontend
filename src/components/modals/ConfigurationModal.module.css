@@ -1,0 +1,163 @@
+.container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+@media (max-width: 1080px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.section {
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 14px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sectionTitle {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.sectionSubtitle {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.serviceList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 420px;
+  overflow: auto;
+}
+
+.serviceItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem;
+  background: rgba(8, 12, 22, 0.75);
+  border: 1px solid rgba(122, 152, 255, 0.16);
+  border-radius: 12px;
+  padding: 0.75rem 0.95rem;
+}
+
+.serviceMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.serviceName {
+  font-weight: 600;
+}
+
+.serviceDescription {
+  font-size: 0.75rem;
+  color: rgba(233, 236, 255, 0.55);
+}
+
+.statusBadge {
+  border-radius: 999px;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.75rem;
+}
+
+.statusOnline {
+  background: rgba(52, 211, 153, 0.18);
+  color: rgba(209, 250, 229, 0.95);
+}
+
+.statusError {
+  background: rgba(248, 113, 113, 0.18);
+  color: rgba(254, 205, 211, 0.95);
+}
+
+.statusUnknown {
+  background: rgba(148, 163, 184, 0.18);
+  color: rgba(226, 232, 240, 0.95);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table th,
+.table td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+  font-size: 0.85rem;
+  color: #1f2937;
+}
+
+.table thead {
+  background: #eef2ff;
+}
+
+.actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.actionButton {
+  border: 1px solid rgba(122, 152, 255, 0.35);
+  border-radius: 10px;
+  padding: 0.45rem 0.9rem;
+  background: rgba(102, 126, 234, 0.18);
+  color: inherit;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+
+.infoCard {
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 12px;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.infoLabel {
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+}
+
+.link {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.empty {
+  padding: 1.5rem 1rem;
+  text-align: center;
+  color: var(--color-text-secondary);
+  background: rgba(148, 163, 184, 0.12);
+  border: 1px dashed rgba(148, 163, 184, 0.3);
+  border-radius: 12px;
+}

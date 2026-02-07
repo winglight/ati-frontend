@@ -1,0 +1,258 @@
+.detailGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 14px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+
+.sectionTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.definitionList {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  row-gap: 8px;
+  column-gap: 12px;
+  font-size: 13px;
+  color: var(--color-text-primary);
+}
+
+.definitionList dt {
+  color: var(--color-text-tertiary);
+}
+
+.definitionList dd {
+  margin: 0;
+  word-break: break-word;
+}
+
+.status {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+
+.pending {
+  background-color: #fef3c7;
+  border-color: #fde68a;
+  color: #92400e;
+}
+
+.running {
+  background-color: #dcfce7;
+  border-color: #bbf7d0;
+  color: #166534;
+}
+
+.completed {
+  background-color: #e0e7ff;
+  border-color: #c7d2fe;
+  color: #312e81;
+}
+
+.failed {
+  background-color: #fee2e2;
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
+.error {
+  color: #b91c1c;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.key {
+  color: var(--color-text-secondary);
+  min-width: 100px;
+}
+
+.value {
+  color: var(--color-text-primary);
+  text-align: right;
+  flex: 1;
+  word-break: break-word;
+}
+
+.placeholder {
+  font-size: 13px;
+  color: var(--color-text-tertiary);
+  margin: 0;
+}
+
+.resultSection {
+  grid-column: 1 / -1;
+}
+
+.resultGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.parameterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.featureParameters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.featureBlock {
+  flex: 1 1 200px;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 12px;
+  padding: 12px;
+  background-color: var(--color-surface-hover);
+}
+
+.featureTitle {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.horizonList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.horizonList li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.horizonLabel {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.horizonValues {
+  color: var(--color-text-primary);
+}
+
+.muted {
+  color: var(--color-text-tertiary);
+}
+
+.subTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin: 0 0 4px;
+}
+
+.resultFooter {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  gap: 12px;
+}
+
+.empty {
+  padding: 32px;
+  text-align: center;
+  border-radius: 14px;
+  background-color: var(--color-surface);
+  border: 1px dashed var(--color-border-subtle);
+  color: var(--color-text-tertiary);
+}
+
+@media (max-width: 960px) {
+  .definitionList {
+    grid-template-columns: 1fr;
+  }
+
+  .key {
+    min-width: auto;
+  }
+
+  .value {
+    text-align: left;
+  }
+}
+
+.coverageSection {
+  background: var(--color-surface-hover);
+  border-color: rgba(37, 99, 235, 0.35);
+}
+
+.coverageHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.coverageAction {
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border-subtle);
+  background-color: var(--color-surface);
+  color: var(--color-primary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.coverageAction:hover {
+  background-color: var(--color-surface-hover);
+  border-color: var(--color-primary);
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.16);
+}
+
+.coverageError {
+  margin: 0;
+  font-size: 12px;
+  color: #b91c1c;
+}
+
+.coverageEmpty {
+  margin: 0;
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+}

@@ -1,0 +1,166 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.panelEmbedded {
+  gap: 12px;
+}
+
+.headerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.titleEmbedded {
+  font-size: 0.9rem;
+}
+
+.subtitle {
+  font-size: 0.8rem;
+  color: var(--color-text-tertiary);
+}
+
+.subtitleEmbedded {
+  font-size: 0.75rem;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.primaryButton,
+.secondaryButton {
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.primaryButton {
+  background: rgba(59, 130, 246, 0.15);
+  color: #1d4ed8;
+}
+
+.secondaryButton {
+  background: #ffffff;
+  color: var(--color-text-primary);
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.contentGridEmbedded {
+  gap: 12px;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cardEmbedded {
+  padding: 10px 12px;
+  gap: 10px;
+}
+
+.cardHeader {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.cardHeaderEmbedded {
+  font-size: 0.8rem;
+}
+
+.historyList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.historyItem {
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: #f8fafc;
+  cursor: pointer;
+}
+
+.historyItemEmbedded {
+  padding: 6px 8px;
+}
+
+.historyItemActive {
+  border-color: rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 0 2px rgba(191, 219, 254, 0.6);
+}
+
+.historyTitle {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.historyMeta {
+  margin-top: 4px;
+  font-size: 0.7rem;
+  color: var(--color-text-tertiary);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.emptyState {
+  font-size: 0.8rem;
+  color: var(--color-text-tertiary);
+  padding: 8px 0;
+}
+
+.tableWrapper {
+  overflow: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.table th,
+.table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  text-align: left;
+}
+
+.table th {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}

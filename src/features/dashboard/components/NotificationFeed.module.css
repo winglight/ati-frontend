@@ -1,0 +1,151 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.statusMessage {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #f8fafc;
+  font-size: 12px;
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-subtle);
+}
+
+.statusMessage button {
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.statusMessage button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.placeholder {
+  padding: 12px;
+  border-radius: 10px;
+  background: #f8fafc;
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  text-align: center;
+  border: 1px dashed var(--color-border-subtle);
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px;
+  border-radius: 10px;
+  background: var(--color-surface);
+  border-left: 3px solid transparent;
+  border: 1px solid var(--color-border-subtle);
+}
+
+.itemHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.itemInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
+.itemActions {
+  display: flex;
+  gap: 8px;
+}
+
+.itemActions button {
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 11px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.itemActions button:hover:not(:disabled) {
+  background: var(--color-primary-soft);
+  border-color: #bfd7ff;
+  color: var(--color-primary-dark);
+}
+
+.itemActions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.title {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.timestamp {
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+}
+
+.message {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+.read {
+  opacity: 0.7;
+}
+
+.unread {
+  opacity: 1;
+}
+
+.footer {
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+  text-align: right;
+}
+
+.info {
+  border-left-color: #64b5f6;
+}
+
+.warning {
+  border-left-color: #ffd666;
+}
+
+.error {
+  border-left-color: #ff7875;
+}

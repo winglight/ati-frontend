@@ -1,0 +1,381 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.15rem 1.25rem;
+  border-radius: 16px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: #f8fafc;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 0.96rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.sectionHint {
+  font-size: 0.75rem;
+  color: rgba(71, 85, 105, 0.9);
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.label {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: rgba(15, 23, 42, 0.85);
+}
+
+.fieldTip {
+  font-size: 0.72rem;
+  color: rgba(71, 85, 105, 0.85);
+}
+
+.input,
+.select,
+.textarea {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: #ffffff;
+  color: #0f172a;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.85rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  outline: none;
+  border-color: rgba(59, 130, 246, 0.55);
+  box-shadow: 0 0 0 2px rgba(191, 219, 254, 0.8);
+}
+
+.textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.combobox {
+  position: relative;
+}
+
+.comboboxList {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  max-height: 220px;
+  overflow-y: auto;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+  z-index: 20;
+  padding: 0.35rem 0;
+}
+
+.comboboxItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  width: 100%;
+  text-align: left;
+  padding: 0.45rem 0.75rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #0f172a;
+  font-size: 0.78rem;
+}
+
+.comboboxItem:hover,
+.comboboxItem:focus-visible {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.comboboxLabel {
+  font-weight: 600;
+}
+
+.comboboxValue {
+  font-size: 0.72rem;
+  color: rgba(71, 85, 105, 0.8);
+}
+
+.comboboxDescription {
+  font-size: 0.72rem;
+  color: rgba(71, 85, 105, 0.85);
+}
+
+.switchGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.switchLabel {
+  font-size: 0.78rem;
+  color: rgba(51, 65, 85, 0.85);
+}
+
+.windowList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.windowRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.parameterList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.filterList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.filterRow {
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.filterGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.85rem;
+  align-items: end;
+}
+
+.filterHint {
+  font-size: 0.72rem;
+  color: rgba(71, 85, 105, 0.85);
+}
+
+.parameterCard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.85rem;
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: #f1f5f9;
+}
+
+.parameterHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  grid-column: 1 / -1;
+}
+
+.parameterTitle {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.parameterMeta {
+  font-size: 0.72rem;
+  color: rgba(71, 85, 105, 0.85);
+}
+
+.removeButton {
+  border: none;
+  background: none;
+  color: rgba(220, 38, 38, 0.85);
+  cursor: pointer;
+  font-size: 0.75rem;
+}
+
+.addButton {
+  align-self: flex-start;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  border: 1px dashed rgba(59, 130, 246, 0.6);
+  background: rgba(191, 219, 254, 0.55);
+  color: #1d4ed8;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.addButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 18px rgba(59, 130, 246, 0.25);
+}
+
+.error {
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  background: rgba(239, 68, 68, 0.92);
+  border: 1px solid rgba(248, 113, 113, 0.9);
+  color: #fff5f5;
+  font-size: 0.82rem;
+  box-shadow: 0 8px 16px rgba(239, 68, 68, 0.25);
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.footerButton {
+  min-width: 120px;
+  padding: 0.55rem 1.2rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease;
+}
+
+.scanCodeHelpList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 220px;
+  overflow-y: auto;
+  padding-right: 0.2rem;
+}
+
+.scanCodeHelpItem {
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+.scanCodeHelpItem:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.scanCodeHelpTitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: inherit;
+}
+
+.scanCodeHelpCode {
+  font-size: 0.72rem;
+  color: rgba(226, 232, 240, 0.85);
+  margin-top: 0.1rem;
+}
+
+.scanCodeHelpDescription {
+  font-size: 0.75rem;
+  color: rgba(226, 232, 240, 0.8);
+  margin-top: 0.25rem;
+}
+
+.cancelButton {
+  background: transparent;
+  border-color: rgba(148, 163, 184, 0.5);
+  color: rgba(15, 23, 42, 0.75);
+}
+
+.cancelButton:hover {
+  box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.25);
+}
+
+.submitButton {
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.92), rgba(59, 130, 246, 0.9));
+  color: #0f172a;
+}
+
+.submitButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 24px rgba(59, 130, 246, 0.3);
+}
+
+.footerButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.inlineControls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tagsHint {
+  font-size: 0.7rem;
+  color: rgba(71, 85, 105, 0.85);
+}
+
+.fileHint {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.7rem;
+  color: rgba(71, 85, 105, 0.85);
+}
+
+.templateActions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.refreshButton {
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  border-radius: 8px;
+  background: rgba(226, 232, 240, 0.75);
+  color: #0f172a;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+
+.refreshButton:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.templateStatus {
+  font-size: 0.72rem;
+  color: rgba(71, 85, 105, 0.85);
+}

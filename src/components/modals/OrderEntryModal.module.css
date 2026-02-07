@@ -1,0 +1,465 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.formLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 0.85fr);
+  gap: 1.35rem;
+}
+
+@media (max-width: 1024px) {
+  .formLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .secondaryColumn {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .marketPanel {
+    flex: 1.15;
+  }
+
+  .summaryCard {
+    flex: 0.85;
+    min-width: 220px;
+  }
+}
+
+.formSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.sectionTitle {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #0f172a;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+}
+
+.sectionSubtitle {
+  font-size: 0.72rem;
+  color: rgba(71, 85, 105, 0.85);
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 0.75rem 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: rgba(30, 41, 59, 0.85);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.input,
+.select,
+.textarea {
+  background: #ffffff;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  border-radius: 9px;
+  color: #0f172a;
+  padding: 0.55rem 0.65rem;
+  font-size: 0.82rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  outline: none;
+  border-color: rgba(59, 130, 246, 0.55);
+  box-shadow: 0 0 0 2px rgba(191, 219, 254, 0.8);
+}
+
+.textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.inlineFields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.75rem;
+}
+
+.checkboxRow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.65rem 0.75rem;
+  background: rgba(224, 231, 255, 0.65);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+  border-radius: 10px;
+}
+
+.checkboxRow input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  accent-color: rgba(96, 165, 250, 0.95);
+}
+
+.checkboxLabel {
+  font-size: 0.78rem;
+  color: rgba(30, 41, 59, 0.9);
+}
+
+.secondaryColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.marketPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  background: #ffffff;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  border-radius: 12px;
+  padding: 0.85rem 0.95rem;
+  box-shadow: 0 12px 22px rgba(15, 23, 42, 0.04);
+}
+
+.priceTicker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.priceHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.priceSymbol {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: rgba(71, 85, 105, 0.9);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.priceValue {
+  font-size: 1.45rem;
+  font-weight: 600;
+  color: rgba(15, 23, 42, 0.95);
+  line-height: 1;
+}
+
+.priceValuePositive {
+  color: #16a34a;
+}
+
+.priceValueNegative {
+  color: #dc2626;
+}
+
+.priceValueNeutral {
+  color: rgba(15, 23, 42, 0.95);
+}
+
+.priceMeta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  color: rgba(71, 85, 105, 0.85);
+}
+
+.priceDelta {
+  font-weight: 600;
+}
+
+.priceDeltaPositive {
+  color: #16a34a;
+}
+
+.priceDeltaNegative {
+  color: #dc2626;
+}
+
+.priceStatus {
+  color: rgba(71, 85, 105, 0.75);
+}
+
+.priceStatusError {
+  color: #dc2626;
+  font-weight: 500;
+}
+
+.chartPanel {
+  position: relative;
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  background: #f8fafc;
+  padding: 0.35rem 0.4rem;
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.chartPanel > * {
+  width: 100%;
+}
+
+.chartSkeleton {
+  width: 100%;
+  height: 160px;
+  border-radius: 8px;
+  background: linear-gradient(
+    90deg,
+    rgba(226, 232, 240, 0.4) 0%,
+    rgba(203, 213, 225, 0.65) 50%,
+    rgba(226, 232, 240, 0.4) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.chartPlaceholder {
+  font-size: 0.75rem;
+  color: rgba(71, 85, 105, 0.75);
+  text-align: center;
+  padding: 0.5rem 0.25rem;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.summaryCard {
+  background: #f8fafc;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 12px;
+  padding: 0.85rem 0.95rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.summaryTitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.summaryRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: rgba(51, 65, 85, 0.9);
+}
+
+.summaryValuePositive {
+  color: rgba(110, 231, 183, 0.95);
+  font-weight: 600;
+}
+
+.summaryValueNeutral {
+  color: rgba(51, 65, 85, 0.95);
+  font-weight: 600;
+}
+
+.summaryHint {
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: rgba(71, 85, 105, 0.85);
+}
+
+.validationError,
+.submitError {
+  background: rgba(254, 226, 226, 0.85);
+  border: 1px solid rgba(248, 113, 113, 0.45);
+  color: #991b1b;
+  border-radius: 10px;
+  padding: 0.75rem 0.9rem;
+  font-size: 0.78rem;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.footerMeta {
+  font-size: 0.75rem;
+  color: rgba(71, 85, 105, 0.85);
+}
+
+.footerActions {
+  display: flex;
+  gap: 0.65rem;
+}
+
+.secondaryButton,
+.primaryButton {
+  border-radius: 9px;
+  font-size: 0.82rem;
+  padding: 0.55rem 1.1rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.secondaryButton {
+  background: #e2e8f0;
+  color: #0f172a;
+  border-color: rgba(148, 163, 184, 0.6);
+}
+
+.secondaryButton:hover {
+  background: rgba(203, 213, 225, 0.95);
+}
+
+.primaryButton {
+  background: linear-gradient(135deg, rgba(96, 165, 250, 0.92), rgba(59, 130, 246, 0.95));
+  color: #0b1120;
+  font-weight: 600;
+  box-shadow: 0 10px 24px rgba(59, 130, 246, 0.28);
+}
+
+.primaryButton:disabled {
+  background: rgba(59, 130, 246, 0.35);
+  color: rgba(15, 23, 42, 0.6);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.primaryButton:not(:disabled):hover {
+  background: linear-gradient(135deg, rgba(148, 197, 255, 0.95), rgba(59, 130, 246, 1));
+}
+
+.metaList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.metaLabel {
+  font-size: 0.72rem;
+  color: rgba(71, 85, 105, 0.85);
+}
+
+.metaValue {
+  font-size: 0.8rem;
+  color: rgba(30, 41, 59, 0.9);
+  font-weight: 500;
+}
+
+.optionalRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+  margin-top: -0.2rem;
+  padding: 0.5rem 0.6rem;
+  background: rgba(226, 232, 240, 0.35);
+  border-radius: 10px;
+}
+
+.optionalField {
+  gap: 0.35rem;
+}
+
+.optionalLabel {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: rgba(51, 65, 85, 0.75);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.optionalField .input,
+.optionalField .textarea {
+  padding: 0.45rem 0.55rem;
+}
+
+.optionalField .textarea {
+  min-height: 72px;
+}
+
+.hintBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(191, 219, 254, 0.75);
+  color: #1d4ed8;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.hintRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.inlineNote {
+  font-size: 0.72rem;
+  color: rgba(71, 85, 105, 0.85);
+}
+
+@media (max-width: 640px) {
+  .footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .footerActions {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .footerActions button {
+    flex: 1;
+  }
+
+  .secondaryColumn {
+    flex-direction: column;
+  }
+
+  .marketPanel,
+  .summaryCard {
+    width: 100%;
+  }
+}

@@ -1,0 +1,191 @@
+.topBar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(0.5rem, 1.5vw, 1.5rem);
+  padding: clamp(0.35rem, 0.8vw, 0.6rem) clamp(0.9rem, 1.6vw, 1.8rem);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border-subtle);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+  color: var(--color-text-primary);
+}
+
+.leftGroup {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.branding {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #2563eb;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.2);
+}
+
+.brandText {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.centerGroup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;
+}
+
+.statusPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  background: #f8fafc;
+  border: 1px solid #dbeafe;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.statusDot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+}
+
+.statusDotDanger {
+  background: #ef4444;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.18);
+}
+
+.rightGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.iconButton {
+  position: relative;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 10px;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  padding: 0.35rem 0.7rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background-color 0.2s ease, transform 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.iconButton:hover {
+  background: var(--color-primary-soft);
+  border-color: #c4d4f8;
+  color: var(--color-primary-dark);
+  transform: translateY(-1px);
+}
+
+.linkButton {
+  display: inline-flex;
+  align-items: center;
+}
+
+.badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  min-width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: #f97316;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+}
+
+.userBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-left: 0.65rem;
+  border-left: 1px solid var(--color-border-subtle);
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  text-align: right;
+}
+
+.userName {
+  font-weight: 600;
+}
+
+.userRole {
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+}
+
+.authButton {
+  border: 1px solid #dbeafe;
+  border-radius: 10px;
+  padding: 0.35rem 0.7rem;
+  background: #2563eb;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.authButton:hover {
+  background: #1d4ed8;
+  border-color: #bfdbfe;
+}
+
+@media (max-width: 960px) {
+  .topBar {
+    grid-template-columns: 1fr;
+    justify-items: stretch;
+  }
+
+  .centerGroup {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .rightGroup {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.tests.json",
+  "include": [
+    "src/features/strategies/components/StrategyDetailPanel.domMomentumParameters.test.tsx"
+  ],
+  "exclude": []
+}

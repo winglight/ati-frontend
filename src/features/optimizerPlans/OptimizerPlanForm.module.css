@@ -1,0 +1,253 @@
+.form {
+  background-color: var(--color-surface);
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.section {
+  background-color: rgba(248, 250, 252, 0.8);
+  border-radius: 10px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sectionTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.sectionActions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.field input,
+.field select,
+.field textarea {
+  border-radius: 6px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  padding: 8px 10px;
+  font-size: 13px;
+  transition: border 0.2s ease;
+  background-color: #ffffff;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--color-primary);
+  outline: none;
+}
+
+.field select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, rgba(148, 163, 184, 0.6) 50%),
+    linear-gradient(135deg, rgba(148, 163, 184, 0.6) 50%, transparent 50%);
+  background-position: calc(100% - 16px) calc(50% - 3px), calc(100% - 12px) calc(50% - 3px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+.textarea {
+  min-height: 160px;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  resize: vertical;
+}
+
+.metricGroups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.metricColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.metricTitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.metricList {
+  display: grid;
+  gap: 8px;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.checkboxLabel input {
+  width: 16px;
+  height: 16px;
+}
+
+.parameterGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+}
+
+.helperText {
+  margin: 0;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.helperTextError {
+  margin: 0;
+  font-size: 12px;
+  color: #ef4444;
+}
+
+.inlineButton,
+.inlineGhostButton {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background-color: transparent;
+  color: var(--color-text-primary);
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.inlineButton {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary);
+  color: #ffffff;
+}
+
+.inlineButton:disabled,
+.inlineGhostButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.inlineGhostButton {
+  border-color: rgba(148, 163, 184, 0.5);
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.statsItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: rgba(148, 163, 184, 0.12);
+}
+
+.statsLabel {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.statsValue {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.statsHint {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.statusList {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.statusInfo,
+.statusWarning,
+.statusError {
+  margin: 0;
+  font-size: 12px;
+}
+
+.statusInfo {
+  color: var(--color-text-secondary);
+}
+
+.statusWarning {
+  color: #d97706;
+}
+
+.statusError {
+  color: #ef4444;
+}
+
+.error {
+  color: #ef4444;
+  font-size: 13px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.primaryButton {
+  padding: 8px 18px;
+  border-radius: 6px;
+  border: 1px solid var(--color-primary);
+  background-color: var(--color-primary);
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.secondaryButton {
+  padding: 8px 18px;
+  border-radius: 6px;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  background-color: transparent;
+  color: var(--color-text-primary);
+  cursor: pointer;
+}

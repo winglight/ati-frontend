@@ -1,0 +1,100 @@
+.card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 18px;
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.1);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 220px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.status {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.metric {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: rgba(15, 23, 42, 0.04);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+
+.metricLabel {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.metricValue {
+  font-weight: 600;
+  color: var(--color-text-primary);
+  font-size: 0.95rem;
+}
+
+.jobList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.jobItem {
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.highlight {
+  color: var(--color-accent, #2563eb);
+  font-weight: 600;
+}
+
+.stateMessage {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+}
+
+.error {
+  color: #ef4444;
+}
+
+.retryButton {
+  align-self: flex-start;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.retryButton:hover {
+  background: #1d4ed8;
+}
+
+@media (max-width: 720px) {
+  .card {
+    padding: 18px;
+  }
+}

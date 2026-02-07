@@ -1,0 +1,1079 @@
+.panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 18px;
+  box-shadow: 0 14px 30px rgba(15, 23, 42, 0.12);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: #f1f5ff;
+  color: var(--color-text-primary);
+  border-bottom: 1px solid var(--color-border-subtle);
+  /* Unified widget sizing variables for toolbar controls */
+  --toolbar-widget-height: 2.8rem;
+  --toolbar-text-size: 0.9rem;
+}
+
+.toolbarLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  /* Left cluster should take 75% of the panel width */
+  flex: 0 0 75%;
+  min-width: 0;
+}
+
+.symbolCluster {
+  display: flex;
+  align-items: stretch;
+  gap: 0.75rem;
+  flex-wrap: nowrap;
+  min-width: 0;
+  width: 100%;
+}
+
+.priceBadge {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid var(--color-border-subtle);
+  min-width: 108px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.priceBadgeLabel {
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  color: var(--color-text-tertiary);
+}
+
+.priceBadgeValue {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2563eb;
+}
+
+.toolbarGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #e6efff;
+  border-radius: 999px;
+  padding: 0.25rem 0.5rem;
+}
+
+.compactButton {
+  border: none;
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.compactButtonActive {
+  background: var(--color-surface);
+  color: var(--color-primary);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.12);
+}
+
+.toolbarActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.riskDropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.riskDropdownMenu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 1000;
+  background: #ffffff;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 16px;
+  padding: 0.75rem;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.18);
+  min-width: 420px;
+}
+
+@media (max-width: 720px) {
+  .riskDropdownMenu {
+    left: 0;
+    right: auto;
+    min-width: min(90vw, 420px);
+  }
+}
+
+.dropdownRiskCard {
+  width: 100%;
+  max-height: 70vh;
+  overflow: auto;
+}
+
+.toolbarMetrics {
+  display: flex;
+  align-items: stretch;
+  gap: 0.75rem;
+  flex-wrap: nowrap;
+  flex: 6 1 0;
+  min-width: 0;
+}
+
+.toolbarChangeValues {
+  display: inline-flex;
+  align-items: center; /* unify vertical alignment */
+  gap: 0.4rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 10px;
+  background: #ffffff;
+  border: 1px solid var(--color-border-subtle);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  height: var(--toolbar-widget-height);
+  flex: 0 0 25%;
+  width: auto;
+}
+
+.toolbarDistribution {
+  display: flex;
+  align-items: center; /* unify vertical alignment */
+  flex: 0 0 55%;
+  width: auto;
+  padding: 0.45rem 0.65rem;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid var(--color-border-subtle);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  height: var(--toolbar-widget-height);
+}
+
+@media (max-width: 960px) {
+  .toolbarMetrics {
+    flex-wrap: wrap;
+  }
+}
+
+.actionButton {
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 999px;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.82rem;
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.monitorButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.monitorActive {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.35);
+  color: #047857;
+}
+
+.monitorInactive {
+  background: rgba(248, 113, 113, 0.12);
+  border-color: rgba(248, 113, 113, 0.35);
+  color: #b91c1c;
+}
+
+.monitorIndicator {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 4px rgba(148, 163, 184, 0.18);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  padding: 1.2rem 1.4rem 1.6rem;
+}
+
+.monitorPaused {
+  background: #eff4fb;
+  border: 1px dashed var(--color-border-subtle);
+  border-radius: 14px;
+  padding: 1rem 1.2rem;
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.summaryValuePrimary {
+  font-size: 1rem; /* slightly reduced for consistent height */
+  font-weight: 600;
+}
+
+.summaryValueSecondary {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+
+.summaryInlinePercent {
+  white-space: nowrap;
+}
+
+.rangeTrack {
+  position: relative;
+  flex: 1 1 auto;
+  width: 100%;
+  padding: 0.6rem 0 0.35rem; /* balance visual spacing */
+  min-height: var(--toolbar-widget-height);
+  overflow: visible;
+}
+
+.rangeMarker {
+  position: absolute;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  transform: translateX(-50%);
+  min-width: 0;
+  z-index: 1;
+}
+
+.rangeRail {
+  position: absolute;
+  top: 0.9rem;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #1e293b, rgba(37, 99, 235, 0.35));
+  border-radius: 999px;
+  z-index: 0;
+}
+
+.rangeMarkerDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(148, 163, 184, 0.6);
+  border: 2px solid rgba(148, 163, 184, 0.4);
+  box-shadow: 0 0 0 3px rgba(148, 163, 184, 0.12);
+}
+
+.rangeMarkerLabel {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--color-text-tertiary);
+  letter-spacing: 0.08em;
+  text-align: center;
+}
+
+.rangeMarkerValue {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  text-align: center;
+}
+
+.rangeMarkerAlignLeft .rangeMarkerLabel,
+.rangeMarkerAlignLeft .rangeMarkerValue {
+  transform: translateX(-55%);
+  text-align: right;
+}
+
+.rangeMarkerAlignRight .rangeMarkerLabel,
+.rangeMarkerAlignRight .rangeMarkerValue {
+  transform: translateX(55%);
+  text-align: left;
+}
+
+.rangeMarkerAlignFarLeft .rangeMarkerLabel,
+.rangeMarkerAlignFarLeft .rangeMarkerValue {
+  transform: translateX(-90%);
+  text-align: right;
+}
+
+.rangeMarkerAlignFarRight .rangeMarkerLabel,
+.rangeMarkerAlignFarRight .rangeMarkerValue {
+  transform: translateX(90%);
+  text-align: left;
+}
+
+.toolbarRangeMarker {
+  gap: 0.15rem;
+}
+
+.toolbarRangeMarkerDot {
+  width: 8px;
+  height: 8px;
+  box-shadow: 0 0 0 2px rgba(148, 163, 184, 0.12);
+}
+
+.toolbarRangeMarkerLabel {
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  color: var(--color-text-tertiary);
+}
+
+.toolbarRangeMarkerValue {
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.rangeMarkerLow .rangeMarkerDot {
+  background: rgba(148, 163, 184, 0.6);
+  border-color: rgba(148, 163, 184, 0.4);
+}
+
+.rangeMarkerOpen .rangeMarkerDot {
+  background: rgba(96, 165, 250, 0.8);
+  border-color: rgba(59, 130, 246, 0.35);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.rangeMarkerClose .rangeMarkerDot {
+  background: rgba(250, 204, 21, 0.9);
+  border-color: rgba(234, 179, 8, 0.5);
+  box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.22);
+}
+
+.rangeMarkerClose .rangeMarkerValue {
+  color: #fbbf24;
+}
+
+.rangeMarkerHigh .rangeMarkerDot {
+  background: rgba(192, 132, 252, 0.8);
+  border-color: rgba(168, 85, 247, 0.4);
+  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.18);
+}
+
+.positionOverview {
+  margin-top: 0.65rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.positionMetricRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.positionMetricLabel {
+  font-size: 0.78rem;
+  color: var(--color-text-secondary);
+}
+
+.positionMetricValueGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  align-items: flex-end;
+  text-align: right;
+}
+
+.positionMetricValue {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.pnlValue {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.pnlPercent {
+  font-size: 0.88rem;
+  color: var(--color-text-secondary);
+}
+
+.pnlPositive {
+  color: #34d399;
+}
+
+.pnlNegative {
+  color: #f87171;
+}
+
+.positionHint {
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--color-text-tertiary);
+}
+
+.riskCard {
+  background: #ffffff;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 16px;
+  padding: 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.troubleshootCard {
+  background: #f5f7fb;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 14px;
+  padding: 1rem 1.15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--color-text-primary);
+}
+
+.troubleshootTitle {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.troubleshootSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.troubleshootSubtitle {
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: var(--color-primary-dark);
+}
+
+.troubleshootList {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  color: var(--color-text-secondary);
+}
+
+.troubleshootList code {
+  background: #f8fafc;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 6px;
+  padding: 0.1rem 0.35rem;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.78rem;
+  color: var(--color-text-primary);
+}
+
+.troubleshootHint {
+  font-size: 0.78rem;
+  color: var(--color-text-tertiary);
+  line-height: 1.4;
+}
+
+.riskHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+  color: var(--color-text-primary);
+}
+
+.riskControls {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.switch input {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.riskMeta {
+  font-size: 0.78rem;
+  color: var(--color-text-secondary);
+}
+
+
+.riskFields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(180px, 1fr));
+  gap: 0.75rem;
+  align-items: stretch;
+}
+
+.riskField {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(37, 99, 235, 0.05));
+  border: 1px solid rgba(37, 99, 235, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.28);
+}
+
+@media (max-width: 640px) {
+  .riskFields {
+    grid-template-columns: 1fr;
+  }
+}
+
+.riskStopLoss {
+  background: linear-gradient(135deg, rgba(248, 113, 113, 0.1), rgba(239, 68, 68, 0.05));
+  border-color: rgba(239, 68, 68, 0.24);
+}
+
+.riskTakeProfit {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.12), rgba(16, 185, 129, 0.05));
+  border-color: rgba(34, 197, 94, 0.24);
+}
+
+.riskFieldLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.riskFieldValue {
+  display: flex;
+  align-items: center;
+}
+
+.riskInput {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 10px;
+  padding: 0.5rem 0.65rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+
+.riskInput:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.readonlyValue {
+  font-size: 1.08rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.riskFieldDelta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 0.75rem;
+  gap: 0.45rem;
+  color: var(--color-text-tertiary);
+}
+
+.riskPositive {
+  color: #047857;
+}
+
+.riskNegative {
+  color: #b91c1c;
+}
+
+.riskNeutral {
+  color: var(--color-text-tertiary);
+}
+
+.riskSummary {
+  margin-top: 0.4rem;
+  background: linear-gradient(135deg, rgba(250, 204, 21, 0.25), rgba(253, 224, 71, 0.18));
+  border-radius: 14px;
+  padding: 0.6rem 0.85rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  align-items: center;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.riskSummaryItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  align-items: center;
+  text-align: center;
+}
+
+.riskSummaryLabel {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #92400e;
+}
+
+.riskSummaryValue {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.riskLossValue {
+  color: #b91c1c;
+}
+
+.riskProfitValue {
+  color: #047857;
+}
+
+.riskNeutralValue {
+  color: var(--color-text-primary);
+}
+
+.riskSummaryCenter {
+  align-items: center;
+  text-align: center;
+}
+
+.riskSummaryCenter .riskSummaryValue {
+  font-size: 1.05rem;
+}
+
+.riskSummaryLoss {
+  align-items: flex-start;
+}
+
+.riskSummaryProfit {
+  align-items: flex-start;
+}
+
+.saveButton {
+  border: none;
+  border-radius: 999px;
+  padding: 0.5rem 1.3rem;
+  background: linear-gradient(135deg, #60a5fa, #2563eb);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.2s ease;
+  width: auto;
+  max-width: none;
+  font-size: 0.85rem;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.25);
+}
+
+.saveButton:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.75rem;
+}
+
+.metric {
+  background: #ffffff;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 12px;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.metricLabel {
+  font-size: 0.72rem;
+  color: var(--color-text-tertiary);
+}
+
+.metricValue {
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.metricPositive {
+  color: #34d399;
+}
+
+.metricNegative {
+  color: #f87171;
+}
+
+.domSection {
+  display: grid;
+  grid-template-columns: minmax(0, 1.75fr) minmax(140px, 0.6fr) minmax(360px, 1.35fr);
+  gap: 1.25rem;
+  align-items: stretch;
+}
+
+.domChartBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  background: #ffffff;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 16px;
+  padding: 1rem;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+}
+
+.domLegend {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.74rem;
+  color: var(--color-text-tertiary);
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.legendSwatch {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 999px;
+}
+
+.domIndicators {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+
+.domIndicatorCard {
+  background: #f6f9ff;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 12px;
+  padding: 0.65rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+}
+
+.domIndicatorLabel {
+  color: var(--color-text-tertiary);
+}
+
+.domIndicatorValue {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.signalPanel {
+  background: #ffffff;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 16px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-height: 0;
+  --signal-card-height: 5.5rem;
+  --signal-list-gap: 0.65rem;
+  width: 100%;
+  max-width: 220px;
+  justify-self: start;
+}
+
+.inlineRiskCard {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  justify-self: stretch;
+}
+
+.signalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--color-text-primary);
+  font-size: 0.9rem;
+}
+
+.signalSummary {
+  font-size: 0.78rem;
+  color: var(--color-text-tertiary);
+}
+
+.signalList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--signal-list-gap);
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  max-height: calc((var(--signal-card-height) + var(--signal-list-gap)) * 3 - var(--signal-list-gap));
+}
+
+.signalItem {
+  border-radius: 12px;
+  padding: 0.65rem 0.75rem;
+  background: #f2f6fc;
+  min-height: var(--signal-card-height);
+}
+
+.signalBuy {
+  border-left: 3px solid #2563eb;
+}
+
+.signalSell {
+  border-left: 3px solid #ef4444;
+}
+
+.signalMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.signalStrength {
+  font-size: 0.72rem;
+  color: var(--color-text-tertiary);
+}
+
+.chartStack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  background: #ffffff;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 16px;
+  padding: 1rem;
+}
+
+.chartHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  color: var(--color-text-primary);
+  font-size: 0.88rem;
+}
+
+.chartHeaderTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.chartControls {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.chartControlGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #e6efff;
+  border-radius: 999px;
+  padding: 0.25rem 0.5rem;
+}
+
+.subscriptionStatusBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+  text-align: right;
+}
+
+.subscriptionStatusLine {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.subscriptionStatusItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+}
+
+.subscriptionSeparator {
+  color: rgba(148, 163, 184, 0.55);
+  font-size: 0.72rem;
+}
+
+.subscriptionMode {
+  font-size: 0.74rem;
+  color: rgba(148, 163, 184, 0.95);
+}
+
+.subscriptionMeta {
+  font-size: 0.72rem;
+  color: rgba(148, 163, 184, 0.85);
+}
+
+.subscriptionHint {
+  font-size: 0.72rem;
+  color: rgba(250, 204, 21, 0.95);
+}
+
+.subscriptionPending {
+  font-size: 0.72rem;
+  color: rgba(96, 165, 250, 0.9);
+}
+
+.subscriptionError {
+  font-size: 0.72rem;
+  color: #f87171;
+}
+
+.connectionFailedRow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.connectionRetryButton {
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  border-radius: 999px;
+  background: rgba(59, 130, 246, 0.08);
+  color: #2563eb;
+  font-size: 0.72rem;
+  padding: 0.3rem 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.connectionRetryButton:hover {
+  background: rgba(59, 130, 246, 0.18);
+  border-color: rgba(59, 130, 246, 0.6);
+  color: #1d4ed8;
+}
+
+.availability {
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+  text-align: center;
+}
+
+.chartFooter {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+
+.footerCard {
+  background: #f6f9ff;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 12px;
+  padding: 0.65rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.footerLabel {
+  font-size: 0.72rem;
+  color: var(--color-text-tertiary);
+}
+
+.footerValue {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+@media (max-width: 1280px) {
+  .summaryGrid {
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+  }
+}
+
+@media (max-width: 1080px) {
+  .domSection {
+    grid-template-columns: 1fr;
+  }
+
+  .signalPanel,
+  .inlineRiskCard {
+    max-width: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .toolbarActions {
+    justify-content: flex-end;
+  }
+
+  .symbolCluster {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .priceBadge {
+    width: 100%;
+  }
+
+  .summaryGrid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,99 @@
+.tableScroller {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  min-width: 720px;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table thead {
+  background: #f3f6fc;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-secondary);
+}
+
+.table th,
+.table td {
+  padding: 0.55rem 0.65rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+  text-align: left;
+  white-space: nowrap;
+  color: var(--color-text-primary);
+}
+
+.table tbody tr:nth-child(even) {
+  background: #f8faff;
+}
+
+.ruleButton {
+  border: none;
+  background: none;
+  color: var(--color-primary);
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  font: inherit;
+}
+
+.enabled {
+  color: #34d399;
+  font-weight: 600;
+}
+
+.disabled {
+  color: var(--color-text-tertiary);
+}
+
+.rowActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.actionButton {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 999px;
+  color: var(--color-text-secondary);
+  padding: 0.2rem 0.8rem;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.actionButton:hover,
+.actionButton:focus {
+  background: var(--color-primary-soft);
+  border-color: #bfd7ff;
+  color: var(--color-primary-dark);
+}
+
+.toggleEnable {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.35);
+  color: #047857;
+}
+
+.toggleEnable:hover,
+.toggleEnable:focus {
+  background: rgba(16, 185, 129, 0.18);
+}
+
+.toggleDisable {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #b91c1c;
+}
+
+.toggleDisable:hover,
+.toggleDisable:focus {
+  background: rgba(239, 68, 68, 0.18);
+}

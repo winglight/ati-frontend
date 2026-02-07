@@ -1,0 +1,5 @@
+@import '@ui-kit/styles/theme.css';
+
+#root {
+  min-height: 100vh;
+}
