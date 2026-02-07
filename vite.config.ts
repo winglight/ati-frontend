@@ -17,7 +17,7 @@ export default defineConfig({
       '@features': path.resolve(__dirname, 'src/features'),
       '@services': path.resolve(__dirname, 'src/services'),
       '@utils': path.resolve(__dirname, 'src/utils'),
-      '@ui-kit': path.resolve(__dirname, '../packages/ui-kit/src'),
+      '@ui-kit': path.resolve(__dirname, 'packages/ui-kit/src'),
       'lightweight-charts': path.resolve(__dirname, 'src/stubs/lightweight-charts.ts'),
       // Ensure deps from ui-kit resolve to frontend's node_modules
       'clsx': path.resolve(__dirname, 'node_modules/clsx')
