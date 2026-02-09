@@ -1,4 +1,4 @@
-import type { AppDispatch } from '@store/index';
+import type { AppDispatch, RootState } from '@store/index';
 import { pushNotification } from '@store/slices/notificationsSlice';
 import {
   pushRiskEvent,
@@ -24,6 +24,7 @@ import {
 interface RiskRealtimeClientOptions {
   dispatch: AppDispatch;
   tokenProvider: () => string | null;
+  stateProvider?: () => RootState;
   pollIntervalMs?: number;
   eventsLimit?: number;
 }
@@ -95,6 +96,7 @@ const toNotificationSeverity = (level: string): 'info' | 'warning' | 'error' => 
 export class RiskRealtimeClient {
   private readonly dispatch: AppDispatch;
   private readonly tokenProvider: () => string | null;
+  private readonly stateProvider?: () => RootState;
   private readonly pollIntervalMs: number;
   private readonly eventsLimit: number;
   private socketHandle: WebSocketSubscription | null = null;
@@ -105,6 +107,7 @@ export class RiskRealtimeClient {
   constructor(options: RiskRealtimeClientOptions) {
     this.dispatch = options.dispatch;
     this.tokenProvider = options.tokenProvider;
+    this.stateProvider = options.stateProvider;
     this.pollIntervalMs = options.pollIntervalMs ?? DEFAULT_POLL_INTERVAL;
     this.eventsLimit = options.eventsLimit ?? DEFAULT_EVENTS_LIMIT;
   }
@@ -139,6 +142,7 @@ export class RiskRealtimeClient {
         this.dispatch(setRiskFallbackMode('websocket'));
         this.stopPolling();
         this.send({ action: 'subscribe', topics: ['risk.alert', 'risk.metric'] });
+        void this.pollOnce();
       },
       onMessage: (data) => {
         this.handleMessage(data);
@@ -199,6 +203,31 @@ export class RiskRealtimeClient {
     );
   }
 
+  private syncGlobalHaltNotification(events: RiskEventItem[]) {
+    if (!this.stateProvider) {
+      return;
+    }
+    const state = this.stateProvider();
+    const existingIds = new Set(state.notifications.items.map((item) => item.id));
+    const haltEvent = events.find(
+      (item) => typeof item.metrics?.event === 'string' && item.metrics.event === 'GLOBAL_TRADING_HALTED'
+    );
+    if (!haltEvent || existingIds.has(haltEvent.id)) {
+      return;
+    }
+    this.dispatch(
+      pushNotification({
+        id: haltEvent.id,
+        severity: toNotificationSeverity(haltEvent.level),
+        title: `风险告警 · ${haltEvent.symbol}`,
+        message: haltEvent.message,
+        timestamp: haltEvent.createdAt,
+        channel: 'risk.alert',
+        event: 'GLOBAL_TRADING_HALTED'
+      })
+    );
+  }
+
   private handleMetric(payload: unknown) {
     if (!payload) {
       return;
@@ -247,6 +276,7 @@ export class RiskRealtimeClient {
       const events = mapRiskEvents(eventsPayload.items ?? []);
       this.dispatch(setRiskMetrics(metrics));
       this.dispatch(setRiskEvents(events));
+      this.syncGlobalHaltNotification(events);
     } catch (error) {
       console.warn('轮询风控数据失败：', error);
     }

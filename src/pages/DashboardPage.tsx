@@ -36,6 +36,7 @@ import { initializeDashboard } from '@store/thunks/initializeDashboard';
 import { fetchMarketSnapshot } from '@store/thunks/fetchMarketSnapshot';
 import { setSelectedSymbol, setSelectedTimeframe, updateDepthSnapshot } from '@store/slices/marketSlice';
 import { fetchNotifications, acknowledgeNotificationById } from '@store/thunks/notifications';
+import { markNotificationRead } from '@store/slices/notificationsSlice';
 import { refreshAccountSummary, refreshAccountPositions } from '@store/thunks/account';
 import {
   cancelOrderById,
@@ -430,7 +431,8 @@ function DashboardPage() {
     }
     const client = new RiskRealtimeClient({
       dispatch,
-      tokenProvider: () => store.getState().auth.token
+      tokenProvider: () => store.getState().auth.token,
+      stateProvider: () => store.getState()
     });
     riskRealtimeRef.current = client;
     void client.connect();
@@ -1055,7 +1057,13 @@ function DashboardPage() {
             <button
               className={styles.secondaryButton}
               style={{ marginLeft: '0.75rem' }}
-              onClick={() => void dispatch(acknowledgeNotificationById(item.id))}
+              onClick={() => {
+                if (item.channel === 'risk.alert' || item.event === 'GLOBAL_TRADING_HALTED') {
+                  dispatch(markNotificationRead(item.id));
+                  return;
+                }
+                void dispatch(acknowledgeNotificationById(item.id));
+              }}
             >我知道了</button>
           </div>
         );
