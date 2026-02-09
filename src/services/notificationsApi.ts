@@ -207,7 +207,7 @@ export const listNotifications = async (
 
 export const acknowledgeNotification = async (token: string, id: string): Promise<NotificationItem> => {
   const payload = await requestJson<NotificationRecordPayload>(
-    `/notifications/${id}/ack`,
+    `/notifications/${encodeURIComponent(id)}/ack`,
     token,
     { method: 'POST' }
   );
@@ -224,7 +224,7 @@ export const acknowledgeAllNotifications = async (token: string): Promise<number
 };
 
 export const deleteNotification = async (token: string, id: string): Promise<void> => {
-  const url = resolveRequestUrl(`/notifications/${id}`);
+  const url = resolveRequestUrl(`/notifications/${encodeURIComponent(id)}`);
   const headers: HeadersInit = {
     Accept: 'application/json',
     Authorization: `Bearer ${token}`

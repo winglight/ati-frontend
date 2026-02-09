@@ -192,7 +192,9 @@ export class RiskRealtimeClient {
         severity: toNotificationSeverity(event.level),
         title: `风险告警 · ${event.symbol}`,
         message: event.message,
-        timestamp: event.createdAt
+        timestamp: event.createdAt,
+        channel: 'risk.alert',
+        event: typeof event.metrics?.event === 'string' ? event.metrics.event : null
       })
     );
   }

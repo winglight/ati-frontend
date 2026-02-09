@@ -82,6 +82,31 @@ export interface RiskRuleEventsResponse {
   items: RiskEventPayload[];
 }
 
+export interface GlobalHaltDiagnosticsResponse {
+  daily_halt: boolean;
+  halt_until: string | null;
+  timestamp: string;
+  thresholds: {
+    max_drawdown_ratio: number;
+    max_loss_streak_trades: number;
+    consecutive_loss_days_threshold: number;
+    daily_max_loss: number | null;
+    single_trade_max_loss: number | null;
+  };
+  metrics: {
+    drawdown_ratio: number;
+    daily_pnl: number | null;
+    loss_streak_trades: number;
+    loss_streak_days: number;
+  };
+  triggers: {
+    drawdown: boolean;
+    loss_streak_trades: boolean;
+    daily_max_loss: boolean | null;
+    loss_streak_days: boolean;
+  };
+}
+
 export interface RiskRuleMetricsPayload {
   events: number;
   last_event_at?: string | null;
@@ -288,6 +313,12 @@ export const mapRiskRule = (
     metrics,
     atrConfig
   };
+};
+
+export const fetchGlobalHaltDiagnostics = async (
+  token: string
+): Promise<GlobalHaltDiagnosticsResponse> => {
+  return fetchJson<GlobalHaltDiagnosticsResponse>('/risk/global-halt/diagnostics', token);
 };
 
 export const mapRiskRules = (

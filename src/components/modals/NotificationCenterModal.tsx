@@ -10,6 +10,7 @@ import {
   fetchNotifications
 } from '@store/thunks/notifications';
 import {
+  markNotificationRead,
   resetNotificationFilters,
   setNotificationChannel,
   setNotificationSearch,
@@ -18,6 +19,7 @@ import {
   setNotificationStatus,
   setNotificationUnreadOnly
 } from '@store/slices/notificationsSlice';
+import { fetchGlobalHaltDiagnostics, RiskApiError } from '@services/riskApi';
 
 interface NotificationCenterModalProps {
   open: boolean;
@@ -67,8 +69,16 @@ const severityLabels: Record<'all' | 'info' | 'warning' | 'error', string> = {
   error: '错误'
 };
 
+const formatNumber = (value: number | null | undefined, digits = 2): string => {
+  if (typeof value !== 'number' || Number.isNaN(value)) {
+    return '—';
+  }
+  return value.toFixed(digits);
+};
+
 function NotificationCenterModal({ open, onClose }: NotificationCenterModalProps) {
   const dispatch = useAppDispatch();
+  const token = useAppSelector((state) => state.auth.token);
   const notificationsState = useAppSelector((state) => state.notifications);
   const {
     items,
@@ -87,6 +97,13 @@ function NotificationCenterModal({ open, onClose }: NotificationCenterModalProps
   const [searchInput, setSearchInput] = useState(filters.search);
   const [unreadOnly, setUnreadOnly] = useState(filters.unreadOnly);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [haltDiagnosticsOpen, setHaltDiagnosticsOpen] = useState(false);
+  const [haltDiagnosticsLoading, setHaltDiagnosticsLoading] = useState(false);
+  const [haltDiagnosticsError, setHaltDiagnosticsError] = useState<string | null>(null);
+  const [haltDiagnostics, setHaltDiagnostics] = useState<Awaited<ReturnType<typeof fetchGlobalHaltDiagnostics>> | null>(
+    null
+  );
+  const [haltDiagnosticsTitle, setHaltDiagnosticsTitle] = useState<string>('全局停牌详情');
 
   useEffect(() => {
     if (!open) {
@@ -219,6 +236,11 @@ function NotificationCenterModal({ open, onClose }: NotificationCenterModalProps
   };
 
   const handleMarkRead = (id: string) => {
+    const item = items.find((entry) => entry.id === id);
+    if (item?.channel === 'risk.alert' || item?.event === 'GLOBAL_TRADING_HALTED') {
+      dispatch(markNotificationRead(id));
+      return;
+    }
     void dispatch(acknowledgeNotificationById(id));
   };
 
@@ -257,6 +279,44 @@ function NotificationCenterModal({ open, onClose }: NotificationCenterModalProps
   const handleSeveritySelect = (value: 'all' | 'info' | 'warning' | 'error') => {
     dispatch(setNotificationSeverity(value));
   };
+
+  const isGlobalHaltItem = useCallback((message: string | null | undefined, event: string | null | undefined) => {
+    if (event === 'GLOBAL_TRADING_HALTED') {
+      return true;
+    }
+    if (!message) {
+      return false;
+    }
+    return message.toLowerCase().includes('global trading halted');
+  }, []);
+
+  const handleOpenHaltDiagnostics = useCallback(
+    async (title: string) => {
+      setHaltDiagnosticsTitle(title);
+      if (!token) {
+        setHaltDiagnosticsError('无法获取详情：缺少认证信息');
+        setHaltDiagnostics(null);
+        setHaltDiagnosticsOpen(true);
+        return;
+      }
+      setHaltDiagnosticsLoading(true);
+      setHaltDiagnosticsError(null);
+      setHaltDiagnosticsOpen(true);
+      try {
+        const payload = await fetchGlobalHaltDiagnostics(token);
+        setHaltDiagnostics(payload);
+      } catch (error) {
+        if (error instanceof RiskApiError) {
+          setHaltDiagnosticsError(error.message);
+        } else {
+          setHaltDiagnosticsError('加载全局停牌详情失败');
+        }
+      } finally {
+        setHaltDiagnosticsLoading(false);
+      }
+    },
+    [token]
+  );
 
   return (
     <>
@@ -439,6 +499,15 @@ function NotificationCenterModal({ open, onClose }: NotificationCenterModalProps
                         <div className={styles.messageCell}>
                           <div className={styles.messageTitle}>{item.title || '系统通知'}</div>
                           <div className={styles.messageBody}>{item.message || '—'}</div>
+                          {isGlobalHaltItem(item.message, item.event) ? (
+                            <button
+                              type="button"
+                              className={styles.detailButton}
+                              onClick={() => handleOpenHaltDiagnostics(item.title || '全局停牌详情')}
+                            >
+                              查看详情
+                            </button>
+                          ) : null}
                           {item.errorDetail ? (
                             <div className={styles.errorText}>错误：{item.errorDetail}</div>
                           ) : null}
@@ -494,6 +563,95 @@ function NotificationCenterModal({ open, onClose }: NotificationCenterModalProps
         </div>
       </Modal>
       <NotificationSettingsModal open={settingsOpen} onClose={() => setSettingsOpen(false)} />
+      <Modal
+        open={haltDiagnosticsOpen}
+        onClose={() => setHaltDiagnosticsOpen(false)}
+        title={haltDiagnosticsTitle}
+        size="md"
+      >
+        {haltDiagnosticsLoading ? <div className={styles.detailsStatus}>加载中…</div> : null}
+        {haltDiagnosticsError ? <div className={styles.detailsError}>{haltDiagnosticsError}</div> : null}
+        {!haltDiagnosticsLoading && !haltDiagnosticsError && haltDiagnostics ? (
+          <div className={styles.detailsBody}>
+            <div className={styles.detailsRow}>
+              <span className={styles.detailsLabel}>状态</span>
+              <span className={styles.detailsValue}>{haltDiagnostics.daily_halt ? '已触发' : '未触发'}</span>
+            </div>
+            <div className={styles.detailsRow}>
+              <span className={styles.detailsLabel}>有效至</span>
+              <span className={styles.detailsValue}>{haltDiagnostics.halt_until ?? '—'}</span>
+            </div>
+            <div className={styles.detailsSection}>
+              <h4 className={styles.detailsTitle}>触发阈值</h4>
+              <div className={styles.detailsGrid}>
+                <div className={styles.detailsCard}>
+                  <span className={styles.detailsLabel}>最大回撤</span>
+                  <span className={styles.detailsValue}>
+                    {formatNumber(haltDiagnostics.thresholds.max_drawdown_ratio, 4)}
+                  </span>
+                </div>
+                <div className={styles.detailsCard}>
+                  <span className={styles.detailsLabel}>连亏笔数</span>
+                  <span className={styles.detailsValue}>{haltDiagnostics.thresholds.max_loss_streak_trades}</span>
+                </div>
+                <div className={styles.detailsCard}>
+                  <span className={styles.detailsLabel}>连亏天数</span>
+                  <span className={styles.detailsValue}>
+                    {haltDiagnostics.thresholds.consecutive_loss_days_threshold}
+                  </span>
+                </div>
+                <div className={styles.detailsCard}>
+                  <span className={styles.detailsLabel}>日内亏损</span>
+                  <span className={styles.detailsValue}>
+                    {haltDiagnostics.thresholds.daily_max_loss != null
+                      ? formatNumber(haltDiagnostics.thresholds.daily_max_loss, 2)
+                      : '—'}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className={styles.detailsSection}>
+              <h4 className={styles.detailsTitle}>实时指标</h4>
+              <div className={styles.detailsGrid}>
+                <div className={styles.detailsCard}>
+                  <span className={styles.detailsLabel}>回撤比例</span>
+                  <span className={styles.detailsValue}>
+                    {formatNumber(haltDiagnostics.metrics.drawdown_ratio, 4)}
+                  </span>
+                  <span className={styles.detailsBadge}>
+                    {haltDiagnostics.triggers.drawdown ? '已触发' : '未触发'}
+                  </span>
+                </div>
+                <div className={styles.detailsCard}>
+                  <span className={styles.detailsLabel}>当日盈亏</span>
+                  <span className={styles.detailsValue}>
+                    {haltDiagnostics.metrics.daily_pnl != null
+                      ? formatNumber(haltDiagnostics.metrics.daily_pnl, 2)
+                      : '—'}
+                  </span>
+                  <span className={styles.detailsBadge}>
+                    {haltDiagnostics.triggers.daily_max_loss ? '已触发' : '未触发'}
+                  </span>
+                </div>
+                <div className={styles.detailsCard}>
+                  <span className={styles.detailsLabel}>连亏笔数</span>
+                  <span className={styles.detailsValue}>{haltDiagnostics.metrics.loss_streak_trades}</span>
+                  <span className={styles.detailsBadge}>
+                    {haltDiagnostics.triggers.loss_streak_trades ? '已触发' : '未触发'}
+                  </span>
+                </div>
+                <div className={styles.detailsCard}>
+                  <span className={styles.detailsLabel}>连亏天数</span>
+                  <span className={styles.detailsValue}>{haltDiagnostics.metrics.loss_streak_days}</span>
+                  <span className={styles.detailsBadge}>
+                    {haltDiagnostics.triggers.loss_streak_days ? '已触发' : '未触发'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : null}
+      </Modal>
     </>
   );
 }
