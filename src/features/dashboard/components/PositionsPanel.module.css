@@ -286,10 +286,13 @@
   border: 1px solid var(--color-border-subtle);
   background: var(--color-surface);
   box-shadow: 0 12px 28px rgba(15, 23, 42, 0.16);
+  max-height: min(22rem, calc(100vh - 8rem));
+  overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .watchlistColumnsMenu {
-  min-width: 240px;
+  min-width: 250px;
 }
 
 .watchlistMenuButton {
@@ -396,33 +399,16 @@
 }
 
 .watchlistTable {
+  --watchlist-columns: minmax(140px, 1.5fr) repeat(4, minmax(74px, 0.85fr));
   border: 1px solid var(--color-border-subtle);
   border-radius: 12px;
   background: var(--color-surface);
-  overflow: hidden;
-}
-
-.watchlistHeaderRow,
-.watchlistQuoteRow {
-  display: grid;
-  grid-template-columns: minmax(190px, 2.4fr) repeat(4, minmax(80px, 1fr));
-  align-items: center;
-}
-
-.watchlistHeaderRow {
-  border-bottom: 1px solid var(--color-border-subtle);
-  background: rgba(148, 163, 184, 0.08);
-}
-
-.watchlistHeaderCell {
-  padding: 0.58rem 0.62rem;
-  font-size: 0.76rem;
-  font-weight: 600;
-  color: var(--color-text-secondary);
-  letter-spacing: 0.02em;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .watchlistGroupBlock {
+  min-width: max-content;
   border-top: 1px solid rgba(148, 163, 184, 0.16);
 }
 
@@ -433,8 +419,10 @@
 .watchlistGroupBar {
   display: flex;
   align-items: center;
-  gap: 0.45rem;
-  padding: 0.46rem 0.5rem;
+  gap: 0.35rem;
+  width: 100%;
+  min-width: 100%;
+  padding: 0.4rem 0.46rem;
   border-bottom: 1px solid rgba(148, 163, 184, 0.16);
   background: rgba(148, 163, 184, 0.08);
 }
@@ -451,10 +439,20 @@
 }
 
 .watchlistDragHandle {
-  color: var(--color-text-tertiary);
-  font-size: 0.72rem;
-  letter-spacing: 0.03em;
-  user-select: none;
+  position: relative;
+  width: 0.72rem;
+  height: 0.82rem;
+  flex: 0 0 auto;
+  opacity: 0.7;
+}
+
+.watchlistDragHandle::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(circle, var(--color-text-tertiary) 1px, transparent 1px);
+  background-size: 0.34rem 0.34rem;
 }
 
 .watchlistGroupTitleButton {
@@ -527,6 +525,8 @@
 .watchlistRows {
   display: flex;
   flex-direction: column;
+  width: max-content;
+  min-width: 100%;
 }
 
 .watchlistEmptyGroup {
@@ -536,6 +536,11 @@
 }
 
 .watchlistQuoteRow {
+  display: grid;
+  grid-template-columns: var(--watchlist-columns);
+  align-items: center;
+  width: max-content;
+  min-width: 100%;
   min-height: 2.2rem;
   border-bottom: 1px solid rgba(148, 163, 184, 0.12);
 }
@@ -550,10 +555,10 @@
 
 .watchlistSymbolCell {
   min-width: 0;
-  padding: 0.44rem 0.55rem;
+  padding: 0.38rem 0.46rem;
   display: inline-flex;
   align-items: center;
-  gap: 0.38rem;
+  gap: 0.34rem;
 }
 
 .watchlistSymbolButton {
@@ -576,8 +581,8 @@
 }
 
 .watchlistValueCell {
-  padding: 0.44rem 0.58rem;
-  font-size: 0.8rem;
+  padding: 0.38rem 0.45rem;
+  font-size: 0.78rem;
   font-weight: 600;
   color: var(--color-text-primary);
   text-align: right;
@@ -637,8 +642,7 @@
     overflow-x: auto;
   }
 
-  .watchlistHeaderRow,
   .watchlistQuoteRow {
-    min-width: 580px;
+    min-width: 500px;
   }
 }

@@ -946,15 +946,6 @@ function PositionsPanel({
 
         {sortedWatchlistGroups.length > 0 ? (
           <div className={styles.watchlistTable}>
-            <div className={styles.watchlistHeaderRow}>
-              <div className={styles.watchlistHeaderCell}>{t('dashboard.positions.watchlist.columns.symbol', 'Symbol')}</div>
-              {watchlistColumns.map((column, columnIndex) => (
-                <div key={`${column}-${columnIndex}`} className={styles.watchlistHeaderCell}>
-                  {WATCHLIST_COLUMN_OPTION_MAP[column].label}
-                </div>
-              ))}
-            </div>
-
             {sortedWatchlistGroups.map((group) => {
               const isManual = group.groupType === 'manual';
               const groupCollapsed = Boolean(collapsedGroups[group.id]);
@@ -1004,7 +995,7 @@ function PositionsPanel({
                     >
                       {groupCollapsed ? '>' : 'v'}
                     </button>
-                    <span className={styles.watchlistDragHandle}>==</span>
+                    <span className={styles.watchlistDragHandle} aria-hidden />
                     {editingGroup?.groupId === group.id ? (
                       <input
                         type="text"
@@ -1122,7 +1113,7 @@ function PositionsPanel({
                             }}
                           >
                             <div className={styles.watchlistSymbolCell}>
-                              <span className={styles.watchlistDragHandle}>::</span>
+                              <span className={styles.watchlistDragHandle} aria-hidden />
                               {isEditingItem ? (
                                 <input
                                   type="text"
