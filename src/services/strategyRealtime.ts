@@ -3,7 +3,6 @@ import {
   setStrategyFallbackMode,
   setStrategyMetrics,
   setStrategyPerformance,
-  setStrategyCandles,
   updateStrategyStatus,
   setStrategyRuntimeSnapshot,
   setMarketDataSubscriptions,
@@ -54,6 +53,8 @@ interface StrategyRealtimeClientDependencies {
   subscribeWebSocket: typeof subscribeWebSocket;
   listStrategiesMapped: typeof listStrategiesMapped;
   getStrategyCandlesSnapshot: typeof getStrategyCandlesSnapshot;
+  getStrategyPerformanceSummary?: (...args: unknown[]) => Promise<unknown>;
+  getStrategyMetricsSnapshot?: (...args: unknown[]) => Promise<unknown>;
 }
 
 interface WebSocketEnvelope {
@@ -432,36 +433,6 @@ export class StrategyRealtimeClient {
         period
       );
       this.dispatch(setStrategyPerformance({ id: targetId, performance, period }));
-    }
-    const token = this.tokenProvider();
-    if (token) {
-      const refreshedState = this.stateProvider();
-      const selectedId = refreshedState.strategies.selectedId;
-      if (selectedId && selectedId === targetId) {
-        const candlesRequest = refreshedState.strategies.candlesRequest[selectedId];
-        if (candlesRequest) {
-          void (async () => {
-            try {
-              const candles = await this.dependencies.getStrategyCandlesSnapshot(token, {
-                strategyId: selectedId,
-                interval: candlesRequest.interval
-              });
-              this.dispatch(
-                setStrategyCandles({
-                  id: selectedId,
-                  candles,
-                  request: {
-                    interval: candlesRequest.interval,
-                    intervalSeconds: candles.intervalSeconds ?? candlesRequest.intervalSeconds ?? null
-                  }
-                })
-              );
-            } catch (error) {
-              console.warn('获取策略蜡烛失败：', selectedId, error);
-            }
-          })();
-        }
-      }
     }
   }
 

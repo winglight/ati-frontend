@@ -6,6 +6,7 @@ import type {
   AccountAnalyticsRange,
   AccountAnalyticsSeriesMap,
   AccountSummary,
+  MarketTickerSnapshot,
   PositionItem,
   RiskRuleItem,
   StrategyPerformanceSnapshot,
@@ -27,7 +28,7 @@ import RiskRuleEditorModal, { type RiskRuleEditorContext } from '@components/mod
 import AccountAnalyticsModal from '@components/modals/AccountAnalyticsModal';
 import { AccountRealtimeClient } from '@services/accountRealtime';
 import { MarketRealtimeClient } from '@services/marketRealtime';
-import { resolveDurationSeconds } from '@services/marketApi';
+import { loadMarketSnapshot, resolveDurationSeconds } from '@services/marketApi';
 import { RiskRealtimeClient } from '@services/riskRealtime';
 import NotificationsRealtimeClient from '@services/notificationsRealtime';
 import { StrategyRealtimeClient } from '@services/strategyRealtime';
@@ -681,6 +682,27 @@ function DashboardPage() {
     [runWatchlistMutation]
   );
 
+  const handleLoadWatchlistQuote = useCallback(
+    async (symbol: string): Promise<MarketTickerSnapshot | null> => {
+      if (!token) {
+        return null;
+      }
+      try {
+        const snapshot = await loadMarketSnapshot(token, {
+          symbol,
+          timeframe: '1m',
+          durationSeconds: 60 * 60,
+          refreshAvailability: false,
+          ownerId: 'watchlist-panel'
+        });
+        return snapshot.ticker ?? null;
+      } catch (_error) {
+        return null;
+      }
+    },
+    [token]
+  );
+
   useEffect(() => {
     if (!orderEntryOpen || !orderEntrySubmissionRef.current) {
       return;
@@ -1240,6 +1262,7 @@ function DashboardPage() {
             onUpdateWatchlistItem={handleUpdateWatchlistItem}
             onDeleteWatchlistItem={handleDeleteWatchlistItem}
             onMoveWatchlistItem={handleMoveWatchlistItem}
+            loadWatchlistQuote={handleLoadWatchlistQuote}
           />
           <RiskRulesPanel
             rules={riskRules}

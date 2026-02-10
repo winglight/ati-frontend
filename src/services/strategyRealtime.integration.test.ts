@@ -400,14 +400,14 @@ const runSelectedStrategyRefreshScenario = async () => {
     'should refresh performance when receiving status update'
   );
   assert(
-    candlesCalls === baselineCandlesCalls + 1,
-    'should refresh candles when receiving status update'
+    candlesCalls === baselineCandlesCalls,
+    'status updates should not trigger candles HTTP refresh'
   );
 
   const performanceAction = actions.find((action) => action.type === 'strategies/setStrategyPerformance');
   assert(performanceAction !== undefined, 'should dispatch performance action after refresh');
   const candlesAction = actions.find((action) => action.type === 'strategies/setStrategyCandles');
-  assert(candlesAction !== undefined, 'should dispatch candles action after refresh');
+  assert(candlesAction === undefined, 'status updates should not dispatch candles snapshot actions');
 
   const fallbackAction = actions.find(
     (action) => action.type === 'strategies/setStrategyFallbackMode' && action.payload === 'http-polling'
@@ -422,7 +422,7 @@ const runSelectedStrategyRefreshScenario = async () => {
     (action) => action.type === 'strategies/setStrategyFallbackMode' && action.payload === 'http-polling'
   );
   assert(closedFallbackAction !== undefined, 'should enter http polling when socket closes unexpectedly');
-  assert(listCalls >= 1, 'should trigger polling workflow after socket closes');
+  assert(listCalls === 0, 'socket close should not trigger legacy list polling');
 
   await client.disconnect();
 
@@ -455,27 +455,7 @@ const runSelectedStrategyRefreshScenario = async () => {
   );
 
   const finalCandles = state.strategies.candles['alpha-id'];
-  assertDeepEqual(
-    finalCandles,
-    {
-      symbol: 'ESM4',
-      interval: '5m',
-      intervalSeconds: 300,
-      refreshedAt: '2024-05-01T00:05:00Z',
-      candles: [
-        {
-          timestamp: '2024-05-01T00:00:00Z',
-          open: 4200,
-          high: 4210,
-          low: 4195,
-          close: 4205,
-          volume: 10
-        }
-      ],
-      signals: []
-    },
-    'state should persist refreshed candles snapshot'
-  );
+  assert(finalCandles === null, 'state should keep existing candles snapshot when status updates arrive');
 };
 
 const runDashboardModalRefreshScenario = async () => {

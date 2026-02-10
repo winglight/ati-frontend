@@ -2027,7 +2027,7 @@ function StrategyDetailPanel({
     }
     riskLogsRequestingRef.current = true;
     void dispatch(
-      loadStrategyRiskLogs({ strategyId: strategy.id, page: 1, limit: 50 })
+      loadStrategyRiskLogs({ strategyId: strategy.id, page: 1, limit: 10 })
     ).finally(() => {
       riskLogsRequestingRef.current = false;
     });
