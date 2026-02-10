@@ -312,7 +312,6 @@ function PositionsPanel({
   const [composerGroupId, setComposerGroupId] = useState<string>('');
   const [editingGroup, setEditingGroup] = useState<{ groupId: string; value: string } | null>(null);
   const [editingItem, setEditingItem] = useState<{ itemId: string; value: string } | null>(null);
-  const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>({});
 
   const watchlistToolbarRef = useRef<HTMLDivElement | null>(null);
   const quoteRequestInFlightRef = useRef(false);
@@ -527,13 +526,6 @@ function PositionsPanel({
       return;
     }
     onUpdateWatchlistItem(itemId, trimmed);
-  };
-
-  const toggleGroupCollapsed = (groupId: string) => {
-    setCollapsedGroups((previous) => ({
-      ...previous,
-      [groupId]: !previous[groupId]
-    }));
   };
 
   const updateWatchlistColumn = (index: number, key: WatchlistColumnKey) => {
@@ -948,7 +940,6 @@ function PositionsPanel({
           <div className={styles.watchlistTable}>
             {sortedWatchlistGroups.map((group) => {
               const isManual = group.groupType === 'manual';
-              const groupCollapsed = Boolean(collapsedGroups[group.id]);
               const groupBadge = isManual
                 ? t('dashboard.positions.watchlist.group_type.manual', '手动')
                 : t('dashboard.positions.watchlist.group_type.screener', '策略');
@@ -987,14 +978,6 @@ function PositionsPanel({
                   }}
                 >
                   <div className={styles.watchlistGroupBar}>
-                    <button
-                      type="button"
-                      className={styles.watchlistCollapseButton}
-                      onClick={() => toggleGroupCollapsed(group.id)}
-                      title={groupCollapsed ? t('dashboard.common.expand', '展开') : t('dashboard.common.collapse', '收起')}
-                    >
-                      {groupCollapsed ? '>' : 'v'}
-                    </button>
                     <span className={styles.watchlistDragHandle} aria-hidden />
                     {editingGroup?.groupId === group.id ? (
                       <input
@@ -1050,138 +1033,139 @@ function PositionsPanel({
                     ) : null}
                   </div>
 
-                  {!groupCollapsed ? (
-                    <div
-                      className={styles.watchlistRows}
-                      onDragOver={(event) => {
-                        if (!isManual || !onMoveWatchlistItem) {
-                          return;
-                        }
-                        event.preventDefault();
-                        event.dataTransfer.dropEffect = 'move';
-                      }}
-                      onDrop={(event) => {
-                        if (!isManual || !onMoveWatchlistItem) {
-                          return;
-                        }
-                        event.preventDefault();
-                        const data = parseItemDragData(event);
-                        if (!data) {
-                          return;
-                        }
-                        onMoveWatchlistItem(data.itemId, group.id, group.items.length);
-                      }}
-                    >
-                      {group.items.length === 0 ? (
-                        <div className={styles.watchlistEmptyGroup}>{t('dashboard.positions.watchlist.empty_group', '该分组暂无 symbol')}</div>
-                      ) : null}
+                  <div
+                    className={styles.watchlistRows}
+                    onDragOver={(event) => {
+                      if (!isManual || !onMoveWatchlistItem) {
+                        return;
+                      }
+                      event.preventDefault();
+                      event.dataTransfer.dropEffect = 'move';
+                    }}
+                    onDrop={(event) => {
+                      if (!isManual || !onMoveWatchlistItem) {
+                        return;
+                      }
+                      event.preventDefault();
+                      const data = parseItemDragData(event);
+                      if (!data) {
+                        return;
+                      }
+                      onMoveWatchlistItem(data.itemId, group.id, group.items.length);
+                    }}
+                  >
+                    {group.items.length === 0 ? (
+                      <div className={styles.watchlistEmptyGroup}>{t('dashboard.positions.watchlist.empty_group', '该分组暂无 symbol')}</div>
+                    ) : null}
 
-                      {group.items.map((item, index) => {
-                        const quote = getQuoteForSymbol(item.symbol);
-                        const isEditingItem = editingItem?.itemId === item.id;
+                    {group.items.map((item, index) => {
+                      const quote = getQuoteForSymbol(item.symbol);
+                      const isEditingItem = editingItem?.itemId === item.id;
 
-                        return (
-                          <div
-                            key={item.id}
-                            className={styles.watchlistQuoteRow}
-                            draggable={isManual && Boolean(onMoveWatchlistItem)}
-                            onDragStart={(event) => {
-                              if (!isManual || !onMoveWatchlistItem) {
-                                return;
-                              }
-                              event.dataTransfer.setData('text/plain', `item:${item.id}:${group.id}`);
-                              event.dataTransfer.effectAllowed = 'move';
-                            }}
-                            onDragOver={(event) => {
-                              if (!isManual || !onMoveWatchlistItem) {
-                                return;
-                              }
-                              event.preventDefault();
-                              event.dataTransfer.dropEffect = 'move';
-                            }}
-                            onDrop={(event) => {
-                              if (!isManual || !onMoveWatchlistItem) {
-                                return;
-                              }
-                              event.preventDefault();
-                              event.stopPropagation();
-                              const data = parseItemDragData(event);
-                              if (!data) {
-                                return;
-                              }
-                              onMoveWatchlistItem(data.itemId, group.id, index);
-                            }}
-                          >
-                            <div className={styles.watchlistSymbolCell}>
-                              <span className={styles.watchlistDragHandle} aria-hidden />
-                              {isEditingItem ? (
-                                <input
-                                  type="text"
-                                  className={styles.watchlistInlineInput}
-                                  value={editingItem.value}
-                                  onChange={(event) =>
-                                    setEditingItem({ itemId: item.id, value: event.target.value })
+                      return (
+                        <div
+                          key={item.id}
+                          className={styles.watchlistQuoteRow}
+                          draggable={isManual && Boolean(onMoveWatchlistItem)}
+                          onDragStart={(event) => {
+                            if (!isManual || !onMoveWatchlistItem) {
+                              return;
+                            }
+                            event.dataTransfer.setData('text/plain', `item:${item.id}:${group.id}`);
+                            event.dataTransfer.effectAllowed = 'move';
+                          }}
+                          onDragOver={(event) => {
+                            if (!isManual || !onMoveWatchlistItem) {
+                              return;
+                            }
+                            event.preventDefault();
+                            event.dataTransfer.dropEffect = 'move';
+                          }}
+                          onDrop={(event) => {
+                            if (!isManual || !onMoveWatchlistItem) {
+                              return;
+                            }
+                            event.preventDefault();
+                            event.stopPropagation();
+                            const data = parseItemDragData(event);
+                            if (!data) {
+                              return;
+                            }
+                            onMoveWatchlistItem(data.itemId, group.id, index);
+                          }}
+                        >
+                          <div className={styles.watchlistSymbolCell}>
+                            <span className={styles.watchlistDragHandle} aria-hidden />
+                            {isEditingItem ? (
+                              <input
+                                type="text"
+                                className={styles.watchlistInlineInput}
+                                value={editingItem.value}
+                                onChange={(event) =>
+                                  setEditingItem({ itemId: item.id, value: event.target.value })
+                                }
+                                onKeyDown={(event) => {
+                                  if (event.key === 'Enter') {
+                                    event.preventDefault();
+                                    submitRenameItem(item.id, item.symbol);
                                   }
-                                  onKeyDown={(event) => {
-                                    if (event.key === 'Enter') {
-                                      event.preventDefault();
-                                      submitRenameItem(item.id, item.symbol);
-                                    }
-                                    if (event.key === 'Escape') {
-                                      setEditingItem(null);
-                                    }
-                                  }}
-                                  onBlur={() => setEditingItem(null)}
-                                  autoFocus
-                                />
-                              ) : (
-                                <button
-                                  type="button"
-                                  className={styles.watchlistSymbolButton}
-                                  onClick={() => onSelectSymbol(item.symbol)}
-                                  onDoubleClick={() => {
-                                    if (!isManual || !onUpdateWatchlistItem || watchlistBusy) {
-                                      return;
-                                    }
-                                    setEditingItem({ itemId: item.id, value: item.symbol });
-                                  }}
-                                >
-                                  {item.symbol}
-                                </button>
-                              )}
-                              {isManual ? (
-                                <button
-                                  type="button"
-                                  className={styles.watchlistDeleteButton}
-                                  onClick={() => onDeleteWatchlistItem?.(item.id)}
-                                  disabled={watchlistBusy || !onDeleteWatchlistItem}
-                                >
-                                  Del
-                                </button>
-                              ) : null}
-                            </div>
-
-                            {watchlistColumns.map((column, columnIndex) => {
-                              const option = WATCHLIST_COLUMN_OPTION_MAP[column];
-                              const value = extractColumnValue(quote, option);
-                              const display = formatColumnValue(value, option, item.symbol, quote);
-                              const toneClass = resolveColumnToneClass(value, option);
-
-                              return (
-                                <div
-                                  key={`${item.id}-${column}-${columnIndex}`}
-                                  className={`${styles.watchlistValueCell} ${toneClass}`.trim()}
-                                  title={display}
-                                >
-                                  {display}
-                                </div>
-                              );
-                            })}
+                                  if (event.key === 'Escape') {
+                                    setEditingItem(null);
+                                  }
+                                }}
+                                onBlur={() => setEditingItem(null)}
+                                autoFocus
+                              />
+                            ) : (
+                              <button
+                                type="button"
+                                className={styles.watchlistSymbolButton}
+                                onClick={() => onSelectSymbol(item.symbol)}
+                                onDoubleClick={() => {
+                                  if (!isManual || !onUpdateWatchlistItem || watchlistBusy) {
+                                    return;
+                                  }
+                                  setEditingItem({ itemId: item.id, value: item.symbol });
+                                }}
+                              >
+                                {item.symbol}
+                              </button>
+                            )}
                           </div>
-                        );
-                      })}
-                    </div>
-                  ) : null}
+
+                          {watchlistColumns.map((column, columnIndex) => {
+                            const option = WATCHLIST_COLUMN_OPTION_MAP[column];
+                            const value = extractColumnValue(quote, option);
+                            const display = formatColumnValue(value, option, item.symbol, quote);
+                            const toneClass = resolveColumnToneClass(value, option);
+
+                            return (
+                              <div
+                                key={`${item.id}-${column}-${columnIndex}`}
+                                className={`${styles.watchlistValueCell} ${toneClass}`.trim()}
+                                title={display}
+                              >
+                                {display}
+                              </div>
+                            );
+                          })}
+
+                          <div className={styles.watchlistRowActionCell}>
+                            {isManual ? (
+                              <button
+                                type="button"
+                                className={styles.watchlistDeleteButton}
+                                onClick={() => onDeleteWatchlistItem?.(item.id)}
+                                disabled={watchlistBusy || !onDeleteWatchlistItem}
+                              >
+                                Del
+                              </button>
+                            ) : null}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
                 </section>
               );
             })}
