@@ -11,7 +11,7 @@ import {
   type OrderRecordPayload
 } from './ordersApi';
 import { refreshAccountPositions, refreshAccountSummary } from '@store/thunks/account';
-import { loadStrategies, loadStrategyRuntime } from '@store/thunks/strategies';
+import { loadStrategies } from '@store/thunks/strategies';
 import {
   isAuthenticationFailureCloseEvent,
   subscribeWebSocket,
@@ -327,12 +327,12 @@ export class OrdersRealtimeClient {
     if (this.refreshAllStrategiesPending) {
       this.refreshAllStrategiesPending = false;
       this.pendingStrategyRefreshes.clear();
-      void this.dispatch(loadStrategies({ refresh: true }));
+      void this.dispatch(loadStrategies({ refresh: true, period: 'day' }));
     } else {
       const ids = Array.from(this.pendingStrategyRefreshes);
       this.pendingStrategyRefreshes.clear();
-      for (const id of ids) {
-        void this.dispatch(loadStrategyRuntime({ strategyId: id }));
+      if (ids.length > 0) {
+        void this.dispatch(loadStrategies({ refresh: true, period: 'day' }));
       }
     }
   }

@@ -52,6 +52,7 @@ import {
   fetchStrategyPerformanceSummary,
   fetchStrategyPerformanceOrders,
   mapStrategyPerformance,
+  mapStrategyMetrics,
   fetchStrategyPerformanceCharts,
   fetchStrategyPerformanceCalendar
 } from '@services/strategyApi';
@@ -125,6 +126,7 @@ export const loadStrategyPerformanceSummary = createAsyncThunk<
     id: string;
     period: string;
     summary: StrategyPerformanceSnapshot['summary'];
+    metrics: StrategyMetricsSnapshot | null;
   },
   {
     strategyId: string | number;
@@ -148,7 +150,19 @@ export const loadStrategyPerformanceSummary = createAsyncThunk<
   const period = responsePeriod ?? paramsPeriod ?? 'day';
   // Cast summary to the correct type
   const summary = response.summary as StrategyPerformanceSnapshot['summary'];
-  return { id, period, summary };
+  const metrics = mapStrategyMetrics({
+    metrics:
+      response.metrics && typeof response.metrics === 'object'
+        ? (response.metrics as Record<string, unknown>)
+        : (response.summary as Record<string, unknown>) ?? null,
+    period,
+    updated_at: typeof response.updated_at === 'string' ? response.updated_at : null,
+    last_updated_at:
+      typeof (response as { last_updated_at?: unknown }).last_updated_at === 'string'
+        ? ((response as { last_updated_at?: string }).last_updated_at ?? null)
+        : null
+  });
+  return { id, period, summary, metrics };
 }, {
   condition: (params, { getState }) => {
     const state = getState();

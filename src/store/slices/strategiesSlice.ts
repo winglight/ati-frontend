@@ -748,7 +748,7 @@ const strategiesSlice = createSlice({
       })
       // 性能摘要加载成功后合并到缓存，并更新列表项快照
       .addCase(loadStrategyPerformanceSummary.fulfilled, (state, action) => {
-        const { id, period, summary } = action.payload;
+        const { id, period, summary, metrics } = action.payload;
         const key = period ?? 'day';
         if (!state.performance[id]) {
           state.performance[id] = {};
@@ -758,11 +758,18 @@ const strategiesSlice = createSlice({
           ? { ...existing, period: key, summary }
           : { period: key, summary };
         state.performance[id][key] = merged;
+        if (metrics === null) {
+          state.metrics[id] = null;
+        } else {
+          const previousMetrics = state.metrics[id];
+          state.metrics[id] = previousMetrics ? { ...previousMetrics, ...metrics } : metrics;
+        }
         const index = state.items.findIndex((strategy) => strategy.id === id);
         if (index !== -1) {
           state.items[index] = mergeStrategyItem(state.items[index], {
             id,
-            performanceSnapshot: merged
+            performanceSnapshot: merged,
+            metricsSnapshot: state.metrics[id] ?? null
           });
         }
       })

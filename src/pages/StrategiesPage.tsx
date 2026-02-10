@@ -12,7 +12,6 @@ import { useAppDispatch, useAppSelector } from '@store/hooks';
 import type { RootState } from '@store/index';
 import {
   loadStrategies,
-  loadStrategyMetrics,
   loadStrategyPerformanceSummary,
   loadStrategyTemplates,
   loadStrategyFiles,
@@ -324,7 +323,6 @@ function StrategiesPage() {
                 return;
               }
               void dispatch(loadStrategyPerformanceSummary({ strategyId: selectedId, period: 'day', page: 1, pageSize: 10 }));
-              void dispatch(loadStrategyMetrics({ strategyId: selectedId, period: 'day' }));
             }
           }
         ]}

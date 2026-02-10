@@ -1,6 +1,5 @@
 import type { AppDispatch, RootState } from '@store/index';
 import {
-  setStrategies,
   setStrategyFallbackMode,
   setStrategyMetrics,
   setStrategyPerformance,
@@ -15,12 +14,10 @@ import type {
   StrategyItem,
   StrategyParameterConfig,
   StrategyParameterOption,
-  StrategyPerformanceSnapshot,
   StrategyScheduleWindow,
   StrategyRuntimeSnapshotData
 } from '@features/dashboard/types';
 import {
-  getStrategyMetricsSnapshot,
   getStrategyCandlesSnapshot,
   listStrategiesMapped,
   mapStrategyRecord,
@@ -28,8 +25,7 @@ import {
   mapStrategyPerformance,
   mapRuntimeSnapshot,
   type StrategyRecordPayload,
-  type StrategyMetricsResponse,
-  fetchStrategyPerformanceSummary
+  type StrategyMetricsResponse
 } from './strategyApi';
 import type {
   ActiveSubscriptionSummaryPayload,
@@ -57,9 +53,7 @@ interface StrategyRealtimeClientOptions {
 interface StrategyRealtimeClientDependencies {
   subscribeWebSocket: typeof subscribeWebSocket;
   listStrategiesMapped: typeof listStrategiesMapped;
-  getStrategyMetricsSnapshot: typeof getStrategyMetricsSnapshot;
   getStrategyCandlesSnapshot: typeof getStrategyCandlesSnapshot;
-  getStrategyPerformanceSummary?: (token: string | null, params: { strategyId: string; period?: string }) => Promise<StrategyPerformanceSnapshot | null>;
 }
 
 interface WebSocketEnvelope {
@@ -154,8 +148,6 @@ export class StrategyRealtimeClient {
   private socketHandle: WebSocketSubscription | null = null;
   private pollTimer: ReturnType<typeof setInterval> | null = null;
   private pollingPromise: Promise<void> | null = null;
-  private prefetchPromise: Promise<void> | null = null;
-  private didPrefetchPerformance = false;
   private started = false;
   private subscriptionsAccumulator = new Map<string, ActiveSubscriptionSummaryPayload>();
   private subscriptionsCoalesceTimer: ReturnType<typeof setTimeout> | null = null;
@@ -172,19 +164,7 @@ export class StrategyRealtimeClient {
     const defaultDependencies: StrategyRealtimeClientDependencies = {
       subscribeWebSocket,
       listStrategiesMapped: (token: string) => listStrategiesMapped(token, { refresh: true, period: 'day' }),
-      getStrategyMetricsSnapshot,
-      getStrategyCandlesSnapshot,
-      getStrategyPerformanceSummary: async (token, params) => {
-        if (!token) {
-          return null;
-        }
-        const response = await fetchStrategyPerformanceSummary(token, {
-          strategyId: params.strategyId,
-          period: params.period ?? 'day'
-        });
-        const period = typeof response.period === 'string' ? response.period : params.period ?? 'day';
-        return mapStrategyPerformance(params.strategyId, response, period);
-      }
+      getStrategyCandlesSnapshot
     };
     this.dependencies = { ...defaultDependencies, ...options.dependencies };
   }
@@ -201,7 +181,6 @@ export class StrategyRealtimeClient {
     } else {
       this.openSocket();
     }
-    await this.prefetchInitialMetrics();
   }
 
   async disconnect() {
@@ -251,75 +230,6 @@ export class StrategyRealtimeClient {
         }
       }
     });
-  }
-
-  private async prefetchInitialMetrics() {
-    if (this.didPrefetchPerformance) {
-      return;
-    }
-    if (this.prefetchPromise) {
-      return this.prefetchPromise;
-    }
-    const token = this.tokenProvider();
-    if (!token) {
-      return;
-    }
-    this.prefetchPromise = (async () => {
-      let strategies = this.stateProvider().strategies.items;
-      if (strategies.length === 0) {
-        try {
-          strategies = await this.dependencies.listStrategiesMapped(token);
-          this.dispatch(setStrategies(strategies));
-        } catch (error) {
-          console.warn('预加载策略列表失败：', error);
-          return;
-        }
-      }
-      if (strategies.length === 0) {
-        return;
-      }
-      const fetchPerformance = this.dependencies.getStrategyPerformanceSummary;
-      if (!fetchPerformance) {
-        return;
-      }
-      const performanceState = this.stateProvider().strategies.performance;
-      await Promise.allSettled(
-        strategies.map(async (strategy) => {
-          if (isScreenerStrategy(strategy)) {
-            return;
-          }
-          const existing =
-            performanceState[strategy.id]?.day ??
-            (strategy.performanceSnapshot?.period === 'day'
-              ? strategy.performanceSnapshot
-              : null);
-          if (existing) {
-            return;
-          }
-          try {
-            const snapshot = await fetchPerformance(token, {
-              strategyId: strategy.id,
-              period: 'day'
-            });
-            if (snapshot) {
-              this.dispatch(
-                setStrategyPerformance({
-                  id: strategy.id,
-                  performance: snapshot,
-                  period: snapshot.period ?? 'day'
-                })
-              );
-            }
-          } catch (error) {
-            console.warn('预加载策略绩效失败：', strategy.id, error);
-          }
-        })
-      );
-      this.didPrefetchPerformance = true;
-    })().finally(() => {
-      this.prefetchPromise = null;
-    });
-    return this.prefetchPromise;
   }
 
   private handleMessage(raw: string) {

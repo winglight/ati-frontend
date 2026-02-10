@@ -174,6 +174,7 @@ export interface StrategyPerformanceResponse {
   page?: number;
   page_size?: number;
   summary?: Record<string, unknown> | null;
+  metrics?: Record<string, unknown> | null;
   orders?: {
     items?: StrategyOrderPayload[] | null;
     total?: number | null;
@@ -183,6 +184,7 @@ export interface StrategyPerformanceResponse {
   } | null;
   realtime?: Record<string, unknown> | null;
   updated_at?: string | null;
+  last_updated_at?: string | null;
   charts?: Record<string, unknown> | null;
   calendar?: Record<string, unknown> | null;
 }
