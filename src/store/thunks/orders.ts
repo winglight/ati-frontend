@@ -143,9 +143,9 @@ export const syncOrdersWithBroker = createAsyncThunk<SyncOrdersResult, void, { s
 
     try {
       const result = await syncOrdersRequest(token);
-      const message = result.updated.length
-        ? `已同步 ${result.updated.length} 条订单状态`
-        : '订单状态已同步';
+      const message = result.started
+        ? '已提交后台同步，完成后将通过实时消息通知'
+        : '已有后台同步任务正在执行';
       thunkAPI.dispatch(addToast({ message, variant: 'success' }));
       return result;
     } catch (error) {

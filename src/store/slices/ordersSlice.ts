@@ -265,9 +265,6 @@ const ordersSlice = createSlice({
       .addCase(syncOrdersWithBroker.fulfilled, (state, action) => {
         state.syncStatus = 'succeeded';
         state.syncError = undefined;
-        for (const order of action.payload.updated) {
-          upsertOrderItem(state, order);
-        }
         state.lastUpdated = action.payload.receivedAt;
       })
       .addCase(syncOrdersWithBroker.rejected, (state, action) => {

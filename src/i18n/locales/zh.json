@@ -316,7 +316,32 @@
         "reverse": "反手",
         "reversing": "反手中…"
       },
-      "configure_risk": "Risk"
+      "configure_risk": "Risk",
+      "tabs": {
+        "positions": "持仓",
+        "watchlist": "自选股"
+      },
+      "watchlist": {
+        "loading": "加载自选股中...",
+        "empty": "暂无自选股分组",
+        "load_failed": "加载自选股失败",
+        "action_failed": "自选股操作失败",
+        "group_placeholder": "新分组名称",
+        "create_group": "新增分组",
+        "rename": "重命名",
+        "rename_prompt": "请输入新的分组名称",
+        "delete_group": "删除分组",
+        "group_type": {
+          "manual": "手动",
+          "screener": "策略"
+        },
+        "empty_group": "该分组暂无 symbol",
+        "symbol_placeholder": "输入 symbol，例如 AAPL",
+        "symbol_prompt": "请输入新的 symbol",
+        "add_symbol": "添加",
+        "edit_symbol": "编辑",
+        "delete_symbol": "删除"
+      }
     },
     "risk_rules": {
       "title": "风险规则",

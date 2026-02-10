@@ -379,3 +379,76 @@
   font-size: 0.72rem;
   color: rgba(71, 85, 105, 0.85);
 }
+
+.aiUploadRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.aiImageList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.aiImageItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 10px;
+  padding: 0.45rem 0.65rem;
+  background: #f8fafc;
+  font-size: 0.78rem;
+}
+
+.aiLogList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.aiLogItem {
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 10px;
+  padding: 0.55rem 0.75rem;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.aiLogMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  font-size: 0.74rem;
+  color: rgba(51, 65, 85, 0.9);
+}
+
+.aiLogError {
+  font-size: 0.75rem;
+  color: #b91c1c;
+}
+
+.aiLogPayload {
+  margin: 0.25rem 0 0;
+  padding: 0.5rem 0.6rem;
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  background: #ffffff;
+  font-size: 0.7rem;
+  color: rgba(15, 23, 42, 0.9);
+  max-height: 160px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}

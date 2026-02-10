@@ -8,7 +8,8 @@ import type {
   AccountSummary,
   PositionItem,
   RiskRuleItem,
-  StrategyPerformanceSnapshot
+  StrategyPerformanceSnapshot,
+  WatchlistGroup
 } from '@features/dashboard/types';
 import PositionsPanel from '@features/dashboard/components/PositionsPanel';
 import OrdersPanel from '@features/dashboard/components/OrdersPanel';
@@ -30,6 +31,18 @@ import { resolveDurationSeconds } from '@services/marketApi';
 import { RiskRealtimeClient } from '@services/riskRealtime';
 import NotificationsRealtimeClient from '@services/notificationsRealtime';
 import { StrategyRealtimeClient } from '@services/strategyRealtime';
+import {
+  WatchlistApiError,
+  addWatchlistItem,
+  createWatchlistGroup,
+  deleteWatchlistGroup,
+  deleteWatchlistItem,
+  fetchWatchlist,
+  moveWatchlistItem,
+  renameWatchlistGroup,
+  reorderWatchlistGroups,
+  updateWatchlistItem
+} from '@services/watchlistApi';
 import { useAppDispatch, useAppSelector } from '@store/hooks';
 import type { RootState } from '@store/index';
 import { initializeDashboard } from '@store/thunks/initializeDashboard';
@@ -196,6 +209,10 @@ function DashboardPage() {
   const fallbackDuration = useMemo(() => monitorDuration ?? '1D', [monitorDuration]);
   const [chartTimeframe, setChartTimeframe] = useState<string>(fallbackTimeframe);
   const [chartDuration, setChartDuration] = useState<string>(fallbackDuration);
+  const [watchlistGroups, setWatchlistGroups] = useState<WatchlistGroup[]>([]);
+  const [watchlistStatus, setWatchlistStatus] = useState<'idle' | 'loading' | 'succeeded' | 'failed'>('idle');
+  const [watchlistError, setWatchlistError] = useState<string | null>(null);
+  const [watchlistSaving, setWatchlistSaving] = useState(false);
 
   useEffect(() => {
     const available = new Set(timeframes.map((item) => item.value));
@@ -544,6 +561,125 @@ function DashboardPage() {
       void dispatch(fetchNotifications({ limit: 30 }));
     }
   }, [dispatch, notificationsStatus, token]);
+
+  const refreshWatchlist = useCallback(async () => {
+    if (!token) {
+      setWatchlistGroups([]);
+      setWatchlistStatus('idle');
+      setWatchlistError(null);
+      return;
+    }
+    setWatchlistStatus('loading');
+    try {
+      const groups = await fetchWatchlist(token);
+      setWatchlistGroups(groups);
+      setWatchlistStatus('succeeded');
+      setWatchlistError(null);
+    } catch (error) {
+      const message =
+        error instanceof WatchlistApiError
+          ? error.message
+          : error instanceof Error
+            ? error.message
+            : t('dashboard.positions.watchlist.load_failed', '加载自选股失败');
+      setWatchlistStatus('failed');
+      setWatchlistError(message);
+    }
+  }, [t, token]);
+
+  useEffect(() => {
+    if (!token) {
+      setWatchlistGroups([]);
+      setWatchlistStatus('idle');
+      setWatchlistError(null);
+      return;
+    }
+    void refreshWatchlist();
+  }, [refreshWatchlist, token]);
+
+  const runWatchlistMutation = useCallback(
+    async (operation: (accessToken: string) => Promise<WatchlistGroup[]>) => {
+      if (!token) {
+        return;
+      }
+      setWatchlistSaving(true);
+      try {
+        const groups = await operation(token);
+        setWatchlistGroups(groups);
+        setWatchlistError(null);
+        setWatchlistStatus('succeeded');
+      } catch (error) {
+        const message =
+          error instanceof WatchlistApiError
+            ? error.message
+            : error instanceof Error
+              ? error.message
+              : t('dashboard.positions.watchlist.action_failed', '自选股操作失败');
+        setWatchlistError(message);
+      } finally {
+        setWatchlistSaving(false);
+      }
+    },
+    [t, token]
+  );
+
+  const handleCreateWatchlistGroup = useCallback(
+    (name: string) => {
+      void runWatchlistMutation((accessToken) => createWatchlistGroup(accessToken, name));
+    },
+    [runWatchlistMutation]
+  );
+
+  const handleRenameWatchlistGroup = useCallback(
+    (groupId: string, name: string) => {
+      void runWatchlistMutation((accessToken) => renameWatchlistGroup(accessToken, groupId, name));
+    },
+    [runWatchlistMutation]
+  );
+
+  const handleDeleteWatchlistGroup = useCallback(
+    (groupId: string) => {
+      void runWatchlistMutation((accessToken) => deleteWatchlistGroup(accessToken, groupId));
+    },
+    [runWatchlistMutation]
+  );
+
+  const handleReorderWatchlistGroups = useCallback(
+    (groupIds: string[]) => {
+      void runWatchlistMutation((accessToken) => reorderWatchlistGroups(accessToken, groupIds));
+    },
+    [runWatchlistMutation]
+  );
+
+  const handleAddWatchlistItem = useCallback(
+    (groupId: string, symbol: string) => {
+      void runWatchlistMutation((accessToken) => addWatchlistItem(accessToken, groupId, symbol));
+    },
+    [runWatchlistMutation]
+  );
+
+  const handleUpdateWatchlistItem = useCallback(
+    (itemId: string, symbol: string) => {
+      void runWatchlistMutation((accessToken) => updateWatchlistItem(accessToken, itemId, symbol));
+    },
+    [runWatchlistMutation]
+  );
+
+  const handleDeleteWatchlistItem = useCallback(
+    (itemId: string) => {
+      void runWatchlistMutation((accessToken) => deleteWatchlistItem(accessToken, itemId));
+    },
+    [runWatchlistMutation]
+  );
+
+  const handleMoveWatchlistItem = useCallback(
+    (itemId: string, targetGroupId: string, targetIndex: number) => {
+      void runWatchlistMutation((accessToken) =>
+        moveWatchlistItem(accessToken, { itemId, targetGroupId, targetIndex })
+      );
+    },
+    [runWatchlistMutation]
+  );
 
   useEffect(() => {
     if (!orderEntryOpen || !orderEntrySubmissionRef.current) {
@@ -1073,7 +1209,7 @@ function DashboardPage() {
           {t('dashboard.account_warning_prefix')}{accountWarning}
         </div>
       ) : null}
-      <div className={styles.layout} data-has-chart={monitorActive ? 'true' : 'false'}>
+      <div className={styles.layout}>
         <div className={styles.leftColumn}>
           <AccountSummaryCard
             account={accountSummary!}
@@ -1092,6 +1228,18 @@ function DashboardPage() {
             quickCloseError={positionCloseError}
             quickReverseStatus={positionReverseStatus}
             quickReverseError={positionReverseError}
+            watchlistGroups={watchlistGroups}
+            watchlistStatus={watchlistStatus}
+            watchlistError={watchlistError}
+            watchlistSaving={watchlistSaving}
+            onCreateWatchlistGroup={handleCreateWatchlistGroup}
+            onRenameWatchlistGroup={handleRenameWatchlistGroup}
+            onDeleteWatchlistGroup={handleDeleteWatchlistGroup}
+            onReorderWatchlistGroups={handleReorderWatchlistGroups}
+            onAddWatchlistItem={handleAddWatchlistItem}
+            onUpdateWatchlistItem={handleUpdateWatchlistItem}
+            onDeleteWatchlistItem={handleDeleteWatchlistItem}
+            onMoveWatchlistItem={handleMoveWatchlistItem}
           />
           <RiskRulesPanel
             rules={riskRules}
@@ -1108,32 +1256,7 @@ function DashboardPage() {
           />
         </div>
         <div className={styles.centerColumn}>
-          <OrdersPanel
-            orders={orders}
-            onSelectSymbol={handleSelectSymbol}
-            onViewDetail={setSelectedOrder}
-            onCancel={handleCancelOrder}
-            onRefresh={handleRefreshOrders}
-            onSync={handleSyncOrders}
-            syncInProgress={ordersState.syncStatus === 'loading'}
-            lastUpdated={ordersState.lastUpdated}
-            onCreateOrder={handleOpenOrderEntry}
-          />
-          <StrategiesPanel
-            strategies={strategies}
-            onInspect={handleInspectStrategy}
-            onEdit={handleEditStrategy}
-            onToggle={handleToggleStrategy}
-            onCreate={handleCreateStrategy}
-            onRefresh={handleRefreshStrategies}
-            metricsById={strategyMetricsMap}
-            performanceById={strategyPerformanceSnapshots}
-            runtimeById={strategyRuntimeMap}
-            onSelectSymbol={handleSelectSymbol}
-          />
-        </div>
-        {monitorActive ? (
-          <div className={styles.rightColumn}>
+          {monitorActive ? (
             <MarketMonitorPanel
               symbols={symbols}
               selectedSymbol={effectiveSymbol}
@@ -1160,8 +1283,31 @@ function DashboardPage() {
               onToggleRiskRule={handleToggleInlineRiskRule}
               onRetryConnection={handleRetryRealtimeConnection}
             />
-          </div>
-        ) : null}
+          ) : null}
+          <OrdersPanel
+            orders={orders}
+            onSelectSymbol={handleSelectSymbol}
+            onViewDetail={setSelectedOrder}
+            onCancel={handleCancelOrder}
+            onRefresh={handleRefreshOrders}
+            onSync={handleSyncOrders}
+            syncInProgress={ordersState.syncStatus === 'loading'}
+            lastUpdated={ordersState.lastUpdated}
+            onCreateOrder={handleOpenOrderEntry}
+          />
+          <StrategiesPanel
+            strategies={strategies}
+            onInspect={handleInspectStrategy}
+            onEdit={handleEditStrategy}
+            onToggle={handleToggleStrategy}
+            onCreate={handleCreateStrategy}
+            onRefresh={handleRefreshStrategies}
+            metricsById={strategyMetricsMap}
+            performanceById={strategyPerformanceSnapshots}
+            runtimeById={strategyRuntimeMap}
+            onSelectSymbol={handleSelectSymbol}
+          />
+        </div>
       </div>
       <AccountAnalyticsModal
         open={accountAnalyticsOpen}

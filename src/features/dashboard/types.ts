@@ -35,6 +35,22 @@ export interface PositionItem {
   multiplier?: number;
 }
 
+export interface WatchlistItem {
+  id: string;
+  groupId: string;
+  symbol: string;
+  sortOrder: number;
+}
+
+export interface WatchlistGroup {
+  id: string;
+  name: string;
+  groupType: 'manual' | 'screener';
+  strategyId: string | null;
+  sortOrder: number;
+  items: WatchlistItem[];
+}
+
 export interface OrderItem {
   id: string;
   ibOrderId?: string | null;

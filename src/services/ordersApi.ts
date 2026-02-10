@@ -96,12 +96,18 @@ export interface CancelAllOrdersResponse {
 }
 
 export interface SyncOrdersResponsePayload {
-  updated?: OrderRecordPayload[] | null;
+  accepted?: boolean | null;
+  job_id?: string | null;
+  started?: boolean | null;
+  status?: string | null;
   received_at?: string | null;
 }
 
 export interface SyncOrdersResult {
-  updated: OrderItem[];
+  accepted: boolean;
+  jobId: string;
+  started: boolean;
+  status: string;
   receivedAt: string;
 }
 
@@ -750,12 +756,18 @@ export const syncOrders = async (token: string): Promise<SyncOrdersResult> => {
     { method: 'POST' },
     { errorMessage: '同步订单状态失败' }
   );
-  const updated = Array.isArray(payload.updated)
-    ? payload.updated.map(mapOrderRecord)
-    : [];
+  const accepted = payload.accepted !== false;
+  const jobIdRaw = typeof payload.job_id === 'string' ? payload.job_id.trim() : '';
+  const statusRaw = typeof payload.status === 'string' ? payload.status.trim() : '';
   const receivedAt =
     typeof payload.received_at === 'string' ? payload.received_at : new Date().toISOString();
-  return { updated, receivedAt };
+  return {
+    accepted,
+    jobId: jobIdRaw || `orders-sync-${Date.now()}`,
+    started: payload.started !== false,
+    status: statusRaw || (payload.started === false ? 'already_running' : 'running'),
+    receivedAt
+  };
 };
 
 export const createOrder = async (

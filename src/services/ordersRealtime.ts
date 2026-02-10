@@ -198,7 +198,10 @@ export class OrdersRealtimeClient {
           this.queueAllStrategiesRefresh();
           this.didInitialStrategyRefresh = true;
         }
-        this.send({ action: 'subscribe', topics: ['orders.status', 'orders.fill', 'orders.snapshot'] });
+        this.send({
+          action: 'subscribe',
+          topics: ['orders.status', 'orders.fill', 'orders.snapshot', 'orders.sync']
+        });
       },
       onMessage: (data) => {
         this.handleMessage(data);
@@ -413,6 +416,79 @@ export class OrdersRealtimeClient {
     this.dispatch(pushNotification(notification));
   }
 
+  private emitSyncNotification(payload: unknown, timestamp?: string) {
+    if (!payload || typeof payload !== 'object') {
+      return;
+    }
+
+    const record = payload as Record<string, unknown>;
+    const statusRaw = typeof record.status === 'string' ? record.status.trim().toLowerCase() : '';
+    if (!statusRaw) {
+      return;
+    }
+
+    const updatedCountRaw = record.updated_count;
+    const updatedCount =
+      typeof updatedCountRaw === 'number'
+        ? updatedCountRaw
+        : Number.isFinite(Number(updatedCountRaw))
+          ? Number(updatedCountRaw)
+          : null;
+    const jobId =
+      typeof record.job_id === 'string' && record.job_id.trim()
+        ? record.job_id.trim()
+        : null;
+    const errorText =
+      typeof record.error === 'string' && record.error.trim()
+        ? record.error.trim()
+        : null;
+
+    let notification: NotificationItem | null = null;
+    if (statusRaw === 'succeeded') {
+      const message =
+        updatedCount !== null
+          ? `后台订单同步完成，更新 ${updatedCount} 条订单`
+          : '后台订单同步完成';
+      notification = {
+        id: `orders-sync-${jobId ?? 'completed'}-${Date.now()}`,
+        severity: 'info',
+        title: '订单同步完成',
+        message,
+        timestamp: timestamp ?? new Date().toISOString(),
+        channel: 'orders',
+        status: 'succeeded',
+        event: 'orders_sync_completed'
+      };
+      this.scheduleRefresh();
+    } else if (statusRaw === 'failed') {
+      notification = {
+        id: `orders-sync-${jobId ?? 'failed'}-${Date.now()}`,
+        severity: 'error',
+        title: '订单同步失败',
+        message: errorText ? `后台订单同步失败：${errorText}` : '后台订单同步失败',
+        timestamp: timestamp ?? new Date().toISOString(),
+        channel: 'orders',
+        status: 'failed',
+        event: 'orders_sync_failed'
+      };
+    } else if (statusRaw === 'cancelled') {
+      notification = {
+        id: `orders-sync-${jobId ?? 'cancelled'}-${Date.now()}`,
+        severity: 'warning',
+        title: '订单同步已取消',
+        message: '后台订单同步任务已取消',
+        timestamp: timestamp ?? new Date().toISOString(),
+        channel: 'orders',
+        status: 'cancelled',
+        event: 'orders_sync_cancelled'
+      };
+    }
+
+    if (notification) {
+      this.dispatch(pushNotification(notification));
+    }
+  }
+
   private handleMessage(raw: string) {
     let envelope: WebSocketEnvelope;
     try {
@@ -503,6 +579,9 @@ export class OrdersRealtimeClient {
             heartbeatTimestamp = snapshot.receivedAt;
           }
         }
+        break;
+      case 'orders.sync':
+        this.emitSyncNotification(envelope.payload, envelope.timestamp);
         break;
       default:
         break;

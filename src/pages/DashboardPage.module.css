@@ -32,31 +32,20 @@
 
 .layout {
   display: grid;
-  /* 默认双列布局（无图表时），左侧概览/持仓，右侧订单/策略 */
-  grid-template-columns: minmax(260px, 320px) minmax(540px, 1fr);
+  grid-template-columns: minmax(260px, 340px) minmax(540px, 1fr);
   gap: 1.25rem;
   align-items: start;
 }
 
 .leftColumn,
-.centerColumn,
-.rightColumn {
+.centerColumn {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-/* 当存在图表时，启用三列布局：左（账户/持仓/风控）、中（订单/策略）、右（K线图） */
-.layout[data-has-chart="true"] {
-  grid-template-columns: minmax(260px, 320px) minmax(420px, 1fr) minmax(540px, 1fr);
-}
-
 @media (max-width: 1380px) {
   .layout {
-    grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
-  }
-  .layout[data-has-chart="true"] {
-    /* 窄屏时退化为双列，图表占第二列 */
     grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
   }
 }
@@ -71,8 +60,7 @@
   }
 
   .leftColumn,
-  .centerColumn,
-  .rightColumn {
+  .centerColumn {
     gap: 0.85rem;
   }
 }

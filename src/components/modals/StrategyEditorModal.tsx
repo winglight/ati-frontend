@@ -1,4 +1,13 @@
-import { ChangeEvent, FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  ChangeEvent,
+  ClipboardEvent,
+  FormEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState
+} from 'react';
 import { useTranslation } from '@i18n';
 import Modal from './Modal';
 import styles from './StrategyEditorModal.module.css';
@@ -18,6 +27,12 @@ import {
   type ScreenerFilterDefinition,
   type ScreenerMetadata
 } from '@services/strategyApi';
+import {
+  fetchScreenerAiLogs,
+  streamScreenerAiGenerate,
+  type ScreenerAiConditionsResult,
+  type ScreenerAiLogEntry
+} from '@services/screenerAiApi';
 import { FieldHelp } from '@components/FieldHelp';
 
 interface StrategyEditorModalProps {
@@ -97,6 +112,7 @@ interface FormState {
 }
 
 const createId = (): string => Math.random().toString(36).slice(2, 10);
+const MAX_SCREENER_AI_IMAGES = 3;
 
 const DEFAULT_WINDOW: StrategyScheduleWindow = { start: '00:00', end: '23:59' };
 const EMPTY_WINDOW: StrategyScheduleWindow = { start: '', end: '' };
@@ -130,6 +146,36 @@ const formatParameterValue = (value: unknown): string => {
   }
   return String(value);
 };
+
+const formatJsonPreview = (value: unknown, maxChars = 1200): string => {
+  if (value === null || value === undefined) {
+    return '';
+  }
+  try {
+    const text = JSON.stringify(value, null, 2);
+    if (text.length <= maxChars) {
+      return text;
+    }
+    return `${text.slice(0, maxChars)}\n...`;
+  } catch {
+    return '';
+  }
+};
+
+const fileToDataUri = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = typeof reader.result === 'string' ? reader.result : '';
+      if (result) {
+        resolve(result);
+      } else {
+        reject(new Error('图片读取失败'));
+      }
+    };
+    reader.onerror = () => reject(new Error('图片读取失败'));
+    reader.readAsDataURL(file);
+  });
 
 const filterComboboxOptions = (options: ComboboxOption[], query: string): ComboboxOption[] => {
   const normalized = query.trim().toLowerCase();
@@ -739,6 +785,14 @@ function StrategyEditorModal({
   >('idle');
   const [screenerMetadataError, setScreenerMetadataError] = useState<string | null>(null);
   const [detailLoadedFor, setDetailLoadedFor] = useState<string | null>(null);
+  const [screenerAiInput, setScreenerAiInput] = useState('');
+  const [screenerAiImages, setScreenerAiImages] = useState<string[]>([]);
+  const [screenerAiImageNames, setScreenerAiImageNames] = useState<string[]>([]);
+  const [screenerAiGenerating, setScreenerAiGenerating] = useState(false);
+  const [screenerAiRawResponse, setScreenerAiRawResponse] = useState('');
+  const [screenerAiError, setScreenerAiError] = useState<string | null>(null);
+  const [screenerAiLogs, setScreenerAiLogs] = useState<ScreenerAiLogEntry[]>([]);
+  const [screenerAiLogsLoading, setScreenerAiLogsLoading] = useState(false);
 
   const availableTemplates = useMemo(() => {
     const merged: StrategyTemplateItem[] = [];
@@ -802,6 +856,14 @@ function StrategyEditorModal({
       setFormState(defaultFormState);
       setValidationError(null);
       setMetadataAppliedFor(null);
+      setScreenerAiInput('');
+      setScreenerAiImages([]);
+      setScreenerAiImageNames([]);
+      setScreenerAiGenerating(false);
+      setScreenerAiRawResponse('');
+      setScreenerAiError(null);
+      setScreenerAiLogs([]);
+      setScreenerAiLogsLoading(false);
       return;
     }
 
@@ -851,6 +913,14 @@ function StrategyEditorModal({
     setValidationError(null);
     setMetadataAppliedFor(null);
     setDetailLoadedFor(null);
+    setScreenerAiInput('');
+    setScreenerAiImages([]);
+    setScreenerAiImageNames([]);
+    setScreenerAiGenerating(false);
+    setScreenerAiRawResponse('');
+    setScreenerAiError(null);
+    setScreenerAiLogs([]);
+    setScreenerAiLogsLoading(false);
   }, [open, strategy]);
 
   useEffect(() => {
@@ -1191,6 +1261,169 @@ function StrategyEditorModal({
         [field]: value
       }
     }));
+  };
+
+  const applyScreenerAiConditions = useCallback(
+    (conditions: ScreenerAiConditionsResult | null | undefined) => {
+      if (!conditions) {
+        return;
+      }
+      setFormState((previous) => {
+        const next: FormState = { ...previous };
+        if (typeof conditions.instrument === 'string' && conditions.instrument.trim()) {
+          next.screenerInstrument = conditions.instrument.trim();
+        }
+        if (
+          typeof conditions.location_code === 'string' &&
+          conditions.location_code.trim()
+        ) {
+          next.screenerLocation = conditions.location_code.trim();
+        }
+        if (typeof conditions.scan_code === 'string' && conditions.scan_code.trim()) {
+          next.screenerScanCode = conditions.scan_code.trim();
+        }
+        if (typeof conditions.number_of_rows === 'number' && Number.isFinite(conditions.number_of_rows)) {
+          next.screenerNumberOfRows = String(Math.max(1, Math.floor(conditions.number_of_rows)));
+        }
+        if (Array.isArray(conditions.filters)) {
+          next.screenerFilters = conditions.filters
+            .filter((entry) => entry && typeof entry.field === 'string' && entry.field.trim())
+            .map((entry) => ({
+              id: createId(),
+              field: entry.field.trim(),
+              value: formatParameterValue(entry.value)
+            }));
+        }
+        return next;
+      });
+    },
+    []
+  );
+
+  const refreshScreenerAiLogs = useCallback(async () => {
+    if (!token || !open || !isScreener) {
+      return;
+    }
+    setScreenerAiLogsLoading(true);
+    try {
+      const response = await fetchScreenerAiLogs(token, { limit: 10 });
+      setScreenerAiLogs(Array.isArray(response.items) ? response.items : []);
+    } catch {
+      setScreenerAiLogs([]);
+    } finally {
+      setScreenerAiLogsLoading(false);
+    }
+  }, [isScreener, open, token]);
+
+  useEffect(() => {
+    if (!open || !isScreener || !token) {
+      return;
+    }
+    void refreshScreenerAiLogs();
+  }, [isScreener, open, refreshScreenerAiLogs, token]);
+
+  const appendScreenerAiImages = useCallback(
+    async (files: File[]) => {
+      const imageFiles = files.filter((file) => file.type.startsWith('image/'));
+      if (!imageFiles.length) {
+        return;
+      }
+      const remaining = Math.max(0, MAX_SCREENER_AI_IMAGES - screenerAiImages.length);
+      if (remaining <= 0) {
+        setScreenerAiError(`最多上传 ${MAX_SCREENER_AI_IMAGES} 张图片`);
+        return;
+      }
+      const selectedFiles = imageFiles.slice(0, remaining);
+      try {
+        const encoded = await Promise.all(selectedFiles.map((file) => fileToDataUri(file)));
+        setScreenerAiImages((previous) => [...previous, ...encoded]);
+        setScreenerAiImageNames((previous) => [
+          ...previous,
+          ...selectedFiles.map((file) => file.name || `image-${Date.now()}`)
+        ]);
+        setScreenerAiError(null);
+      } catch {
+        setScreenerAiError('图片读取失败，请重试');
+      }
+    },
+    [screenerAiImages.length]
+  );
+
+  const handleScreenerAiImageUpload = async (
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
+    const files = event.target.files ? Array.from(event.target.files) : [];
+    await appendScreenerAiImages(files);
+    event.target.value = '';
+  };
+
+  const handleScreenerAiPaste = async (
+    event: ClipboardEvent<HTMLTextAreaElement>
+  ) => {
+    const items = Array.from(event.clipboardData?.items ?? []);
+    const files = items
+      .filter((item) => item.type.startsWith('image/'))
+      .map((item) => item.getAsFile())
+      .filter((file): file is File => Boolean(file));
+    if (!files.length) {
+      return;
+    }
+    event.preventDefault();
+    await appendScreenerAiImages(files);
+  };
+
+  const handleRemoveScreenerAiImage = (index: number) => {
+    setScreenerAiImages((previous) => previous.filter((_, idx) => idx !== index));
+    setScreenerAiImageNames((previous) => previous.filter((_, idx) => idx !== index));
+  };
+
+  const handleGenerateScreenerAiConditions = async () => {
+    if (!token) {
+      setScreenerAiError('当前尚未登录，无法调用 AI');
+      return;
+    }
+    if (!screenerAiInput.trim() && !screenerAiImages.length) {
+      setScreenerAiError('请输入条件描述或上传图片');
+      return;
+    }
+    setScreenerAiGenerating(true);
+    setScreenerAiError(null);
+    setScreenerAiRawResponse('');
+    const currentProfile = buildScreenerProfile(formState, screenerFilterDefinitions);
+    try {
+      await streamScreenerAiGenerate(
+        token,
+        {
+          user_input: screenerAiInput.trim(),
+          images: screenerAiImages,
+          current_profile: currentProfile
+        },
+        {
+          onEvent: (event) => {
+            if (event.type === 'delta') {
+              setScreenerAiRawResponse((previous) => previous + event.content);
+              return;
+            }
+            if (event.type === 'result') {
+              if (typeof event.raw_text === 'string' && event.raw_text.trim()) {
+                setScreenerAiRawResponse(event.raw_text);
+              }
+              applyScreenerAiConditions(event.conditions);
+              return;
+            }
+            if (event.type === 'error') {
+              setScreenerAiError(event.message);
+            }
+          }
+        }
+      );
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'AI 条件生成失败';
+      setScreenerAiError(message);
+    } finally {
+      setScreenerAiGenerating(false);
+      void refreshScreenerAiLogs();
+    }
   };
 
   const tagsList = useMemo(() => {
@@ -1942,6 +2175,114 @@ function StrategyEditorModal({
                   );
                 })}
               </div>
+            </section>
+
+            <section className={styles.section}>
+              <div className={styles.sectionHeader}>
+                <h3 className={styles.sectionTitle}>AI 条件生成</h3>
+                <button
+                  type="button"
+                  className={styles.addButton}
+                  onClick={handleGenerateScreenerAiConditions}
+                  disabled={screenerAiGenerating}
+                >
+                  {screenerAiGenerating ? '生成中…' : '生成条件'}
+                </button>
+              </div>
+              <label className={styles.field}>
+                <span className={styles.label}>自然语言输入（支持粘贴图片）</span>
+                <textarea
+                  className={styles.textarea}
+                  value={screenerAiInput}
+                  onChange={(event) => setScreenerAiInput(event.target.value)}
+                  onPaste={handleScreenerAiPaste}
+                  placeholder="例如：帮我筛选美股，价格大于 20、成交量活跃、近5日涨幅较好的标的。"
+                />
+              </label>
+              <div className={styles.aiUploadRow}>
+                <label className={styles.addButton}>
+                  上传图片
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    className={styles.hiddenInput}
+                    onChange={handleScreenerAiImageUpload}
+                  />
+                </label>
+                <span className={styles.fieldTip}>最多 {MAX_SCREENER_AI_IMAGES} 张，支持粘贴截图</span>
+              </div>
+              {screenerAiImageNames.length ? (
+                <div className={styles.aiImageList}>
+                  {screenerAiImageNames.map((name, index) => (
+                    <div key={`${name}-${index}`} className={styles.aiImageItem}>
+                      <span>{name}</span>
+                      <button
+                        type="button"
+                        className={styles.removeButton}
+                        onClick={() => handleRemoveScreenerAiImage(index)}
+                      >
+                        移除
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+              {screenerAiError ? <div className={styles.error}>{screenerAiError}</div> : null}
+              <label className={styles.field}>
+                <span className={styles.label}>AI 返回内容（流式）</span>
+                <textarea
+                  className={styles.textarea}
+                  value={screenerAiRawResponse}
+                  readOnly
+                  placeholder="流式返回内容会显示在这里。"
+                />
+              </label>
+              <div className={styles.sectionHeader}>
+                <h4 className={styles.sectionTitle}>当日最近 10 条日志</h4>
+                <button
+                  type="button"
+                  className={styles.refreshButton}
+                  onClick={() => {
+                    void refreshScreenerAiLogs();
+                  }}
+                  disabled={screenerAiLogsLoading}
+                >
+                  {screenerAiLogsLoading ? '刷新中…' : '刷新'}
+                </button>
+              </div>
+              {!screenerAiLogs.length ? (
+                <div className={styles.sectionHint}>暂无日志</div>
+              ) : (
+                <div className={styles.aiLogList}>
+                  {screenerAiLogs.map((entry) => (
+                    <div key={entry.id} className={styles.aiLogItem}>
+                      <div className={styles.aiLogMeta}>
+                        <span>{entry.timestamp}</span>
+                        <span>{entry.status}</span>
+                        <span>{entry.duration_ms != null ? `${entry.duration_ms}ms` : '-'}</span>
+                      </div>
+                      {entry.error ? <div className={styles.aiLogError}>{entry.error}</div> : null}
+                      {entry.request_payload ? (
+                        <div>
+                          <div className={styles.fieldTip}>Request</div>
+                          <pre className={styles.aiLogPayload}>
+                            {formatJsonPreview(entry.request_payload)}
+                          </pre>
+                        </div>
+                      ) : null}
+                      {entry.response_payload ? (
+                        <div>
+                          <div className={styles.fieldTip}>Response</div>
+                          <pre className={styles.aiLogPayload}>
+                            {formatJsonPreview(entry.response_payload)}
+                          </pre>
+                        </div>
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
+              )}
             </section>
 
             <section className={styles.section}>

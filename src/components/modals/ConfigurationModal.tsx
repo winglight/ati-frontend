@@ -6,11 +6,24 @@ import { loadServiceStatuses, loadSystemInfo } from '@store/thunks/system';
 import { useTranslation } from '@i18n';
 import type { GlobalRiskSettingsPayload } from '@services/riskApi';
 import { fetchGlobalRiskSettings, saveGlobalRiskSettings } from '@services/riskApi';
+import {
+  fetchScreenerAiConfig,
+  saveScreenerAiConfig,
+  type ScreenerAiConfig
+} from '@services/screenerAiApi';
 
 interface ConfigurationModalProps {
   open: boolean;
   onClose: () => void;
 }
+
+const DEFAULT_SCREENER_AI_CONFIG: ScreenerAiConfig = {
+  url: '',
+  token: '',
+  model: 'gpt-4',
+  timeout_seconds: 120,
+  is_new_session: true
+};
 
 const formatTimestamp = (value: string | null | undefined): string => {
   if (!value) {
@@ -40,6 +53,12 @@ function ConfigurationModal({ open, onClose }: ConfigurationModalProps) {
     consecutive_loss_days_threshold: 2,
     halt_duration_days: 1
   });
+  const [screenerAiLoading, setScreenerAiLoading] = useState(false);
+  const [screenerAiSaving, setScreenerAiSaving] = useState(false);
+  const [screenerAiForm, setScreenerAiForm] = useState<ScreenerAiConfig>(
+    DEFAULT_SCREENER_AI_CONFIG
+  );
+  const [screenerAiUpdatedAt, setScreenerAiUpdatedAt] = useState<string | null>(null);
 
   useEffect(() => {
     if (!open) {
@@ -57,6 +76,18 @@ function ConfigurationModal({ open, onClose }: ConfigurationModalProps) {
         .then((settings) => setGlobalRiskForm(settings))
         .catch(() => {})
         .finally(() => setGlobalRiskLoading(false));
+
+      setScreenerAiLoading(true);
+      fetchScreenerAiConfig(token)
+        .then((response) => {
+          setScreenerAiForm(response.config ?? DEFAULT_SCREENER_AI_CONFIG);
+          setScreenerAiUpdatedAt(response.updated_at ?? null);
+        })
+        .catch(() => {
+          setScreenerAiForm(DEFAULT_SCREENER_AI_CONFIG);
+          setScreenerAiUpdatedAt(null);
+        })
+        .finally(() => setScreenerAiLoading(false));
     }
   }, [dispatch, infoStatus, servicesStatus, open, token]);
 
@@ -111,6 +142,22 @@ function ConfigurationModal({ open, onClose }: ConfigurationModalProps) {
       setGlobalRiskForm(saved);
     } finally {
       setGlobalRiskSaving(false);
+    }
+  };
+
+  const updateScreenerAi = (patch: Partial<ScreenerAiConfig>) => {
+    setScreenerAiForm((prev) => ({ ...prev, ...patch }));
+  };
+
+  const saveScreenerAi = async () => {
+    if (!token) return;
+    setScreenerAiSaving(true);
+    try {
+      const response = await saveScreenerAiConfig(token, screenerAiForm);
+      setScreenerAiForm(response.config ?? screenerAiForm);
+      setScreenerAiUpdatedAt(response.updated_at ?? null);
+    } finally {
+      setScreenerAiSaving(false);
     }
   };
 
@@ -227,6 +274,71 @@ function ConfigurationModal({ open, onClose }: ConfigurationModalProps) {
           </div>
           <div className={styles.actions}>
             <button className={styles.actionButton} disabled={globalRiskSaving} onClick={saveGlobalRisk}>保存</button>
+          </div>
+        </div>
+
+        <div className={styles.section}>
+          <div className={styles.sectionTitle}>Screener AI 配置</div>
+          <div className={styles.sectionSubtitle}>
+            配置自然语言转筛选条件所需的 AI 接口。上次更新：{formatTimestamp(screenerAiUpdatedAt)}
+          </div>
+          <div className={styles.infoGrid}>
+            <div className={styles.infoCard}>
+              <span className={styles.infoLabel}>API URL</span>
+              <input
+                className={styles.input}
+                value={screenerAiForm.url}
+                disabled={screenerAiLoading || screenerAiSaving}
+                onChange={(event) => updateScreenerAi({ url: event.target.value })}
+                placeholder="http://localhost:8000/chat"
+              />
+            </div>
+            <div className={styles.infoCard}>
+              <span className={styles.infoLabel}>Token</span>
+              <input
+                className={styles.input}
+                value={screenerAiForm.token}
+                disabled={screenerAiLoading || screenerAiSaving}
+                onChange={(event) => updateScreenerAi({ token: event.target.value })}
+                placeholder="Bearer Token"
+              />
+            </div>
+            <div className={styles.infoCard}>
+              <span className={styles.infoLabel}>Model</span>
+              <input
+                className={styles.input}
+                value={screenerAiForm.model}
+                disabled={screenerAiLoading || screenerAiSaving}
+                onChange={(event) => updateScreenerAi({ model: event.target.value })}
+                placeholder="gpt-4"
+              />
+            </div>
+            <div className={styles.infoCard}>
+              <span className={styles.infoLabel}>超时（秒）</span>
+              <input
+                type="number"
+                min={1}
+                max={600}
+                className={styles.input}
+                value={screenerAiForm.timeout_seconds}
+                disabled={screenerAiLoading || screenerAiSaving}
+                onChange={(event) => updateScreenerAi({ timeout_seconds: Math.max(1, Number(event.target.value) || 120) })}
+              />
+            </div>
+            <div className={styles.infoCard}>
+              <span className={styles.infoLabel}>每次新会话</span>
+              <input
+                type="checkbox"
+                checked={screenerAiForm.is_new_session}
+                disabled={screenerAiLoading || screenerAiSaving}
+                onChange={(event) => updateScreenerAi({ is_new_session: event.target.checked })}
+              />
+            </div>
+          </div>
+          <div className={styles.actions}>
+            <button className={styles.actionButton} disabled={screenerAiSaving} onClick={saveScreenerAi}>
+              {screenerAiSaving ? '保存中…' : '保存'}
+            </button>
           </div>
         </div>
       </div>

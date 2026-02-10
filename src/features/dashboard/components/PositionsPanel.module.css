@@ -3,6 +3,31 @@
   flex-direction: column;
 }
 
+.tabBar {
+  display: inline-flex;
+  gap: 0.35rem;
+  padding: 0.2rem;
+  border-radius: 999px;
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-bg-weak);
+}
+
+.tabButton {
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  border-radius: 999px;
+  padding: 0.25rem 0.72rem;
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tabActive {
+  background: var(--color-primary);
+  color: #fff;
+}
+
 .emptyState {
   padding: 2rem 1rem;
   text-align: center;
@@ -193,6 +218,180 @@
   transform: translateY(-1px);
 }
 
+.watchlistSection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.watchlistCreateRow,
+.watchlistAddRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.5rem;
+}
+
+.watchlistInput {
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 10px;
+  padding: 0.5rem 0.65rem;
+  font-size: 0.84rem;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+}
+
+.watchlistInput:focus {
+  outline: none;
+  border-color: rgba(37, 99, 235, 0.6);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.14);
+}
+
+.watchlistActionButton {
+  border: 1px solid rgba(37, 99, 235, 0.4);
+  border-radius: 10px;
+  padding: 0.5rem 0.72rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #1d4ed8;
+  background: rgba(37, 99, 235, 0.1);
+  cursor: pointer;
+}
+
+.watchlistActionButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.watchlistError {
+  font-size: 0.78rem;
+  color: #b91c1c;
+  border: 1px solid rgba(185, 28, 28, 0.2);
+  background: rgba(254, 226, 226, 0.6);
+  border-radius: 10px;
+  padding: 0.45rem 0.6rem;
+}
+
+.watchlistGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 12px;
+  background: var(--color-surface);
+  padding: 0.55rem;
+}
+
+.watchlistGroupHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.watchlistGroupTitleRow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.dragHandle {
+  color: var(--color-text-tertiary);
+  cursor: grab;
+  user-select: none;
+  font-size: 0.75rem;
+}
+
+.watchlistGroupTitle {
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.groupTypeBadge {
+  border-radius: 999px;
+  padding: 0.1rem 0.45rem;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.groupTypeManual {
+  color: #1d4ed8;
+  background: rgba(219, 234, 254, 0.9);
+  border: 1px solid rgba(59, 130, 246, 0.35);
+}
+
+.groupTypeScreener {
+  color: #9a3412;
+  background: rgba(255, 237, 213, 0.9);
+  border: 1px solid rgba(249, 115, 22, 0.35);
+}
+
+.watchlistGroupActions,
+.watchlistItemActions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.watchlistLinkButton {
+  border: none;
+  background: transparent;
+  color: var(--color-primary-dark);
+  font-size: 0.72rem;
+  cursor: pointer;
+  padding: 0.15rem 0.25rem;
+}
+
+.watchlistDangerButton {
+  color: #b91c1c;
+}
+
+.watchlistLinkButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.watchlistItems {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.watchlistEmptyGroup {
+  font-size: 0.75rem;
+  color: var(--color-text-tertiary);
+  padding: 0.35rem 0.1rem;
+}
+
+.watchlistItemRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 10px;
+  padding: 0.35rem 0.42rem;
+  background: rgba(248, 250, 252, 0.72);
+}
+
+.watchlistSymbolButton {
+  border: none;
+  background: transparent;
+  color: #1d4ed8;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  padding: 0.1rem 0.2rem;
+}
+
+.watchlistSymbolButton:hover,
+.watchlistSymbolButton:focus {
+  text-decoration: underline;
+}
+
 @media (max-width: 680px) {
   .positionCard {
     padding: 0.8rem 0.8rem;
@@ -226,5 +425,10 @@
   .quickButton {
     flex: 1;
     text-align: center;
+  }
+
+  .watchlistCreateRow,
+  .watchlistAddRow {
+    grid-template-columns: 1fr;
   }
 }

@@ -316,7 +316,32 @@
         "reverse": "Reverse",
         "reversing": "Reversing…"
       },
-      "configure_risk": "Risk"
+      "configure_risk": "Risk",
+      "tabs": {
+        "positions": "Positions",
+        "watchlist": "Watch List"
+      },
+      "watchlist": {
+        "loading": "Loading watch list...",
+        "empty": "No watch list groups yet",
+        "load_failed": "Failed to load watch list",
+        "action_failed": "Watch list operation failed",
+        "group_placeholder": "New group name",
+        "create_group": "Create Group",
+        "rename": "Rename",
+        "rename_prompt": "Enter a new group name",
+        "delete_group": "Delete Group",
+        "group_type": {
+          "manual": "Manual",
+          "screener": "Screener"
+        },
+        "empty_group": "No symbols in this group",
+        "symbol_placeholder": "Input symbol, e.g. AAPL",
+        "symbol_prompt": "Enter a new symbol",
+        "add_symbol": "Add",
+        "edit_symbol": "Edit",
+        "delete_symbol": "Delete"
+      }
     },
     "risk_rules": {
       "title": "Risk Rules",
