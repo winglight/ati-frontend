@@ -228,7 +228,18 @@ function ConfigurationModal({ open, onClose }: ConfigurationModalProps) {
 
   const appRunning = runtimeStatus?.app?.running;
   const showRuntimeActions = appRunning !== false;
-  const ibGatewayRunning = runtimeStatus?.ibGateway?.running === true;
+  const ibGatewayRunning =
+    typeof runtimeStatus?.ibGateway?.running === 'boolean'
+      ? runtimeStatus.ibGateway.running
+      : null;
+  const ibGatewayReady = ibGatewayRunning !== null;
+  const ibGatewayLabel = runtimeLoading
+    ? '加载中…'
+    : ibGatewayReady
+      ? ibGatewayRunning
+        ? '关闭 IB Gateway'
+        : '开启 IB Gateway'
+      : 'IB Gateway 状态未知';
 
   return (
     <Modal
@@ -256,14 +267,10 @@ function ConfigurationModal({ open, onClose }: ConfigurationModalProps) {
             <div className={styles.actions}>
               <button
                 className={styles.actionButton}
-                disabled={runtimeLoading || runtimeActionLoading}
+                disabled={runtimeLoading || runtimeActionLoading || !ibGatewayReady}
                 onClick={toggleIbGateway}
               >
-                {runtimeLoading
-                  ? '加载中…'
-                  : ibGatewayRunning
-                    ? '关闭 IB Gateway'
-                    : '开启 IB Gateway'}
+                {ibGatewayLabel}
               </button>
               <button
                 className={`${styles.actionButton} ${styles.dangerButton}`}

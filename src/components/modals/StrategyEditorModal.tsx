@@ -236,6 +236,15 @@ function FilterCombobox({
         value={inputValue}
         placeholder={placeholder}
         onFocus={() => setOpen(true)}
+        onClick={() => setOpen(true)}
+        onKeyDown={(event) => {
+          if (event.key === 'ArrowDown') {
+            setOpen(true);
+          }
+          if (event.key === 'Escape') {
+            setOpen(false);
+          }
+        }}
         onChange={(event) => {
           const nextValue = event.target.value;
           setInputValue(nextValue);
@@ -258,26 +267,30 @@ function FilterCombobox({
           }
         }}
       />
-      {open && filteredOptions.length ? (
+      {open ? (
         <div className={styles.comboboxList}>
-          {filteredOptions.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              className={styles.comboboxItem}
-              onClick={() => {
-                setInputValue(option.value);
-                onChange(option.value);
-                setOpen(false);
-              }}
-            >
-              <span className={styles.comboboxLabel}>{option.label}</span>
-              <span className={styles.comboboxValue}>{option.value}</span>
-              {option.description ? (
-                <span className={styles.comboboxDescription}>{option.description}</span>
-              ) : null}
-            </button>
-          ))}
+          {filteredOptions.length ? (
+            filteredOptions.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                className={styles.comboboxItem}
+                onClick={() => {
+                  setInputValue(option.value);
+                  onChange(option.value);
+                  setOpen(false);
+                }}
+              >
+                <span className={styles.comboboxLabel}>{option.label}</span>
+                <span className={styles.comboboxValue}>{option.value}</span>
+                {option.description ? (
+                  <span className={styles.comboboxDescription}>{option.description}</span>
+                ) : null}
+              </button>
+            ))
+          ) : (
+            <div className={styles.comboboxEmpty}>暂无匹配选项</div>
+          )}
         </div>
       ) : null}
     </div>
