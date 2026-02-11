@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import ServiceStatusPanel from '@features/dashboard/components/ServiceStatusPanel';
 import { useAppSelector } from '@store/hooks';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useThrottledValue } from '../../hooks/useThrottledValue';
 import styles from './TopBar.module.css';
@@ -22,23 +22,9 @@ function TopBar({ onOpenData, onOpenNotifications, onOpenLogs, onOpenConfigurati
   const { items: subscriptions, error: subscriptionsError } = useAppSelector(
     (state) => state.strategies.marketDataSubscriptions
   );
+  const systemInfo = useAppSelector((state) => state.system.info);
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-
-  const [version, setVersion] = useState<string>('');
-
-  useEffect(() => {
-    fetch('/version.json')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data?.version) {
-          setVersion(data.version);
-        }
-      })
-      .catch(() => {
-        // Ignore error
-      });
-  }, []);
 
   // 节流订阅数据以减少顶部按钮文本频繁刷新造成的闪烁
   const throttledSubscriptions = useThrottledValue(subscriptions, 1000);
@@ -57,6 +43,7 @@ function TopBar({ onOpenData, onOpenNotifications, onOpenLogs, onOpenConfigurati
   );
 
   const roleLabel = user?.roles?.length ? user.roles.join(', ') : '';
+  const versionLabel = systemInfo?.displayVersion || (systemInfo?.version ? `v${systemInfo.version}` : '');
   const isConnected = status === 'connected';
   const statusText =
     status === 'connected'
@@ -131,7 +118,9 @@ function TopBar({ onOpenData, onOpenNotifications, onOpenLogs, onOpenConfigurati
         <div className={styles.userBadge}>
           <div className={styles.userInfo}>
             <span className={styles.userName}>{user?.username ?? t('topbar.user.guest')}</span>
-            <span className={styles.userRole}>{roleLabel || (version ? `v${version}` : t('topbar.user.role_guest'))}</span>
+            <span className={styles.userRole}>
+              {roleLabel || (versionLabel ? versionLabel : t('topbar.user.role_guest'))}
+            </span>
           </div>
         </div>
       </div>

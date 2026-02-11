@@ -38,6 +38,7 @@ const requestJson = async <T>(path: string, init: RequestInit = {}): Promise<T> 
 export interface SystemInfoResponse {
   name?: string | null;
   version?: string | null;
+  display_version?: string | null;
   debug?: boolean | null;
   docs_url?: string | null;
   redoc_url?: string | null;
@@ -49,6 +50,7 @@ export interface SystemInfoResponse {
 export interface SystemInfo {
   name: string;
   version: string;
+  displayVersion: string | null;
   debug: boolean;
   docsUrl: string | null;
   redocUrl: string | null;
@@ -96,11 +98,13 @@ const toNumberOrNull = (value: unknown): number | null => {
 const mapSystemInfo = (payload: SystemInfoResponse): SystemInfo => {
   const name = normalizeString(payload.name, 'Algo Trading Platform') ?? 'Algo Trading Platform';
   const version = normalizeString(payload.version, 'unknown') ?? 'unknown';
+  const displayVersion = normalizeString(payload.display_version);
   const timestamp = normalizeString(payload.timestamp, new Date().toISOString()) ?? new Date().toISOString();
 
   return {
     name,
     version,
+    displayVersion,
     debug: Boolean(payload.debug),
     docsUrl: normalizeString(payload.docs_url),
     redocUrl: normalizeString(payload.redoc_url),
