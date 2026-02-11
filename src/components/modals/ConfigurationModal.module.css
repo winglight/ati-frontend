@@ -136,6 +136,12 @@
   font-size: 0.85rem;
 }
 
+.dangerButton {
+  border-color: rgba(248, 113, 113, 0.45);
+  background: rgba(248, 113, 113, 0.16);
+  color: #b91c1c;
+}
+
 .infoGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

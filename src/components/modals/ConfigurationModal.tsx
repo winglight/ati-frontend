@@ -7,6 +7,12 @@ import { useTranslation } from '@i18n';
 import type { GlobalRiskSettingsPayload } from '@services/riskApi';
 import { fetchGlobalRiskSettings, saveGlobalRiskSettings } from '@services/riskApi';
 import {
+  fetchRuntimeStatus,
+  shutdownRuntime,
+  startIbGateway,
+  stopIbGateway
+} from '@services/systemApi';
+import {
   fetchScreenerAiConfig,
   saveScreenerAiConfig,
   type ScreenerAiConfig
@@ -59,11 +65,29 @@ function ConfigurationModal({ open, onClose }: ConfigurationModalProps) {
     DEFAULT_SCREENER_AI_CONFIG
   );
   const [screenerAiUpdatedAt, setScreenerAiUpdatedAt] = useState<string | null>(null);
+  const [runtimeLoading, setRuntimeLoading] = useState(false);
+  const [runtimeActionLoading, setRuntimeActionLoading] = useState(false);
+  const [runtimeStatus, setRuntimeStatus] = useState<{
+    app: { running: boolean | null } | null;
+    ibGateway: { running: boolean | null } | null;
+  } | null>(null);
 
   useEffect(() => {
     if (!open) {
       return;
     }
+    setRuntimeLoading(true);
+    fetchRuntimeStatus()
+      .then((status) => {
+        setRuntimeStatus({
+          app: { running: status.app.running },
+          ibGateway: { running: status.ibGateway.running }
+        });
+      })
+      .catch(() => {
+        setRuntimeStatus(null);
+      })
+      .finally(() => setRuntimeLoading(false));
     if (infoStatus === 'idle') {
       void dispatch(loadSystemInfo());
     }
@@ -149,6 +173,47 @@ function ConfigurationModal({ open, onClose }: ConfigurationModalProps) {
     setScreenerAiForm((prev) => ({ ...prev, ...patch }));
   };
 
+  const refreshRuntimeStatus = async () => {
+    setRuntimeLoading(true);
+    try {
+      const status = await fetchRuntimeStatus();
+      setRuntimeStatus({
+        app: { running: status.app.running },
+        ibGateway: { running: status.ibGateway.running }
+      });
+    } catch (_error) {
+      setRuntimeStatus(null);
+    } finally {
+      setRuntimeLoading(false);
+    }
+  };
+
+  const toggleIbGateway = async () => {
+    if (runtimeActionLoading) return;
+    setRuntimeActionLoading(true);
+    try {
+      if (runtimeStatus?.ibGateway?.running) {
+        await stopIbGateway();
+      } else {
+        await startIbGateway();
+      }
+    } finally {
+      setRuntimeActionLoading(false);
+      void refreshRuntimeStatus();
+    }
+  };
+
+  const handleShutdown = async () => {
+    if (runtimeActionLoading) return;
+    setRuntimeActionLoading(true);
+    try {
+      await shutdownRuntime();
+    } finally {
+      setRuntimeActionLoading(false);
+      void refreshRuntimeStatus();
+    }
+  };
+
   const saveScreenerAi = async () => {
     if (!token) return;
     setScreenerAiSaving(true);
@@ -160,6 +225,10 @@ function ConfigurationModal({ open, onClose }: ConfigurationModalProps) {
       setScreenerAiSaving(false);
     }
   };
+
+  const appRunning = runtimeStatus?.app?.running;
+  const showRuntimeActions = appRunning !== false;
+  const ibGatewayRunning = runtimeStatus?.ibGateway?.running === true;
 
   return (
     <Modal
@@ -183,6 +252,28 @@ function ConfigurationModal({ open, onClose }: ConfigurationModalProps) {
               </div>
             ))}
           </div>
+          {showRuntimeActions ? (
+            <div className={styles.actions}>
+              <button
+                className={styles.actionButton}
+                disabled={runtimeLoading || runtimeActionLoading}
+                onClick={toggleIbGateway}
+              >
+                {runtimeLoading
+                  ? '加载中…'
+                  : ibGatewayRunning
+                    ? '关闭 IB Gateway'
+                    : '开启 IB Gateway'}
+              </button>
+              <button
+                className={`${styles.actionButton} ${styles.dangerButton}`}
+                disabled={runtimeLoading || runtimeActionLoading}
+                onClick={handleShutdown}
+              >
+                {runtimeActionLoading ? '执行中…' : '关机'}
+              </button>
+            </div>
+          ) : null}
         </div>
         <div className={styles.section}>
           <div className={styles.sectionTitle}>全局风控设置</div>

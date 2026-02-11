@@ -186,6 +186,115 @@ export const fetchServiceStatuses = async (): Promise<ServiceStatusEntry[]> => {
   return services.map(mapServiceStatus);
 };
 
+export interface RuntimeContainerStatusResponse {
+  container?: string | null;
+  running?: boolean | null;
+  exists?: boolean | null;
+  status?: string | null;
+}
+
+export interface RuntimeStatusResponse {
+  app?: RuntimeContainerStatusResponse | null;
+  ib_gateway?: RuntimeContainerStatusResponse | null;
+}
+
+export interface RuntimeContainerStatus {
+  container: string | null;
+  running: boolean | null;
+  exists: boolean;
+  status: string | null;
+}
+
+export interface RuntimeStatusResult {
+  app: RuntimeContainerStatus;
+  ibGateway: RuntimeContainerStatus;
+}
+
+export interface RuntimeActionResponse {
+  container?: string | null;
+  action?: string | null;
+  succeeded?: boolean | null;
+  status_code?: number | string | null;
+  detail?: string | null;
+  step?: string | null;
+}
+
+export interface RuntimeActionResult {
+  container: string | null;
+  action: string | null;
+  succeeded: boolean;
+  statusCode: number | null;
+  detail: string | null;
+  step: string | null;
+}
+
+export interface RuntimeShutdownResponse {
+  succeeded?: boolean | null;
+  steps?: RuntimeActionResponse[] | null;
+}
+
+export interface RuntimeShutdownResult {
+  succeeded: boolean;
+  steps: RuntimeActionResult[];
+}
+
+const mapRuntimeContainer = (
+  payload: RuntimeContainerStatusResponse | null | undefined
+): RuntimeContainerStatus => ({
+  container: normalizeString(payload?.container),
+  running: typeof payload?.running === 'boolean' ? payload.running : null,
+  exists: typeof payload?.exists === 'boolean' ? payload.exists : false,
+  status: normalizeString(payload?.status)
+});
+
+const toNumberOrNullOrUndefined = (value: unknown): number | null => {
+  const parsed = toNumberOrNull(value);
+  return parsed === null ? null : parsed;
+};
+
+const mapRuntimeAction = (
+  payload: RuntimeActionResponse | null | undefined
+): RuntimeActionResult => ({
+  container: normalizeString(payload?.container),
+  action: normalizeString(payload?.action),
+  succeeded: Boolean(payload?.succeeded),
+  statusCode: toNumberOrNullOrUndefined(payload?.status_code),
+  detail: normalizeString(payload?.detail),
+  step: normalizeString(payload?.step)
+});
+
+export const fetchRuntimeStatus = async (): Promise<RuntimeStatusResult> => {
+  const payload = await requestJson<RuntimeStatusResponse>('/system/runtime/status');
+  return {
+    app: mapRuntimeContainer(payload.app ?? null),
+    ibGateway: mapRuntimeContainer(payload.ib_gateway ?? null)
+  };
+};
+
+export const startIbGateway = async (): Promise<RuntimeActionResult> => {
+  const payload = await requestJson<RuntimeActionResponse>('/system/runtime/ib-gateway/start', {
+    method: 'POST'
+  });
+  return mapRuntimeAction(payload);
+};
+
+export const stopIbGateway = async (): Promise<RuntimeActionResult> => {
+  const payload = await requestJson<RuntimeActionResponse>('/system/runtime/ib-gateway/stop', {
+    method: 'POST'
+  });
+  return mapRuntimeAction(payload);
+};
+
+export const shutdownRuntime = async (): Promise<RuntimeShutdownResult> => {
+  const payload = await requestJson<RuntimeShutdownResponse>('/system/runtime/shutdown', {
+    method: 'POST'
+  });
+  return {
+    succeeded: Boolean(payload.succeeded),
+    steps: Array.isArray(payload.steps) ? payload.steps.map(mapRuntimeAction) : []
+  };
+};
+
 export type ManagedServiceStatus = 'online' | 'degraded' | 'offline' | 'unknown';
 
 export type ManagedServiceRestartStatus = 'completed' | 'failed' | 'pending';
