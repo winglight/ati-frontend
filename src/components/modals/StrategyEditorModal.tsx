@@ -1299,13 +1299,16 @@ function StrategyEditorModal({
           next.screenerNumberOfRows = String(Math.max(1, Math.floor(conditions.number_of_rows)));
         }
         if (Array.isArray(conditions.filters)) {
-          next.screenerFilters = conditions.filters
+          const mappedFilters = conditions.filters
             .filter((entry) => entry && typeof entry.field === 'string' && entry.field.trim())
             .map((entry) => ({
               id: createId(),
               field: entry.field.trim(),
               value: formatParameterValue(entry.value)
             }));
+          if (mappedFilters.length) {
+            next.screenerFilters = mappedFilters;
+          }
         }
         return next;
       });

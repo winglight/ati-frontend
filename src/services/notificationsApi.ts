@@ -146,7 +146,6 @@ export const mapNotificationRecord = (payload: NotificationRecordPayload): Notif
     extractString(payload.category ?? undefined);
   const errorDetail =
     extractString(metadata.error) ??
-    extractString(metadata.reason) ??
     extractString(metadata.detail) ??
     extractString((payload as Record<string, unknown>).error);
   const message =
