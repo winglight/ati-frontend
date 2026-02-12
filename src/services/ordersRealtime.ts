@@ -139,6 +139,8 @@ export class OrdersRealtimeClient {
   private didInitialStrategyRefresh = false;
   private refreshAllStrategiesPending = false;
   private pendingStrategyRefreshes = new Set<string>();
+  private recentOrderNotifications = new Map<string, number>();
+  private readonly orderNotificationDedupeWindowMs = 4000;
 
   private readonly dispatch: AppDispatch;
   private readonly tokenProvider: () => string | null;
@@ -402,6 +404,19 @@ export class OrdersRealtimeClient {
       return;
     }
 
+    const dedupeKey = this.buildOrderNotificationKey(
+      identifier ?? symbol ?? 'unknown',
+      statusKey,
+      formattedFilled
+    );
+    const payloadTimestamp =
+      typeof payload.timestamp === 'string' && payload.timestamp.trim()
+        ? payload.timestamp
+        : undefined;
+    if (!this.shouldEmitOrderNotification(dedupeKey, timestamp ?? payloadTimestamp)) {
+      return;
+    }
+
     const notification: NotificationItem = {
       id: `order-${identifier ?? symbol ?? 'unknown'}-${Date.now()}`,
       severity: descriptor.severity,
@@ -414,6 +429,40 @@ export class OrdersRealtimeClient {
     };
 
     this.dispatch(pushNotification(notification));
+  }
+
+  private buildOrderNotificationKey(identifier: string, statusKey: string, filled: string | null) {
+    return `order:${identifier}:${statusKey}:${filled ?? ''}`;
+  }
+
+  private shouldEmitOrderNotification(key: string, timestamp?: string): boolean {
+    const now = this.resolveTimestampMs(timestamp);
+    const last = this.recentOrderNotifications.get(key);
+    if (last !== undefined && now - last < this.orderNotificationDedupeWindowMs) {
+      return false;
+    }
+    this.recentOrderNotifications.set(key, now);
+    if (this.recentOrderNotifications.size > 200) {
+      this.cleanupOrderNotificationCache(now);
+    }
+    return true;
+  }
+
+  private cleanupOrderNotificationCache(now: number) {
+    const cutoff = now - this.orderNotificationDedupeWindowMs;
+    for (const [key, value] of this.recentOrderNotifications) {
+      if (value < cutoff) {
+        this.recentOrderNotifications.delete(key);
+      }
+    }
+  }
+
+  private resolveTimestampMs(timestamp?: string): number {
+    if (!timestamp) {
+      return Date.now();
+    }
+    const parsed = Date.parse(timestamp);
+    return Number.isNaN(parsed) ? Date.now() : parsed;
   }
 
   private emitSyncNotification(payload: unknown, timestamp?: string) {
