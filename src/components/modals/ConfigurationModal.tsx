@@ -28,7 +28,8 @@ const DEFAULT_SCREENER_AI_CONFIG: ScreenerAiConfig = {
   token: '',
   model: 'gpt-4',
   timeout_seconds: 120,
-  is_new_session: true
+  is_new_session: true,
+  attach_filter_list_file: false
 };
 
 const formatTimestamp = (value: string | null | undefined): string => {
@@ -104,7 +105,10 @@ function ConfigurationModal({ open, onClose }: ConfigurationModalProps) {
       setScreenerAiLoading(true);
       fetchScreenerAiConfig(token)
         .then((response) => {
-          setScreenerAiForm(response.config ?? DEFAULT_SCREENER_AI_CONFIG);
+          setScreenerAiForm({
+            ...DEFAULT_SCREENER_AI_CONFIG,
+            ...(response.config ?? {})
+          });
           setScreenerAiUpdatedAt(response.updated_at ?? null);
         })
         .catch(() => {
@@ -219,7 +223,10 @@ function ConfigurationModal({ open, onClose }: ConfigurationModalProps) {
     setScreenerAiSaving(true);
     try {
       const response = await saveScreenerAiConfig(token, screenerAiForm);
-      setScreenerAiForm(response.config ?? screenerAiForm);
+      setScreenerAiForm({
+        ...DEFAULT_SCREENER_AI_CONFIG,
+        ...(response.config ?? screenerAiForm)
+      });
       setScreenerAiUpdatedAt(response.updated_at ?? null);
     } finally {
       setScreenerAiSaving(false);
@@ -430,6 +437,17 @@ function ConfigurationModal({ open, onClose }: ConfigurationModalProps) {
                 checked={screenerAiForm.is_new_session}
                 disabled={screenerAiLoading || screenerAiSaving}
                 onChange={(event) => updateScreenerAi({ is_new_session: event.target.checked })}
+              />
+            </div>
+            <div className={styles.infoCard}>
+              <span className={styles.infoLabel}>附带完整 IB 字段清单文件</span>
+              <input
+                type="checkbox"
+                checked={screenerAiForm.attach_filter_list_file}
+                disabled={screenerAiLoading || screenerAiSaving}
+                onChange={(event) =>
+                  updateScreenerAi({ attach_filter_list_file: event.target.checked })
+                }
               />
             </div>
           </div>

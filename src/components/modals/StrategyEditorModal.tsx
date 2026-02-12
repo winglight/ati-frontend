@@ -124,6 +124,7 @@ const DEFAULT_SCREENER_SCHEDULE: ScreenerScheduleDraft = {
   day: '1'
 };
 const SCREENER_BASE_FIELDS = new Set(['instrument', 'location_code', 'scan_code', 'number_of_rows']);
+const SCREENER_FILTER_FIELD_PATTERN = /^[A-Za-z][A-Za-z0-9_-]*$/;
 
 const createWindowDraft = (
   window?: StrategyScheduleWindow | null,
@@ -429,6 +430,17 @@ const parseScreenerFilterValue = (
     return null;
   }
   if (!definition) {
+    const lowered = trimmed.toLowerCase();
+    if (lowered === 'true') {
+      return true;
+    }
+    if (lowered === 'false') {
+      return false;
+    }
+    const parsed = Number(trimmed);
+    if (Number.isFinite(parsed)) {
+      return parsed;
+    }
     return trimmed;
   }
   const normalizedType = definition.type.toLowerCase();
@@ -473,9 +485,6 @@ const buildScreenerProfile = (
   state.screenerFilters.forEach((filter) => {
     const key = filter.field.trim();
     if (!key) {
-      return;
-    }
-    if (!definitionMap[key]) {
       return;
     }
     const value = parseScreenerFilterValue(filter.value, definitionMap[key] ?? null);
@@ -1481,31 +1490,65 @@ function StrategyEditorModal({
   const normalizedOptionText = useCallback((value: string) => value.trim().toLowerCase(), []);
   const screenerFilterDefinitions = useMemo(() => {
     if (!allScreenerFilterDefinitions.length) {
-      return [];
+      return formState.screenerFilters
+        .map((filter) => filter.field.trim())
+        .filter(Boolean)
+        .map((field) => ({
+          name: field,
+          label: field,
+          type: 'number',
+          description: '字段来自当前策略/AI 返回，未出现在元数据清单中。',
+          options: null,
+          group: null,
+          min: null,
+          max: null,
+          step: null
+        }));
     }
     const normalizedInstrument = normalizedOptionText(formState.screenerInstrument);
+    let baseDefinitions = allScreenerFilterDefinitions;
     if (!normalizedInstrument) {
-      return allScreenerFilterDefinitions;
-    }
-    const matchedInstrument = screenerInstrumentOptions.find(
-      (option) =>
-        normalizedOptionText(option.value) === normalizedInstrument ||
-        normalizedOptionText(option.label) === normalizedInstrument
-    );
-    const filterGroups = (matchedInstrument?.filters ?? [])
-      .map((entry) => entry.trim().toUpperCase())
-      .filter(Boolean);
-    if (!filterGroups.length) {
-      return allScreenerFilterDefinitions;
-    }
-    return allScreenerFilterDefinitions.filter((definition) => {
-      if (!definition.group) {
-        return true;
+      baseDefinitions = allScreenerFilterDefinitions;
+    } else {
+      const matchedInstrument = screenerInstrumentOptions.find(
+        (option) =>
+          normalizedOptionText(option.value) === normalizedInstrument ||
+          normalizedOptionText(option.label) === normalizedInstrument
+      );
+      const filterGroups = (matchedInstrument?.filters ?? [])
+        .map((entry) => entry.trim().toUpperCase())
+        .filter(Boolean);
+      if (!filterGroups.length) {
+        baseDefinitions = allScreenerFilterDefinitions;
+      } else {
+        baseDefinitions = allScreenerFilterDefinitions.filter((definition) => {
+          if (!definition.group) {
+            return true;
+          }
+          return filterGroups.includes(definition.group.trim().toUpperCase());
+        });
       }
-      return filterGroups.includes(definition.group.trim().toUpperCase());
-    });
+    }
+    const known = new Set(baseDefinitions.map((definition) => definition.name.toLowerCase()));
+    const extraDefinitions = formState.screenerFilters
+      .map((filter) => filter.field.trim())
+      .filter(Boolean)
+      .filter((field) => !known.has(field.toLowerCase()))
+      .map((field) => ({
+        name: field,
+        label: field,
+        type: 'number',
+        description: '字段来自当前策略/AI 返回，未出现在元数据清单中。',
+        options: null,
+        group: null,
+        min: null,
+        max: null,
+        step: null
+      }));
+    return [...baseDefinitions, ...extraDefinitions];
   }, [
     allScreenerFilterDefinitions,
+    formState.screenerFilters,
     formState.screenerInstrument,
     normalizedOptionText,
     screenerInstrumentOptions
@@ -1599,29 +1642,6 @@ function StrategyEditorModal({
       return acc;
     }, {});
   }, [screenerFilterDefinitions]);
-
-  useEffect(() => {
-    if (!formState.screenerFilters.length) {
-      return;
-    }
-    const validNames = new Set(screenerFilterDefinitions.map((definition) => definition.name));
-    setFormState((previous) => {
-      const nextFilters = previous.screenerFilters.filter((filter) => {
-        const key = filter.field.trim();
-        if (!key) {
-          return true;
-        }
-        return validNames.has(key);
-      });
-      if (nextFilters.length === previous.screenerFilters.length) {
-        return previous;
-      }
-      return {
-        ...previous,
-        screenerFilters: nextFilters
-      };
-    });
-  }, [formState.screenerFilters, screenerFilterDefinitions]);
 
   const screenerInstrumentTokens = useMemo(
     () => resolveInstrumentTokens(formState.screenerInstrument),
@@ -1821,13 +1841,12 @@ function StrategyEditorModal({
         setValidationError('请输入 Number of Rows');
         return;
       }
-      const validFilterNames = new Set(screenerFilterDefinitions.map((def) => def.name));
       const invalidFilter = formState.screenerFilters.find((filter) => {
         const key = filter.field.trim();
-        return key && !validFilterNames.has(key);
+        return key && !SCREENER_FILTER_FIELD_PATTERN.test(key);
       });
       if (invalidFilter) {
-        setValidationError('筛选字段无效，请从列表中选择有效字段');
+        setValidationError('筛选字段格式无效，仅支持字母、数字、下划线和中划线');
         return;
       }
     }

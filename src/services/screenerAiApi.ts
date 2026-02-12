@@ -6,6 +6,7 @@ export interface ScreenerAiConfig {
   model: string;
   timeout_seconds: number;
   is_new_session: boolean;
+  attach_filter_list_file: boolean;
 }
 
 export interface ScreenerAiConfigResponse {
