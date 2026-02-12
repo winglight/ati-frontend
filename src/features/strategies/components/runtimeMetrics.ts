@@ -1643,20 +1643,20 @@ const extractOutcomeFromText = (value: string): 'PASS' | 'FAIL' | null => {
   if (!normalized) {
     return null;
   }
-  if (/\bpass\b/.test(normalized)) {
-    return 'PASS';
-  }
   if (/\bfail\b/.test(normalized)) {
     return 'FAIL';
   }
-  for (const token of OUTCOME_LABELS) {
-    if (normalized === token) {
-      return 'PASS';
-    }
+  if (/\bpass\b/.test(normalized)) {
+    return 'PASS';
   }
   for (const token of OUTCOME_FAILURE_LABELS) {
     if (normalized === token) {
       return 'FAIL';
+    }
+  }
+  for (const token of OUTCOME_LABELS) {
+    if (normalized === token) {
+      return 'PASS';
     }
   }
   return null;
