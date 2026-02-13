@@ -139,9 +139,38 @@ export const resolveOrderOriginLabel = (order: OrderItem): string | null => {
 };
 
 export const resolveOrderActionStatus = (order: OrderItem): string => {
-  const sources = [order.source, order.orderSource]
-    .map((value) => (typeof value === 'string' ? value.trim().toLowerCase() : ''))
-    .filter((value) => value.length > 0);
+  const normalizeTag = (value: unknown): string | null => {
+    if (typeof value !== 'string') {
+      return null;
+    }
+    const trimmed = value.trim();
+    if (!trimmed) {
+      return null;
+    }
+    return trimmed.toLowerCase();
+  };
+
+  const raw = order.raw && typeof order.raw === 'object' ? (order.raw as Record<string, unknown>) : null;
+  const rawPayload =
+    raw && typeof raw.raw_payload === 'object' && raw.raw_payload
+      ? (raw.raw_payload as Record<string, unknown>)
+      : null;
+
+  const sources = [
+    order.source,
+    order.orderSource,
+    order.strategyName,
+    order.strategy,
+    raw?.source,
+    raw?.order_source,
+    raw?.strategy_name,
+    raw?.strategy,
+    rawPayload?.source,
+    rawPayload?.strategy_name,
+    rawPayload?.strategy
+  ]
+    .map(normalizeTag)
+    .filter((value): value is string => Boolean(value));
   const notes = (order.notes ?? '').toLowerCase();
 
   const labelOpen = i18n.language === 'zh' ? '开仓' : 'Entry';
@@ -200,7 +229,35 @@ export const resolveOrderActionStatus = (order: OrderItem): string => {
     return labelOpen;
   }
 
-  if (sources.some((source) => source.includes('close') || source.includes('reverse'))) {
+  const isCloseTag = (value: string): boolean => {
+    const normalized = value.replace(/_/g, '-').replace(/\s+/g, ' ').trim();
+    if (
+      normalized === 'close' ||
+      normalized === 'close order' ||
+      normalized === 'close-position' ||
+      normalized === 'close_order' ||
+      normalized === 'closeposition'
+    ) {
+      return true;
+    }
+    return normalized.startsWith('close order') || normalized.startsWith('close-position');
+  };
+
+  const isReverseTag = (value: string): boolean => {
+    const normalized = value.replace(/_/g, '-').replace(/\s+/g, ' ').trim();
+    if (
+      normalized === 'reverse' ||
+      normalized === 'reverse order' ||
+      normalized === 'reverse-position' ||
+      normalized === 'reverse_order' ||
+      normalized === 'reverseposition'
+    ) {
+      return true;
+    }
+    return normalized.startsWith('reverse order') || normalized.startsWith('reverse-position');
+  };
+
+  if (sources.some((source) => isCloseTag(source) || isReverseTag(source))) {
     return labelClose;
   }
   return labelOpen;
