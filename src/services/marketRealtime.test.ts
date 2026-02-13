@@ -490,15 +490,16 @@ await (async () => {
     const topics = firstPayload['topics'] as string[];
     assert(Array.isArray(topics), 'subscription payload should include topics array');
     assert(
-      topics.includes('market.dom-ESM4') && topics.includes('market.depth-ESM4'),
-      'futures subscription should continue requesting DOM topics'
+      topics.includes('market.ticker-ESM4') && topics.includes('market.bar-ESM4'),
+      'futures subscription should request ticker and bar topics'
     );
     const metrics = events.filter((event) => event.type === 'market.realtime.subscribe.requested');
     assert(metrics.length === 1, 'subscription telemetry should emit for futures symbol');
     const [metric] = metrics;
     assert(
-      metric?.topics?.includes('market.dom-ESM4') ?? false,
-      'subscription telemetry should record DOM topic for futures symbol'
+      (metric?.topics?.includes('market.ticker-ESM4') ?? false) &&
+        (metric?.topics?.includes('market.bar-ESM4') ?? false),
+      'subscription telemetry should record ticker and bar topics for futures symbol'
     );
   } finally {
     unsubscribe();
@@ -848,7 +849,7 @@ void (async () => {
     const firstPayload = sendPayloads[0] as Record<string, unknown>;
     assertDeepEqual(
       firstPayload['topics'],
-      ['market.dom-ES', 'market.depth-ES', 'market.ticker-ES', 'market.bar-ES'],
+      ['market.ticker-ES', 'market.bar-ES'],
       'subscription payload should include symbol-specific topics'
     );
     const requestEvents = events.filter((event) => event.type === 'market.realtime.subscribe.requested');

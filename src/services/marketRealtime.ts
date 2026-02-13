@@ -101,12 +101,7 @@ interface HistoricalBarsContext {
   durationSeconds?: number | null;
 }
 
-const DEFAULT_SUBSCRIPTION_TOPICS = [
-  'market.dom',
-  'market.depth',
-  'market.ticker',
-  'market.bar'
-] as const;
+const DEFAULT_SUBSCRIPTION_TOPICS = ['market.ticker', 'market.bar'] as const;
 
 const DOM_TOPIC_BASES = ['market.dom', 'market.depth'] as const;
 const DOM_CAPABILITY_KEYS = [
@@ -1950,9 +1945,8 @@ export class MarketRealtimeClient {
     const normalizedTimeframe = timeframe || null;
 
     const shouldUnsubscribePrevious =
-      this.lastSubscribedSymbol != null &&
-      (normalizedSymbol !== this.lastSubscribedSymbol ||
-        normalizedTimeframe !== this.lastSubscribedTimeframe);
+      this.lastSubscribedTopics.length > 0 &&
+      !this.areTopicsEqual(this.lastSubscribedTopics, topics);
 
     if (
       !force &&

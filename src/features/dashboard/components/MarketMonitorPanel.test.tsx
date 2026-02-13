@@ -95,7 +95,7 @@ const baseMetadata: MarketSubscriptionMetadata = {
   id: null,
   symbol: 'ES',
   timeframe: '1m',
-  topics: ['market.dom-ES', 'market.ticker-ES']
+  topics: ['market.ticker-ES', 'market.bar-ES']
 };
 
 const baseSubscription: MarketSubscriptionState = {
@@ -249,7 +249,7 @@ const renderPanel = (
   const markup = renderPanel('connected', {
     status: 'ready',
     error: null,
-    metadata: { id: 'sub-123', symbol: 'ES', timeframe: '1m', topics: ['market.dom-ES'] }
+    metadata: { id: 'sub-123', symbol: 'ES', timeframe: '1m', topics: ['market.ticker-ES'] }
   });
   assert(markup.includes('实时订阅已激活'), 'ready status should indicate active subscription');
   assert(markup.includes('sub-123'), 'ready status should include subscription identifier');
