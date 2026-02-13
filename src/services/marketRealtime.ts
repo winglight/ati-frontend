@@ -738,8 +738,15 @@ export class MarketRealtimeClient {
         await this.handleSubscribeAck(ack);
         break;
       case 'unsubscribe':
-        this.dispatch(resetMarketSubscription());
-        this.log('subscription reset after unsubscribe ACK');
+        {
+          const ackTopics = this.normalizeTopics(ack.topics);
+          if (this.areTopicsEqual(ackTopics, this.lastSubscribedTopics)) {
+            this.dispatch(resetMarketSubscription());
+            this.log('subscription reset after unsubscribe ACK');
+          } else {
+            this.log('ignoring unsubscribe ACK for previous topics', ackTopics);
+          }
+        }
         break;
       default:
         this.log('ignoring ACK for unsupported action', payload.action);
@@ -1886,8 +1893,38 @@ export class MarketRealtimeClient {
     return true;
   }
 
-  private send(message: Record<string, unknown>) {
-    this.socketHandle?.send(message);
+  private send(message: Record<string, unknown>): boolean {
+    return this.socketHandle?.send(message) ?? false;
+  }
+
+  private unsubscribeFromTopics(topics: string[]) {
+    const normalized = this.normalizeTopics(topics);
+    if (!normalized.length) {
+      return;
+    }
+    const sent = this.send({
+      action: 'unsubscribe',
+      topics: normalized
+    });
+    if (sent) {
+      this.log('unsubscribe request sent', { topics: normalized });
+    } else {
+      this.warn('failed to send unsubscribe request', normalized);
+    }
+  }
+
+  private areTopicsEqual(left: string[] | null | undefined, right: string[] | null | undefined): boolean {
+    const leftSet = new Set(this.normalizeTopics(left ?? []));
+    const rightSet = new Set(this.normalizeTopics(right ?? []));
+    if (leftSet.size !== rightSet.size) {
+      return false;
+    }
+    for (const topic of leftSet) {
+      if (!rightSet.has(topic)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   private subscribeToTopics({ force }: { force: boolean }) {
@@ -1912,6 +1949,11 @@ export class MarketRealtimeClient {
     const timeframe = typeof rawTimeframe === 'string' ? rawTimeframe.trim() : '';
     const normalizedTimeframe = timeframe || null;
 
+    const shouldUnsubscribePrevious =
+      this.lastSubscribedSymbol != null &&
+      (normalizedSymbol !== this.lastSubscribedSymbol ||
+        normalizedTimeframe !== this.lastSubscribedTimeframe);
+
     if (
       !force &&
       normalizedSymbol === this.lastRequestedSymbol &&
@@ -1919,6 +1961,10 @@ export class MarketRealtimeClient {
     ) {
       this.log('subscription skipped because symbol/timeframe unchanged');
       return;
+    }
+
+    if (shouldUnsubscribePrevious) {
+      this.unsubscribeFromTopics(this.lastSubscribedTopics);
     }
 
     const payload: Record<string, unknown> = {
