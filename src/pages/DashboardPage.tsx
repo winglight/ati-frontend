@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useStore } from 'react-redux';
+import clsx from 'clsx';
 import AccountSummaryCard from '@features/dashboard/components/AccountSummaryCard';
 import type {
   AccountAnalyticsPoint,
@@ -1232,105 +1233,119 @@ function DashboardPage() {
         </div>
       ) : null}
       <div className={styles.layout}>
-        <div className={styles.leftColumn}>
-          <AccountSummaryCard
-            account={accountSummary!}
-            onRefresh={handleRefreshAccount}
-            onViewAnalytics={handleOpenAccountAnalytics}
-          />
-          <PositionsPanel
-            positions={positions}
-            symbols={symbols}
-            onSelectSymbol={handleSelectSymbol}
-            onConfigureRiskRule={handleConfigureRiskRule}
-            onQuickClosePosition={handleQuickClosePosition}
-            onQuickReversePosition={handleQuickReversePosition}
-            onRefresh={handleRefreshPositions}
-            quickCloseStatus={positionCloseStatus}
-            quickCloseError={positionCloseError}
-            quickReverseStatus={positionReverseStatus}
-            quickReverseError={positionReverseError}
-            watchlistGroups={watchlistGroups}
-            watchlistStatus={watchlistStatus}
-            watchlistError={watchlistError}
-            watchlistSaving={watchlistSaving}
-            onCreateWatchlistGroup={handleCreateWatchlistGroup}
-            onRenameWatchlistGroup={handleRenameWatchlistGroup}
-            onDeleteWatchlistGroup={handleDeleteWatchlistGroup}
-            onReorderWatchlistGroups={handleReorderWatchlistGroups}
-            onAddWatchlistItem={handleAddWatchlistItem}
-            onUpdateWatchlistItem={handleUpdateWatchlistItem}
-            onDeleteWatchlistItem={handleDeleteWatchlistItem}
-            onMoveWatchlistItem={handleMoveWatchlistItem}
-            loadWatchlistQuote={handleLoadWatchlistQuote}
-          />
-          <RiskRulesPanel
-            rules={riskRules}
-            onViewRule={(rule) => {
-              if (rule.symbol) {
-                handleSelectSymbol(rule.symbol);
-              } else {
-                setSelectedRiskRule(rule);
-              }
-            }}
-            onEditRule={handleEditRiskRule}
-            onToggleRule={handleToggleRiskRule}
-            onRefresh={handleRefreshRiskRules}
-          />
-        </div>
-        <div className={styles.centerColumn}>
-          {monitorActive ? (
-            <MarketMonitorPanel
-              symbols={symbols}
-              selectedSymbol={effectiveSymbol}
-              timeframes={timeframes}
-              selectedTimeframe={chartTimeframe}
-              bars={kline?.bars ?? []}
-              ticker={ticker ?? null}
-              availability={availability ?? null}
-              subscription={marketSubscription}
-              connectionStatus={marketSubscription.connectionStatus}
-              subscriptionNotice={subscriptionNotice}
-              monitorActive={monitorActive}
-              selectedDuration={chartDuration}
-              position={selectedPosition}
-              riskRule={inlineRiskRule}
-              riskRuleSaving={riskRuleSaveStatus === 'loading'}
-              lastSavedRuleId={riskState.lastSavedRuleId}
-              onSymbolChange={handleSelectSymbol}
-              onTimeframeChange={handleTimeframeChange}
-              onToggleMonitor={handleToggleMonitor}
-              onRefresh={handleRefreshMonitor}
-              onDurationChange={handleDurationChange}
-              onSaveRiskRule={handleSubmitRiskRule}
-              onToggleRiskRule={handleToggleInlineRiskRule}
-              onRetryConnection={handleRetryRealtimeConnection}
+        <section className={clsx(styles.panelSlide, styles.leftColumn)}>
+          <div className={styles.panelSlot}>
+            <AccountSummaryCard
+              account={accountSummary!}
+              onRefresh={handleRefreshAccount}
+              onViewAnalytics={handleOpenAccountAnalytics}
             />
+          </div>
+          <div className={styles.panelSlot}>
+            <PositionsPanel
+              positions={positions}
+              symbols={symbols}
+              onSelectSymbol={handleSelectSymbol}
+              onConfigureRiskRule={handleConfigureRiskRule}
+              onQuickClosePosition={handleQuickClosePosition}
+              onQuickReversePosition={handleQuickReversePosition}
+              onRefresh={handleRefreshPositions}
+              quickCloseStatus={positionCloseStatus}
+              quickCloseError={positionCloseError}
+              quickReverseStatus={positionReverseStatus}
+              quickReverseError={positionReverseError}
+              watchlistGroups={watchlistGroups}
+              watchlistStatus={watchlistStatus}
+              watchlistError={watchlistError}
+              watchlistSaving={watchlistSaving}
+              onCreateWatchlistGroup={handleCreateWatchlistGroup}
+              onRenameWatchlistGroup={handleRenameWatchlistGroup}
+              onDeleteWatchlistGroup={handleDeleteWatchlistGroup}
+              onReorderWatchlistGroups={handleReorderWatchlistGroups}
+              onAddWatchlistItem={handleAddWatchlistItem}
+              onUpdateWatchlistItem={handleUpdateWatchlistItem}
+              onDeleteWatchlistItem={handleDeleteWatchlistItem}
+              onMoveWatchlistItem={handleMoveWatchlistItem}
+              loadWatchlistQuote={handleLoadWatchlistQuote}
+            />
+          </div>
+        </section>
+        <section className={clsx(styles.panelSlide, styles.centerColumn)}>
+          <div className={styles.panelSlot}>
+            <RiskRulesPanel
+              rules={riskRules}
+              onViewRule={(rule) => {
+                if (rule.symbol) {
+                  handleSelectSymbol(rule.symbol);
+                } else {
+                  setSelectedRiskRule(rule);
+                }
+              }}
+              onEditRule={handleEditRiskRule}
+              onToggleRule={handleToggleRiskRule}
+              onRefresh={handleRefreshRiskRules}
+            />
+          </div>
+          {monitorActive ? (
+            <div className={styles.panelSlot}>
+              <MarketMonitorPanel
+                symbols={symbols}
+                selectedSymbol={effectiveSymbol}
+                timeframes={timeframes}
+                selectedTimeframe={chartTimeframe}
+                bars={kline?.bars ?? []}
+                ticker={ticker ?? null}
+                availability={availability ?? null}
+                subscription={marketSubscription}
+                connectionStatus={marketSubscription.connectionStatus}
+                subscriptionNotice={subscriptionNotice}
+                monitorActive={monitorActive}
+                selectedDuration={chartDuration}
+                position={selectedPosition}
+                riskRule={inlineRiskRule}
+                riskRuleSaving={riskRuleSaveStatus === 'loading'}
+                lastSavedRuleId={riskState.lastSavedRuleId}
+                onSymbolChange={handleSelectSymbol}
+                onTimeframeChange={handleTimeframeChange}
+                onToggleMonitor={handleToggleMonitor}
+                onRefresh={handleRefreshMonitor}
+                onDurationChange={handleDurationChange}
+                onSaveRiskRule={handleSubmitRiskRule}
+                onToggleRiskRule={handleToggleInlineRiskRule}
+                onRetryConnection={handleRetryRealtimeConnection}
+              />
+            </div>
           ) : null}
-          <OrdersPanel
-            orders={orders}
-            onSelectSymbol={handleSelectSymbol}
-            onViewDetail={setSelectedOrder}
-            onCancel={handleCancelOrder}
-            onRefresh={handleRefreshOrders}
-            onSync={handleSyncOrders}
-            syncInProgress={ordersState.syncStatus === 'loading'}
-            lastUpdated={ordersState.lastUpdated}
-            onCreateOrder={handleOpenOrderEntry}
-          />
-          <StrategiesPanel
-            strategies={strategies}
-            onInspect={handleInspectStrategy}
-            onEdit={handleEditStrategy}
-            onToggle={handleToggleStrategy}
-            onCreate={handleCreateStrategy}
-            onRefresh={handleRefreshStrategies}
-            metricsById={strategyMetricsMap}
-            performanceById={strategyPerformanceSnapshots}
-            runtimeById={strategyRuntimeMap}
-            onSelectSymbol={handleSelectSymbol}
-          />
-        </div>
+        </section>
+        <section className={styles.panelSlide}>
+          <div className={styles.panelSlot}>
+            <OrdersPanel
+              orders={orders}
+              onSelectSymbol={handleSelectSymbol}
+              onViewDetail={setSelectedOrder}
+              onCancel={handleCancelOrder}
+              onRefresh={handleRefreshOrders}
+              onSync={handleSyncOrders}
+              syncInProgress={ordersState.syncStatus === 'loading'}
+              lastUpdated={ordersState.lastUpdated}
+              onCreateOrder={handleOpenOrderEntry}
+            />
+          </div>
+          <div className={styles.panelSlot}>
+            <StrategiesPanel
+              strategies={strategies}
+              onInspect={handleInspectStrategy}
+              onEdit={handleEditStrategy}
+              onToggle={handleToggleStrategy}
+              onCreate={handleCreateStrategy}
+              onRefresh={handleRefreshStrategies}
+              metricsById={strategyMetricsMap}
+              performanceById={strategyPerformanceSnapshots}
+              runtimeById={strategyRuntimeMap}
+              onSelectSymbol={handleSelectSymbol}
+            />
+          </div>
+        </section>
       </div>
       <AccountAnalyticsModal
         open={accountAnalyticsOpen}

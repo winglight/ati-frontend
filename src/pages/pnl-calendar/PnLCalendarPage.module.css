@@ -334,6 +334,10 @@
   font-size: 15px;
 }
 
+.monthSummaryDesktopOnly {
+  display: flex;
+}
+
 .summaryLabel {
   color: var(--text-secondary);
   font-size: 13px;
@@ -461,6 +465,14 @@
   color: var(--text-secondary);
 }
 
+.dayMetaPrimary {
+  display: block;
+}
+
+.dayMetaSecondary {
+  display: block;
+}
+
 .weekSummaryCell {
   background: #e2e8f0;
   border: 1px solid var(--border-subtle);
@@ -485,6 +497,14 @@
 .weekSummaryMeta {
   font-size: 12px;
   color: var(--text-secondary);
+}
+
+.weekSummaryMetaPrimary {
+  display: block;
+}
+
+.weekSummaryMetaSecondary {
+  display: block;
 }
 
 .logSidebar {
@@ -878,23 +898,217 @@
   padding: 20px 0;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 960px) {
+  .filterToolbar {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .filterRow {
+    gap: 10px;
+  }
+
+  .filterField {
+    width: 100%;
+  }
+
+  .dateInputs {
+    width: 100%;
+    gap: 6px;
+  }
+
+  .filterInput,
+  .filterSelect {
+    width: 100%;
+  }
+
+  .calendarCard {
+    padding: 14px;
+    gap: 12px;
+    border-radius: 14px;
+  }
+
   .calendarHeader {
     flex-direction: column;
     align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 0;
   }
-}
 
-@media (max-width: 1200px) {
-  /* Redundant styles removed */
-}
+  .calendarTitle {
+    font-size: 18px;
+  }
 
-@media (max-width: 960px) {
+  .monthSummaryRow {
+    width: 100%;
+    gap: 12px;
+  }
+
+  .monthSummaryItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    font-size: 13px;
+  }
+
+  .monthSummaryDesktopOnly {
+    display: none;
+  }
+
+  .summaryValueCompact {
+    font-size: 15px;
+  }
+
+  .calendarActions {
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .navButton {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .monthLabel {
+    font-size: 14px;
+    min-width: 64px;
+  }
+
+  .weekdayHeader,
+  .calendarGrid {
+    grid-template-columns: repeat(8, minmax(88px, 1fr));
+    gap: 8px;
+    min-width: 760px;
+  }
+
+  .calendarGrid {
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .calendarGrid::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .calendarGrid::-webkit-scrollbar-thumb {
+    background: rgba(148, 163, 184, 0.55);
+    border-radius: 999px;
+  }
+
+  .weekday {
+    font-size: 11px;
+    padding: 6px 8px;
+    border-radius: 6px;
+  }
+
+  .dayCell,
+  .emptyCell {
+    min-height: 78px;
+    border-radius: 10px;
+  }
+
+  .dayCell {
+    padding: 6px;
+    gap: 2px;
+  }
+
+  .dayNumber {
+    font-size: 14px;
+  }
+
+  .dayPnl {
+    font-size: 14px;
+  }
+
+  .dayMeta {
+    font-size: 11px;
+  }
+
+  .dayMetaSecondary {
+    display: none;
+  }
+
+  .logButton {
+    width: 20px;
+    height: 20px;
+    padding: 2px;
+  }
+
+  .weekSummaryCell {
+    min-height: 120px;
+    padding: 8px;
+    gap: 4px;
+    border-radius: 10px;
+  }
+
+  .weekSummaryTitle {
+    font-size: 11px;
+  }
+
+  .weekSummaryValue {
+    font-size: 14px;
+  }
+
+  .weekSummaryMeta {
+    font-size: 11px;
+  }
+
+  .weekSummaryMetaSecondary {
+    display: none;
+  }
+
+  .statsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .statsCard {
+    min-height: 92px;
+    padding: 12px;
+    border-radius: 12px;
+  }
+
+  .statsLabel {
+    font-size: 11px;
+  }
+
+  .statsValue {
+    font-size: 17px;
+  }
+
+  .statsFootnote {
+    font-size: 11px;
+  }
+
   .chartsGrid {
     grid-template-columns: 1fr;
+    gap: 10px;
   }
 
   .chartCardWide {
     grid-column: auto;
+  }
+
+  .chartCard,
+  .chartCardWide {
+    min-height: 250px;
+    padding: 12px;
+    border-radius: 12px;
+  }
+
+  .chartBody {
+    min-height: 176px;
+  }
+}
+
+@media (max-width: 640px) {
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .toolbarActions {
+    width: 100%;
+    justify-content: flex-start;
   }
 }

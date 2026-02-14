@@ -90,6 +90,12 @@
   gap: 0.5rem;
 }
 
+.desktopActions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .iconButton {
   position: relative;
   border: 1px solid var(--color-border-subtle);
@@ -131,6 +137,68 @@
   align-items: center;
   justify-content: center;
   padding: 0 6px;
+}
+
+.inlineBadge {
+  margin-left: 0.45rem;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #f97316;
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+}
+
+.mobileMenuWrap {
+  position: relative;
+  display: none;
+}
+
+.mobileMenuButton {
+  position: relative;
+  width: 2.2rem;
+  height: 2.2rem;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 10px;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.mobileMenuDropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.4rem);
+  min-width: 180px;
+  padding: 0.35rem;
+  border-radius: 12px;
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-surface);
+  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.14);
+  z-index: 40;
+}
+
+.mobileMenuItem {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-primary);
+  text-align: left;
+  padding: 0.48rem 0.58rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.mobileMenuItem:hover {
+  background: var(--color-primary-soft);
 }
 
 .userBadge {
@@ -177,15 +245,54 @@
   .topBar {
     grid-template-columns: 1fr;
     justify-items: stretch;
+    gap: 0.45rem;
   }
 
   .centerGroup {
     justify-content: flex-start;
     flex-wrap: wrap;
+    gap: 0.45rem;
   }
 
   .rightGroup {
-    flex-wrap: wrap;
-    justify-content: flex-start;
+    justify-content: space-between;
+  }
+
+  .statusPill {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.76rem;
+  }
+
+  .statusText {
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .desktopActions {
+    display: none;
+  }
+
+  .mobileMenuWrap {
+    display: inline-flex;
+  }
+
+  .userBadge {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .userInfo {
+    text-align: left;
+  }
+
+  .title {
+    font-size: 1rem;
+  }
+
+  .logo {
+    width: 32px;
+    height: 32px;
   }
 }

@@ -1141,13 +1141,13 @@ function PnLCalendarPage() {
               {monthSummary.tradeCount} / {monthSummary.symbolCount}
             </strong>
           </div>
-          <div className={styles.monthSummaryItem}>
+          <div className={clsx(styles.monthSummaryItem, styles.monthSummaryDesktopOnly)}>
             <span className={styles.summaryLabel}>胜率</span>
             <strong className={styles.summaryValueCompact}>
               {formatPercent(monthSummary.winRate)}
             </strong>
           </div>
-          <div className={styles.monthSummaryItem}>
+          <div className={clsx(styles.monthSummaryItem, styles.monthSummaryDesktopOnly)}>
             <span className={styles.summaryLabel}>ROI</span>
             <strong className={styles.summaryValueCompact}>
               {formatPercent(monthSummary.roi)}
@@ -1228,9 +1228,15 @@ function PnLCalendarPage() {
                         </div>
                         {(dayData || !isWeekend) && (
                           <>
-                            <div className={styles.dayMeta}>{dayData ? `${dayData.tradeCount} / ${dayData.symbolCount}` : null}</div>
-                            <div className={styles.dayMeta}>{dayData ? formatPercent(dayData.winRate) : null}</div>
-                            <div className={styles.dayMeta}>{dayData ? formatPercent(dayData.roi) : null}</div>
+                            <div className={clsx(styles.dayMeta, styles.dayMetaPrimary)}>
+                              {dayData ? `${dayData.tradeCount} / ${dayData.symbolCount}` : null}
+                            </div>
+                            <div className={clsx(styles.dayMeta, styles.dayMetaSecondary)}>
+                              {dayData ? formatPercent(dayData.winRate) : null}
+                            </div>
+                            <div className={clsx(styles.dayMeta, styles.dayMetaSecondary)}>
+                              {dayData ? formatPercent(dayData.roi) : null}
+                            </div>
                           </>
                         )}
                       </>
@@ -1274,9 +1280,15 @@ function PnLCalendarPage() {
                     >
                       {summary.tradeCount ? formatPnlValue(summary.netPnl) : null}
                     </div>
-                    <div className={styles.weekSummaryMeta}>{summary.tradeCount ? `${summary.tradeCount} / ${summary.symbolCount}` : null}</div>
-                    <div className={styles.weekSummaryMeta}>{summary.tradeCount ? formatPercent(summary.winRate) : null}</div>
-                    <div className={styles.weekSummaryMeta}>{summary.tradeCount ? formatPercent(summary.roi) : null}</div>
+                    <div className={clsx(styles.weekSummaryMeta, styles.weekSummaryMetaPrimary)}>
+                      {summary.tradeCount ? `${summary.tradeCount} / ${summary.symbolCount}` : null}
+                    </div>
+                    <div className={clsx(styles.weekSummaryMeta, styles.weekSummaryMetaSecondary)}>
+                      {summary.tradeCount ? formatPercent(summary.winRate) : null}
+                    </div>
+                    <div className={clsx(styles.weekSummaryMeta, styles.weekSummaryMetaSecondary)}>
+                      {summary.tradeCount ? formatPercent(summary.roi) : null}
+                    </div>
                   </div>
                 </Fragment>
               );
