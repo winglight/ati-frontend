@@ -2,7 +2,7 @@ import type { KeyboardEvent as ReactKeyboardEvent, MouseEvent } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { formatDailyPnl, formatDailyTrades, getStrategyDailyStats } from '@features/strategies/utils/dailyStats';
 import { useTranslation } from '@i18n';
-import PanelCard, { PanelAction } from './PanelCard';
+import PanelCard from './PanelCard';
 import StrategyPerformanceModal from '@features/strategies/components/StrategyPerformanceModal';
 import styles from './StrategiesPanel.module.css';
 import type {
@@ -269,11 +269,16 @@ function StrategiesPanel({
   const { statusById: subscriptionResyncStatus, resync } = useStrategiesResyncController();
   const statusLabelMap = buildStatusLabelMap(t);
   const modeLabelMap = buildModeLabelMap(t);
-  const actions: PanelAction[] = [
-    { label: t('dashboard_strategies.actions.add'), onClick: onCreate, variant: 'primary' },
-    onRefresh ? { label: t('dashboard_strategies.actions.refresh'), onClick: onRefresh } : null,
-    { label: '绩效', onClick: () => setPerformanceOpen(true) }
-  ].filter(Boolean) as PanelAction[];
+  const [actionSelection, setActionSelection] = useState<string>('');
+  const actionOptions = useMemo(
+    () =>
+      [
+        { value: 'add', label: t('dashboard_strategies.actions.add'), onClick: onCreate },
+        onRefresh ? { value: 'refresh', label: t('dashboard_strategies.actions.refresh'), onClick: onRefresh } : null,
+        { value: 'performance', label: t('dashboard_strategies.actions.performance'), onClick: () => setPerformanceOpen(true) }
+      ].filter(Boolean) as Array<{ value: string; label: string; onClick?: () => void }>,
+    [onCreate, onRefresh, t]
+  );
 
   const visibleStrategies = useMemo(() => {
     if (selectedFilter === '__ALL__') {
@@ -309,32 +314,44 @@ function StrategiesPanel({
   return (
     <>
       <PanelCard
-      title={t('dashboard_strategies.title')}
-      actions={actions}
-      headerMeta={
-        <div className={styles.headerControls}>
-          <div className={styles.filterTags}>
-            <button
-              type="button"
-              className={`${styles.tag} ${selectedFilter === '__ALL__' ? styles.tagSelected : ''}`}
-              onClick={() => setSelectedFilter('__ALL__')}
-            >
-              {t('strategies.filters.all')}
-            </button>
-              {['DOM', 'Bar', 'AI', 'Screener'].map((label) => (
-                <button
-                  key={label}
-                  type="button"
-                  className={`${styles.tag} ${selectedFilter === (label as 'DOM' | 'Bar' | 'AI' | 'Screener') ? styles.tagSelected : ''}`}
-                  onClick={() => setSelectedFilter(label as 'DOM' | 'Bar' | 'AI' | 'Screener')}
-                >
-                  {label}
-                </button>
-              ))}
+        title={t('dashboard_strategies.title')}
+        headerMeta={
+          <div className={styles.headerControls}>
+            <div className={styles.filterGroup}>
+              <select
+                className={styles.select}
+                value={selectedFilter}
+                onChange={(event) => setSelectedFilter(event.target.value as '__ALL__' | 'DOM' | 'Bar' | 'AI' | 'Screener')}
+              >
+                <option value="__ALL__">{t('strategies.filters.all')}</option>
+                {['DOM', 'Bar', 'AI', 'Screener'].map((label) => (
+                  <option key={label} value={label}>
+                    {label}
+                  </option>
+                ))}
+              </select>
+              <select
+                className={styles.select}
+                value={actionSelection}
+                onChange={(event) => {
+                  const next = event.target.value;
+                  setActionSelection(next);
+                  const action = actionOptions.find((item) => item.value === next);
+                  action?.onClick?.();
+                  setActionSelection('');
+                }}
+              >
+                <option value="">{t('dashboard_strategies.actions.select_action')}</option>
+                {actionOptions.map((action) => (
+                  <option key={action.value} value={action.value}>
+                    {action.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-        </div>
-      }
-    >
+        }
+      >
       {visibleStrategies.length === 0 ? (
         <div className={styles.empty}>{t('dashboard_strategies.empty')}</div>
       ) : (

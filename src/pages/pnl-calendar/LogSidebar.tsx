@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import styles from './PnLCalendarPage.module.css';
 import type { TradeLogRecord } from '@services/tradeLogsApi';
+import { useTranslation } from '@i18n';
 
 interface LogSidebarProps {
   logs: TradeLogRecord[];
@@ -11,24 +12,6 @@ interface LogSidebarProps {
   onDelete: (log: TradeLogRecord) => void;
 }
 
-const formatLogType = (type: TradeLogRecord['type']): string =>
-  type === 'weekly' ? '周复盘' : '日复盘';
-
-const formatLogSummary = (log: TradeLogRecord): string => {
-  if (log.type === 'weekly') {
-    const trades = log.weekly_total_trades ?? log.trades_count;
-    const pnl = log.weekly_pnl_result;
-    if (trades !== null && trades !== undefined) {
-      return `交易 ${trades} 笔${pnl !== null && pnl !== undefined ? ` · 周盈亏 ${pnl.toFixed(2)}` : ''}`;
-    }
-    return '周度复盘记录';
-  }
-  if (log.trades_count !== null && log.trades_count !== undefined) {
-    return `交易 ${log.trades_count} 笔${log.overall_feeling ? ` · 感受 ${log.overall_feeling}` : ''}`;
-  }
-  return log.overall_feeling ? `感受 ${log.overall_feeling}` : '日度复盘记录';
-};
-
 function LogSidebar({
   logs,
   loading = false,
@@ -37,18 +20,51 @@ function LogSidebar({
   onEdit,
   onDelete
 }: LogSidebarProps) {
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language === 'en' ? 'en-US' : 'zh-CN';
+
+  const formatLogType = (type: TradeLogRecord['type']): string =>
+    type === 'weekly' ? t('pnl_calendar.logs.type_weekly') : t('pnl_calendar.logs.type_daily');
+
+  const formatLogSummary = (log: TradeLogRecord): string => {
+    if (log.type === 'weekly') {
+      const trades = log.weekly_total_trades ?? log.trades_count;
+      const pnl = log.weekly_pnl_result;
+      if (trades !== null && trades !== undefined) {
+        return pnl !== null && pnl !== undefined
+          ? t('pnl_calendar.logs.weekly_summary', {
+              trades,
+              pnl: new Intl.NumberFormat(locale, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+              }).format(pnl)
+            })
+          : t('pnl_calendar.logs.weekly_trades', { trades });
+      }
+      return t('pnl_calendar.logs.weekly_default');
+    }
+    if (log.trades_count !== null && log.trades_count !== undefined) {
+      return log.overall_feeling
+        ? t('pnl_calendar.logs.daily_summary', { trades: log.trades_count, feeling: log.overall_feeling })
+        : t('pnl_calendar.logs.daily_trades', { trades: log.trades_count });
+    }
+    return log.overall_feeling
+      ? t('pnl_calendar.logs.daily_feeling_only', { feeling: log.overall_feeling })
+      : t('pnl_calendar.logs.daily_default');
+  };
+
   return (
     <aside className={styles.logSidebar}>
       <div className={styles.logHeader}>
         <div>
-          <h3 className={styles.logTitle}>交易日志</h3>
-          <p className={styles.logSubtitle}>按时间倒序查看每日/每周复盘。</p>
+          <h3 className={styles.logTitle}>{t('pnl_calendar.logs.title')}</h3>
+          <p className={styles.logSubtitle}>{t('pnl_calendar.logs.subtitle')}</p>
         </div>
       </div>
       <div className={styles.logList}>
-        {loading ? <div className={styles.logEmpty}>正在加载日志...</div> : null}
+        {loading ? <div className={styles.logEmpty}>{t('pnl_calendar.logs.loading')}</div> : null}
         {!loading && logs.length === 0 ? (
-          <div className={styles.logEmpty}>当前范围暂无日志。</div>
+          <div className={styles.logEmpty}>{t('pnl_calendar.logs.empty')}</div>
         ) : null}
         {!loading && logs.length > 0 ? (
           <ul className={styles.logItems}>
@@ -68,13 +84,13 @@ function LogSidebar({
                 </div>
                 <div className={styles.logActions}>
                   <button type="button" className={styles.logActionButton} onClick={() => onOpen(log)}>
-                    打开
+                    {t('pnl_calendar.logs.open')}
                   </button>
                   <button type="button" className={styles.logActionButton} onClick={() => onEdit(log)}>
-                    编辑
+                    {t('pnl_calendar.logs.edit')}
                   </button>
                   <button type="button" className={styles.logActionButtonDanger} onClick={() => onDelete(log)}>
-                    删除
+                    {t('pnl_calendar.logs.delete')}
                   </button>
                 </div>
               </li>

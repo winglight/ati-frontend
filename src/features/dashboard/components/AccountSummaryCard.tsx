@@ -99,11 +99,6 @@ function AccountSummaryCard({ account, onRefresh, onViewDetails, onViewAnalytics
     }
   ];
 
-  const metricRows = [] as Array<typeof metricItems>;
-  for (let i = 0; i < metricItems.length; i += 2) {
-    metricRows.push(metricItems.slice(i, i + 2));
-  }
-
   return (
     <PanelCard title={t('dashboard.account.title')} actions={actions} className={styles.card} dense>
       <div className={styles.metaRow}>
@@ -133,36 +128,27 @@ function AccountSummaryCard({ account, onRefresh, onViewDetails, onViewAnalytics
         </div>
         {account.currency ? <div className={styles.currency}>{t('dashboard.account.labels.currency')}：{account.currency}</div> : null}
       </div>
-      <table className={styles.metricsTable}>
-        <tbody>
-          {metricRows.map((row, rowIndex) => (
-            <tr key={rowIndex}>
-              {row.map((item) => (
-                <td key={item.key}>
-                  <div className={styles.metricCell}>
-                    <span className={styles.label}>{item.label}</span>
-                    <span
-                      className={clsx({
-                        [styles.metricValue]: !item.variant || item.variant === 'default',
-                        [styles.metricValueStrong]: item.variant === 'strong',
-                        [styles.metricValuePnl]: item.variant === 'pnl',
-                        [styles.metricValueAccent]: item.variant === 'accent'
-                      })}
-                      data-positive={item.variant === 'pnl' ? item.positive !== false : undefined}
-                      title={item.title}
-                    >
-                      {item.value}
-                    </span>
-                  </div>
-                </td>
-              ))}
-              {row.length < 2
-                ? Array.from({ length: 2 - row.length }).map((_, index) => <td key={`empty-${index}`} />)
-                : null}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <div className={styles.metricsGrid}>
+        {metricItems.map((item) => (
+          <div key={item.key} className={styles.metricTile}>
+            <div className={styles.metricCell}>
+              <span className={styles.label}>{item.label}</span>
+              <span
+                className={clsx({
+                  [styles.metricValue]: !item.variant || item.variant === 'default',
+                  [styles.metricValueStrong]: item.variant === 'strong',
+                  [styles.metricValuePnl]: item.variant === 'pnl',
+                  [styles.metricValueAccent]: item.variant === 'accent'
+                })}
+                data-positive={item.variant === 'pnl' ? item.positive !== false : undefined}
+                title={item.title}
+              >
+                {item.value}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
       <div className={styles.timestamp}>{t('dashboard.account.last_updated_prefix')}{new Date(account.updatedAt).toLocaleString(i18n.language)}</div>
     </PanelCard>
   );

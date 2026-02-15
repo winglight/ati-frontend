@@ -1,5 +1,6 @@
 import clsx from 'clsx';
 import styles from './PnLCalendarPage.module.css';
+import { useTranslation } from '@i18n';
 
 interface StatsCardsProps {
   netPnl: number;
@@ -20,47 +21,6 @@ interface StatsCardsProps {
   dayFlatCount: number;
 }
 
-const formatPnlValue = (value: number | null): string => {
-  if (value === null) {
-    return '';
-  }
-  const formatter = new Intl.NumberFormat('zh-CN', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
-  const sign = value > 0 ? '+' : '';
-  return `${sign}${formatter.format(value)}`;
-};
-
-const formatPercent = (value: number | null): string => {
-  if (value === null) {
-    return '—';
-  }
-  return `${(value * 100).toFixed(1)}%`;
-};
-
-const formatDuration = (minutes: number | null): string => {
-  if (minutes === null) {
-    return '—';
-  }
-  if (minutes < 60) {
-    return `${Math.round(minutes)} 分钟`;
-  }
-  const hours = Math.floor(minutes / 60);
-  const rest = Math.round(minutes % 60);
-  if (rest === 0) {
-    return `${hours} 小时`;
-  }
-  return `${hours} 小时 ${rest} 分钟`;
-};
-
-const formatRatio = (value: number | null): string => {
-  if (value === null) {
-    return '';
-  }
-  return value.toFixed(2);
-};
-
 const StatsCards = ({
   netPnl,
   totalTrades,
@@ -79,60 +39,113 @@ const StatsCards = ({
   dayLossCount,
   dayFlatCount
 }: StatsCardsProps) => {
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language === 'en' ? 'en-US' : 'zh-CN';
+
+  const formatPnlValue = (value: number | null): string => {
+    if (value === null) {
+      return t('pnl_calendar.common.empty');
+    }
+    const formatter = new Intl.NumberFormat(locale, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+    const sign = value > 0 ? '+' : '';
+    return `${sign}${formatter.format(value)}`;
+  };
+
+  const formatPercent = (value: number | null): string => {
+    if (value === null) {
+      return t('pnl_calendar.common.empty');
+    }
+    return t('pnl_calendar.common.percent', { value: (value * 100).toFixed(1) });
+  };
+
+  const formatDuration = (minutes: number | null): string => {
+    if (minutes === null) {
+      return t('pnl_calendar.common.empty');
+    }
+    const rounded = Math.round(minutes);
+    if (rounded < 60) {
+      return t('pnl_calendar.duration.minutes', { count: rounded });
+    }
+    const hours = Math.floor(rounded / 60);
+    const rest = Math.round(rounded % 60);
+    if (rest === 0) {
+      return t('pnl_calendar.duration.hours', { count: hours });
+    }
+    return t('pnl_calendar.duration.hours_minutes', { hours, minutes: rest });
+  };
+
+  const formatRatio = (value: number | null): string => {
+    if (value === null) {
+      return t('pnl_calendar.common.empty');
+    }
+    return value.toFixed(2);
+  };
+
   const cards = [
     {
-      label: '净盈亏',
+      label: t('pnl_calendar.stats.net_pnl'),
       value: formatPnlValue(netPnl),
       tone: netPnl > 0 ? 'positive' : netPnl < 0 ? 'negative' : undefined,
-      footnote: '筛选范围汇总'
+      footnote: t('pnl_calendar.stats.footnote_range')
     },
     {
-      label: '交易笔数',
-      value: totalTrades.toLocaleString('zh-CN'),
-      footnote: '成交笔数统计'
+      label: t('pnl_calendar.stats.total_trades'),
+      value: totalTrades.toLocaleString(locale),
+      footnote: t('pnl_calendar.stats.footnote_trades')
     },
     {
-      label: '胜率',
+      label: t('pnl_calendar.stats.win_rate'),
       value: formatPercent(winRate),
-      footnote: `胜/平/负：${winCount}/${flatCount}/${lossCount}`
+      footnote: t('pnl_calendar.stats.footnote_win_loss', {
+        win: winCount,
+        flat: flatCount,
+        loss: lossCount
+      })
     },
     {
-      label: '盈利日率',
+      label: t('pnl_calendar.stats.profit_day_rate'),
       value: formatPercent(profitDayRate),
-      footnote: `胜/平/负：${dayWinCount}/${dayFlatCount}/${dayLossCount}`
+      footnote: t('pnl_calendar.stats.footnote_day_win_loss', {
+        win: dayWinCount,
+        flat: dayFlatCount,
+        loss: dayLossCount
+      })
     },
     {
-      label: '平均单笔盈亏',
+      label: t('pnl_calendar.stats.avg_trade_pnl'),
       value: formatPnlValue(avgTradePnl),
       tone: avgTradePnl && avgTradePnl > 0 ? 'positive' : avgTradePnl && avgTradePnl < 0 ? 'negative' : undefined,
-      footnote: '单笔净盈亏均值'
+      footnote: t('pnl_calendar.stats.footnote_avg_trade_pnl')
     },
     {
-      label: 'Profit Factor',
+      label: t('pnl_calendar.stats.profit_factor'),
       value: formatRatio(profitFactor),
-      footnote: '总盈利 / 总亏损'
+      footnote: t('pnl_calendar.stats.footnote_profit_factor')
     },
     {
-      label: '平均盈利/亏损比',
+      label: t('pnl_calendar.stats.avg_win_loss_ratio'),
       value: formatRatio(avgWinLossRatio),
-      footnote: '平均盈利 / 平均亏损'
+      footnote: t('pnl_calendar.stats.footnote_avg_win_loss_ratio')
     },
     {
-      label: '最大回撤',
+      label: t('pnl_calendar.stats.max_drawdown'),
       value: formatPnlValue(maxDrawdown),
       tone: maxDrawdown && maxDrawdown < 0 ? 'negative' : undefined,
-      footnote: '累计净值回撤峰值'
+      footnote: t('pnl_calendar.stats.footnote_drawdown')
     },
     {
-      label: '平均持仓时长',
+      label: t('pnl_calendar.stats.avg_duration'),
       value: formatDuration(avgDurationMinutes),
-      footnote: '含开平仓时间'
+      footnote: t('pnl_calendar.stats.footnote_duration')
     },
     {
-      label: '平均每日盈亏',
+      label: t('pnl_calendar.stats.avg_daily_pnl'),
       value: formatPnlValue(avgDailyPnl),
       tone: avgDailyPnl && avgDailyPnl > 0 ? 'positive' : avgDailyPnl && avgDailyPnl < 0 ? 'negative' : undefined,
-      footnote: '按交易日均摊'
+      footnote: t('pnl_calendar.stats.footnote_daily_pnl')
     }
   ];
 
@@ -140,25 +153,27 @@ const StatsCards = ({
     <section className={styles.statsSection}>
       <div className={styles.sectionHeader}>
         <div>
-          <h2 className={styles.sectionTitle}>绩效概览</h2>
-          <p className={styles.sectionSubtitle}>核心指标与进阶统计随筛选条件动态更新。</p>
+          <h2 className={styles.sectionTitle}>{t('pnl_calendar.stats.title')}</h2>
+          <p className={styles.sectionSubtitle}>{t('pnl_calendar.stats.subtitle')}</p>
         </div>
       </div>
-      <div className={styles.statsGrid}>
-        {cards.map((card) => (
-          <article key={card.label} className={styles.statsCard}>
-            <span className={styles.statsLabel}>{card.label}</span>
-            <strong
-              className={clsx(styles.statsValue, {
-                [styles.positive]: card.tone === 'positive',
-                [styles.negative]: card.tone === 'negative'
-              })}
-            >
-              {card.value}
-            </strong>
-            <span className={styles.statsFootnote}>{card.footnote}</span>
-          </article>
-        ))}
+      <div className={styles.statsScroller}>
+        <div className={styles.statsGrid}>
+          {cards.map((card) => (
+            <article key={card.label} className={styles.statsCard}>
+              <span className={styles.statsLabel}>{card.label}</span>
+              <strong
+                className={clsx(styles.statsValue, {
+                  [styles.positive]: card.tone === 'positive',
+                  [styles.negative]: card.tone === 'negative'
+                })}
+              >
+                {card.value}
+              </strong>
+              <span className={styles.statsFootnote}>{card.footnote}</span>
+            </article>
+          ))}
+        </div>
       </div>
     </section>
   );

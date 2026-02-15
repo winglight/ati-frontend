@@ -1,7 +1,8 @@
-import { Fragment, useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react';
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react';
 import clsx from 'clsx';
 import { listPnLCalendarTrades, type PnLCalendarTrade } from '@services/pnlCalendarApi';
 import { useAppSelector } from '@store/hooks';
+import { useTranslation } from '@i18n';
 import layoutStyles from '../PageLayout.module.css';
 import styles from './PnLCalendarPage.module.css';
 import StatsCards from './StatsCards';
@@ -17,11 +18,10 @@ import {
   listTradeLogs,
   updateTradeLog,
   type TradeLogPayload,
-  type TradeLogRecord,
-  type TradeLogType
+  type TradeLogRecord
 } from '@services/tradeLogsApi';
 
-const WEEKDAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const WEEKDAYS: Array<'mon' | 'tue' | 'wed' | 'thu' | 'fri'> = ['mon', 'tue', 'wed', 'thu', 'fri'];
 
 interface MergedTradeGroup {
   key: string;
@@ -48,57 +48,13 @@ interface DayAggregate {
   groups: MergedTradeGroup[];
 }
 
-interface WeekSummary {
-  netPnl: number;
-  tradeCount: number;
-  symbolCount: number;
-  winRate: number | null;
-  roi: number | null;
-}
-
 const QUICK_RANGES = [
-  { key: 'week', label: '本周' },
-  { key: 'month', label: '本月' },
-  { key: 'last30', label: '近30天' },
-  { key: 'quarter', label: '本季度' },
-  { key: 'ytd', label: 'YTD' }
+  { key: 'week', labelKey: 'pnl_calendar.filters.range_week' },
+  { key: 'month', labelKey: 'pnl_calendar.filters.range_month' },
+  { key: 'last30', labelKey: 'pnl_calendar.filters.range_last30' },
+  { key: 'quarter', labelKey: 'pnl_calendar.filters.range_quarter' },
+  { key: 'ytd', labelKey: 'pnl_calendar.filters.range_ytd' }
 ];
-
-const formatPnlValue = (value: number): string => {
-  const formatter = new Intl.NumberFormat('zh-CN', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
-  const sign = value > 0 ? '+' : '';
-  return `${sign}${formatter.format(value)}`;
-};
-
-const formatPercent = (value: number | null): string => {
-  if (value === null) {
-    return '';
-  }
-  const percent = value * 100;
-  return `${percent.toFixed(1)}%`;
-};
-
-const formatDateTime = (value?: string | null): string => {
-  if (!value) {
-    return '—';
-  }
-  const parsed = new Date(value);
-  if (Number.isNaN(parsed.valueOf())) {
-    return value;
-  }
-  return parsed.toLocaleString('zh-CN', { hour12: false });
-};
-
-const formatInstrument = (value?: string | null): string => {
-  if (!value) {
-    return '—';
-  }
-  const trimmed = value.trim();
-  return trimmed || '—';
-};
 
 const resolveTradeDurationMinutes = (openTime?: string | null, closeTime?: string | null): number | null => {
   if (!openTime || !closeTime) {
@@ -110,19 +66,6 @@ const resolveTradeDurationMinutes = (openTime?: string | null, closeTime?: strin
     return null;
   }
   return (close - open) / 60000;
-};
-
-const formatTradeDuration = (minutes: number | null): string => {
-  if (minutes === null) {
-    return '—';
-  }
-  const rounded = Math.round(minutes);
-  if (rounded < 60) {
-    return `${Math.max(rounded, 1)}m`;
-  }
-  const hours = Math.floor(rounded / 60);
-  const remaining = rounded % 60;
-  return remaining ? `${hours}h ${remaining}m` : `${hours}h`;
 };
 
 const resolveNetRoi = (netPnl: number, absPnl: number): number | null => {
@@ -158,40 +101,6 @@ const buildMonthWeeks = (year: number, monthIndex: number): (string | null)[][] 
   return weeks;
 };
 
-const buildWeekSummary = (dates: (string | null)[], dayMap: Map<string, DayAggregate>): WeekSummary => {
-  let netPnl = 0;
-  let tradeCount = 0;
-  let winCount = 0;
-  let absPnl = 0;
-  const symbols = new Set<string>();
-
-  for (const date of dates) {
-    if (!date) {
-      continue;
-    }
-    const day = dayMap.get(date);
-    if (!day) {
-      continue;
-    }
-    netPnl += day.netPnl;
-    tradeCount += day.tradeCount;
-    winCount += day.trades.filter((trade) => trade.FifoPnlRealized > 0).length;
-    absPnl += day.trades.reduce((sum, trade) => sum + Math.abs(trade.FifoPnlRealized ?? 0), 0);
-    day.trades.forEach((trade) => symbols.add(trade.Symbol));
-  }
-
-  const winRate = tradeCount ? winCount / tradeCount : null;
-  const roi = absPnl ? netPnl / absPnl : null;
-
-  return {
-    netPnl,
-    tradeCount,
-    symbolCount: symbols.size,
-    winRate,
-    roi
-  };
-};
-
 const formatDateInput = (value: Date): string => formatDateKey(value);
 
 const startOfWeek = (value: Date): Date => {
@@ -219,19 +128,6 @@ const resolveStrategyLabel = (trade: PnLCalendarTrade): string => {
   return typeof label === 'string' ? label.trim() : '';
 };
 
-const deriveOverallFeeling = (netPnl: number, tradeCount: number): string => {
-  if (tradeCount === 0) {
-    return '无交易';
-  }
-  if (netPnl > 0) {
-    return '表现不错';
-  }
-  if (netPnl < 0) {
-    return '需要调整';
-  }
-  return '保持稳定';
-};
-
 const sortTradeLogs = (logs: TradeLogRecord[]): TradeLogRecord[] =>
   [...logs].sort((a, b) => {
     const dateCompare = b.date.localeCompare(a.date);
@@ -248,6 +144,7 @@ function PnLCalendarPage() {
   const token = useAppSelector((state) => state.auth.token);
   const authUser = useAppSelector((state) => state.auth.user);
   const accountSummary = useAppSelector((state) => state.account.summary);
+  const { t, i18n } = useTranslation();
   const [allTrades, setAllTrades] = useState<PnLCalendarTrade[]>([]);
   const [dateRange, setDateRange] = useState({ start: '', end: '' });
   const [symbolFilter, setSymbolFilter] = useState('');
@@ -264,6 +161,79 @@ function PnLCalendarPage() {
   const [activeLog, setActiveLog] = useState<TradeLogRecord | null>(null);
   const [logDate, setLogDate] = useState<string | null>(null);
   const [showLogSidebar, setShowLogSidebar] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+
+  const locale = i18n.language === 'en' ? 'en-US' : 'zh-CN';
+
+  const formatPnlValue = (value: number): string => {
+    const formatter = new Intl.NumberFormat(locale, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+    const sign = value > 0 ? '+' : '';
+    return `${sign}${formatter.format(value)}`;
+  };
+
+  const formatPercent = (value: number | null): string => {
+    if (value === null) {
+      return '';
+    }
+    const percent = value * 100;
+    return `${percent.toFixed(1)}%`;
+  };
+
+  const formatDateTime = (value?: string | null): string => {
+    if (!value) {
+      return t('pnl_calendar.common.empty');
+    }
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.valueOf())) {
+      return value;
+    }
+    return parsed.toLocaleString(locale, { hour12: false });
+  };
+
+  const formatInstrument = (value?: string | null): string => {
+    if (!value) {
+      return t('pnl_calendar.common.empty');
+    }
+    const trimmed = value.trim();
+    return trimmed || t('pnl_calendar.common.empty');
+  };
+
+  const formatTradeDuration = (minutes: number | null): string => {
+    if (minutes === null) {
+      return t('pnl_calendar.common.empty');
+    }
+    const rounded = Math.max(Math.round(minutes), 1);
+    if (rounded < 60) {
+      return t('pnl_calendar.duration.minutes', { count: rounded });
+    }
+    const hours = Math.floor(rounded / 60);
+    const remaining = rounded % 60;
+    if (!remaining) {
+      return t('pnl_calendar.duration.hours', { count: hours });
+    }
+    return t('pnl_calendar.duration.hours_minutes', { hours, minutes: remaining });
+  };
+
+  const formatDayNumber = (date: string): string => {
+    const parsed = parseDateKey(date);
+    return parsed ? String(parsed.getDate()) : date.split('-').pop() ?? date;
+  };
+
+  const deriveOverallFeeling = useCallback((netPnl: number, tradeCount: number): string => {
+    if (tradeCount === 0) {
+      return t('pnl_calendar.overview.feeling_none');
+    }
+    if (netPnl > 0) {
+      return t('pnl_calendar.overview.feeling_positive');
+    }
+    if (netPnl < 0) {
+      return t('pnl_calendar.overview.feeling_negative');
+    }
+    return t('pnl_calendar.overview.feeling_flat');
+  }, [t]);
 
   useEffect(() => {
     let active = true;
@@ -606,7 +576,7 @@ function PnLCalendarPage() {
       overallFeeling: deriveOverallFeeling(netPnl, tradeCount),
       associatedTrades
     };
-  }, [logDate, logDay]);
+  }, [deriveOverallFeeling, logDate, logDay]);
 
   const weeklyDefaults = useMemo(() => ({ associatedTrades: logWeekTradeIds }), [logWeekTradeIds]);
 
@@ -893,18 +863,6 @@ function PnLCalendarPage() {
     setDetailGroupKey(null);
   };
 
-  const resolveLogForDate = (date: string, type: TradeLogType) =>
-    tradeLogs.find((log) => log.date === date && log.type === type) ?? null;
-
-  const handleOpenLogForDate = (date: string) => {
-    const existing = resolveLogForDate(date, 'daily');
-    setLogDate(date);
-    setActiveLog(existing);
-    setLogModalMode(existing ? 'view' : 'create');
-    setLogModalOpen(true);
-    setShowLogSidebar(true);
-  };
-
   const handleOpenLog = (log: TradeLogRecord) => {
     setLogDate(log.date);
     setActiveLog(log);
@@ -934,7 +892,12 @@ function PnLCalendarPage() {
     if (!token || log.id === undefined) {
       return;
     }
-    const confirmed = window.confirm(`确定删除 ${log.date} 的${log.type === 'weekly' ? '周' : '日'}日志吗？`);
+    const confirmed = window.confirm(
+      t('pnl_calendar.logs.confirm_delete', {
+        date: log.date,
+        type: log.type === 'weekly' ? t('pnl_calendar.logs.weekly') : t('pnl_calendar.logs.daily')
+      })
+    );
     if (!confirmed) {
       return;
     }
@@ -1037,95 +1000,132 @@ function PnLCalendarPage() {
   return (
     <div className={layoutStyles.page}>
       <section className={styles.filterToolbar}>
-        <div className={styles.filterRow}>
-          <div className={styles.filterField}>
-            <div className={styles.dateInputs}>
-              <input
-                id="pnl-date-start"
-                type="date"
-                className={styles.filterInput}
-                value={dateRange.start}
-                onChange={handleDateInputChange('start')}
-              />
-              <span className={styles.dateSeparator}>至</span>
-              <input
-                id="pnl-date-end"
-                type="date"
-                className={styles.filterInput}
-                value={dateRange.end}
-                onChange={handleDateInputChange('end')}
-              />
-            </div>
-            <div className={styles.quickRanges}>
-              {QUICK_RANGES.map((range) => (
-                <button
-                  key={range.key}
-                  type="button"
-                  className={clsx(styles.quickButton, {
-                    [styles.quickButtonActive]: activeRangeKey === range.key
-                  })}
-                  onClick={() => handleQuickRangeSelect(range.key)}
-                >
-                  {range.label}
-                </button>
-              ))}
-            </div>
-          </div>
-          <div className={styles.filterField}>
-            <input
-              id="pnl-symbol-filter"
-              type="search"
-              className={styles.filterInput}
-              placeholder="例如 MNQ 或 MNQ*"
-              list="pnl-symbol-options"
-              value={symbolFilter}
-              onChange={(event) => setSymbolFilter(event.target.value)}
-            />
-            <datalist id="pnl-symbol-options">
-              {baseSymbolSuggestions.map((symbol) => (
-                <option key={symbol} value={symbol} />
-              ))}
-            </datalist>
-          </div>
-          <div className={styles.filterField}>
-            <select
-              id="pnl-strategy-filter"
-              className={styles.filterSelect}
-              value={strategyFilter}
-              onChange={(event) => setStrategyFilter(event.target.value)}
-            >
-              <option value="all">全部策略</option>
-              {strategyOptions.map((strategy) => (
-                <option key={strategy} value={strategy}>
-                  {strategy}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        <div className={styles.toolbarActions}>
+        <div className={styles.filterToolbarHeader}>
           <button
             type="button"
-            className={clsx(styles.toolbarButton, {
-              [styles.toolbarButtonActive]: showLogSidebar
+            className={clsx(styles.filterToggleButton, {
+              [styles.filterToggleButtonOpen]: filtersOpen
             })}
-            aria-pressed={showLogSidebar}
-            onClick={handleShowLogSidebar}
+            aria-expanded={filtersOpen}
+            onClick={() => setFiltersOpen((previous) => !previous)}
           >
-            日志
+            <span className={styles.filterToggleIcon}>▾</span>
+            <span className={styles.filterToggleLabel}>{t('pnl_calendar.filters.toggle')}</span>
           </button>
-          <button type="button" className={styles.toolbarButton} onClick={handleCreateLog}>
-            新建日志
-          </button>
+          <div className={styles.filterHeaderActions}>
+            <button
+              type="button"
+              className={styles.langToggleButton}
+              onClick={() => i18n.changeLanguage(i18n.language === 'en' ? 'zh' : 'en')}
+            >
+              {i18n.language === 'en' ? '中' : 'En'}
+            </button>
+            <button
+              type="button"
+              className={clsx(styles.iconToolbarButton, {
+                [styles.toolbarButtonActive]: showLogSidebar
+              })}
+              aria-pressed={showLogSidebar}
+              aria-label={t('pnl_calendar.logs.open')}
+              title={t('pnl_calendar.logs.open')}
+              onClick={handleShowLogSidebar}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M5 5h14v14H5z" fill="none" stroke="currentColor" strokeWidth="1.6" />
+                <path d="M8 9h8M8 13h8M8 17h5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              </svg>
+            </button>
+            <button
+              type="button"
+              className={styles.iconToolbarButton}
+              aria-label={t('pnl_calendar.logs.create')}
+              title={t('pnl_calendar.logs.create')}
+              onClick={handleCreateLog}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div className={clsx(styles.filterContent, { [styles.filterContentHidden]: !filtersOpen })}>
+          <div className={styles.filterRow}>
+            <div className={styles.filterField}>
+              <div className={styles.dateInputs}>
+                <input
+                  id="pnl-date-start"
+                  type="date"
+                  className={styles.filterInput}
+                  value={dateRange.start}
+                  onChange={handleDateInputChange('start')}
+                  aria-label={t('pnl_calendar.filters.start_date')}
+                />
+                <span className={styles.dateSeparator}>{t('pnl_calendar.filters.to')}</span>
+                <input
+                  id="pnl-date-end"
+                  type="date"
+                  className={styles.filterInput}
+                  value={dateRange.end}
+                  onChange={handleDateInputChange('end')}
+                  aria-label={t('pnl_calendar.filters.end_date')}
+                />
+              </div>
+              <div className={styles.quickRanges}>
+                {QUICK_RANGES.map((range) => (
+                  <button
+                    key={range.key}
+                    type="button"
+                    className={clsx(styles.quickButton, {
+                      [styles.quickButtonActive]: activeRangeKey === range.key
+                    })}
+                    onClick={() => handleQuickRangeSelect(range.key)}
+                  >
+                    {t(range.labelKey)}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className={styles.filterField}>
+              <input
+                id="pnl-symbol-filter"
+                type="search"
+                className={styles.filterInput}
+                placeholder={t('pnl_calendar.filters.symbol_placeholder')}
+                list="pnl-symbol-options"
+                value={symbolFilter}
+                onChange={(event) => setSymbolFilter(event.target.value)}
+              />
+              <datalist id="pnl-symbol-options">
+                {baseSymbolSuggestions.map((symbol) => (
+                  <option key={symbol} value={symbol} />
+                ))}
+              </datalist>
+            </div>
+            <div className={styles.filterField}>
+              <select
+                id="pnl-strategy-filter"
+                className={styles.filterSelect}
+                value={strategyFilter}
+                onChange={(event) => setStrategyFilter(event.target.value)}
+              >
+                <option value="all">{t('pnl_calendar.filters.strategy_all')}</option>
+                {strategyOptions.map((strategy) => (
+                  <option key={strategy} value={strategy}>
+                    {strategy}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
       </section>
       <section className={clsx(styles.calendarLayout, styles.calendarLayoutExpanded)}>
         <div className={styles.calendarCard}>
           <div className={styles.calendarHeader}>
-        <h2 className={styles.calendarTitle}>日历视图</h2>
+        <h2 className={styles.calendarTitle}>{t('pnl_calendar.calendar.title')}</h2>
         <div className={styles.monthSummaryRow}>
           <div className={styles.monthSummaryItem}>
-            <span className={styles.summaryLabel}>净盈亏</span>
+            <span className={styles.summaryLabel}>{t('pnl_calendar.calendar.summary_net')}</span>
             <strong
               className={clsx(styles.summaryValueCompact, {
                 [styles.positive]: monthSummary.netPnl > 0,
@@ -1136,19 +1136,19 @@ function PnLCalendarPage() {
             </strong>
           </div>
           <div className={styles.monthSummaryItem}>
-            <span className={styles.summaryLabel}>交易/标的</span>
+            <span className={styles.summaryLabel}>{t('pnl_calendar.calendar.summary_trades_symbols')}</span>
             <strong className={styles.summaryValueCompact}>
               {monthSummary.tradeCount} / {monthSummary.symbolCount}
             </strong>
           </div>
           <div className={clsx(styles.monthSummaryItem, styles.monthSummaryDesktopOnly)}>
-            <span className={styles.summaryLabel}>胜率</span>
+            <span className={styles.summaryLabel}>{t('pnl_calendar.calendar.summary_win_rate')}</span>
             <strong className={styles.summaryValueCompact}>
               {formatPercent(monthSummary.winRate)}
             </strong>
           </div>
           <div className={clsx(styles.monthSummaryItem, styles.monthSummaryDesktopOnly)}>
-            <span className={styles.summaryLabel}>ROI</span>
+            <span className={styles.summaryLabel}>{t('pnl_calendar.calendar.summary_roi')}</span>
             <strong className={styles.summaryValueCompact}>
               {formatPercent(monthSummary.roi)}
             </strong>
@@ -1156,68 +1156,39 @@ function PnLCalendarPage() {
         </div>
         <div className={styles.calendarActions}>
           <button type="button" className={styles.navButton} onClick={() => handleNavigateMonth(-1)}>
-            ← 上个月
+            {t('pnl_calendar.calendar.prev_month')}
           </button>
-          <span className={styles.monthLabel}>{monthLabel}</span>
+          <span className={styles.monthLabel}>
+            {monthAnchor.toLocaleDateString(locale, { year: 'numeric', month: '2-digit' })}
+          </span>
           <button type="button" className={styles.navButton} onClick={() => handleNavigateMonth(1)}>
-            下个月 →
+            {t('pnl_calendar.calendar.next_month')}
           </button>
         </div>
       </div>
-      <div className={styles.calendarGrid} role="grid">
+        <div className={styles.calendarGrid} role="grid">
         <div className={styles.weekdayHeader} style={{ gridColumn: '1 / -1' }}>
           {WEEKDAYS.map((day) => (
             <div key={day} className={styles.weekday}>
-              {day}
+              {t(`pnl_calendar.weekdays.${day}`)}
             </div>
           ))}
-          <div className={styles.weekday}>周汇总</div>
         </div>
         {monthWeeks.map((week, weekIndex) => {
-              const summary = buildWeekSummary(week, dayMap);
               return (
                 <Fragment key={`week-${weekIndex}`}>
                   {week.map((date, dayIndex) => {
+                    if (dayIndex === 0 || dayIndex === 6) {
+                      return null;
+                    }
                     if (!date) {
                       return <div key={`empty-${weekIndex}-${dayIndex}`} className={styles.emptyCell} />;
                     }
                     const dayData = dayMap.get(date);
-                    const dayNumber = Number(date.slice(-2));
                     const hasTrades = Boolean(dayData && dayData.tradeCount > 0);
-                    const isWeekend = new Date(date).getUTCDay() === 0 || new Date(date).getUTCDay() === 6;
                     const cellContent = (
                       <>
-                        <div className={styles.dayHeader}>
-                          <span className={styles.dayNumber}>{dayNumber}</span>
-                          <div className={styles.dayHeaderActions}>
-                            <button
-                              type="button"
-                              className={styles.logButton}
-                              onClick={(event) => {
-                                event.stopPropagation();
-                                handleOpenLogForDate(date);
-                              }}
-                              title="日志"
-                            >
-                              <svg
-                                width="12"
-                                height="12"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              >
-                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                                <polyline points="14 2 14 8 20 8" />
-                                <line x1="16" y1="13" x2="8" y2="13" />
-                                <line x1="16" y1="17" x2="8" y2="17" />
-                                <polyline points="10 9 9 9 8 9" />
-                              </svg>
-                            </button>
-                          </div>
-                        </div>
+                        <div className={styles.dayNumber}>{formatDayNumber(date)}</div>
                         <div
                           className={clsx(styles.dayPnl, {
                             [styles.positive]: dayData && dayData.netPnl > 0,
@@ -1226,19 +1197,6 @@ function PnLCalendarPage() {
                         >
                           {dayData ? formatPnlValue(dayData.netPnl) : null}
                         </div>
-                        {(dayData || !isWeekend) && (
-                          <>
-                            <div className={clsx(styles.dayMeta, styles.dayMetaPrimary)}>
-                              {dayData ? `${dayData.tradeCount} / ${dayData.symbolCount}` : null}
-                            </div>
-                            <div className={clsx(styles.dayMeta, styles.dayMetaSecondary)}>
-                              {dayData ? formatPercent(dayData.winRate) : null}
-                            </div>
-                            <div className={clsx(styles.dayMeta, styles.dayMetaSecondary)}>
-                              {dayData ? formatPercent(dayData.roi) : null}
-                            </div>
-                          </>
-                        )}
                       </>
                     );
 
@@ -1255,9 +1213,8 @@ function PnLCalendarPage() {
                         key={date}
                         role="button"
                         tabIndex={0}
-                        className={clsx(styles.dayCell, styles.dayCellActive, {
-                          [styles.dayCellWeekend]: isWeekend
-                        })}
+                        className={clsx(styles.dayCell, styles.dayCellActive)}
+                        title={date}
                         onClick={() => handleSelectDate(date)}
                         onKeyDown={(event) => {
                           if (event.key === 'Enter' || event.key === ' ') {
@@ -1270,26 +1227,6 @@ function PnLCalendarPage() {
                       </div>
                     );
                   })}
-                  <div className={styles.weekSummaryCell}>
-                    <div className={styles.weekSummaryTitle}>周汇总</div>
-                    <div
-                      className={clsx(styles.weekSummaryValue, {
-                        [styles.positive]: summary.netPnl > 0,
-                        [styles.negative]: summary.netPnl < 0
-                      })}
-                    >
-                      {summary.tradeCount ? formatPnlValue(summary.netPnl) : null}
-                    </div>
-                    <div className={clsx(styles.weekSummaryMeta, styles.weekSummaryMetaPrimary)}>
-                      {summary.tradeCount ? `${summary.tradeCount} / ${summary.symbolCount}` : null}
-                    </div>
-                    <div className={clsx(styles.weekSummaryMeta, styles.weekSummaryMetaSecondary)}>
-                      {summary.tradeCount ? formatPercent(summary.winRate) : null}
-                    </div>
-                    <div className={clsx(styles.weekSummaryMeta, styles.weekSummaryMetaSecondary)}>
-                      {summary.tradeCount ? formatPercent(summary.roi) : null}
-                    </div>
-                  </div>
                 </Fragment>
               );
             })}
@@ -1315,7 +1252,7 @@ function PnLCalendarPage() {
         <button
           type="button"
           className={styles.logSidebarBackdrop}
-          aria-label="关闭日志侧栏"
+          aria-label={t('pnl_calendar.logs.close_sidebar')}
           onClick={handleHideLogSidebar}
         />
       ) : null}
@@ -1351,8 +1288,15 @@ function PnLCalendarPage() {
       />
       <Modal
         open={Boolean(selectedDate)}
-        title={selectedDate ? `${selectedDate} Trade Detail` : 'Trade Detail'}
-        subtitle={selectedDay ? `净盈亏 ${formatPnlValue(selectedDay.netPnl)} · 交易 ${selectedDay.tradeCount} 笔` : undefined}
+        title={selectedDate ? t('pnl_calendar.detail.title_with_date', { date: selectedDate }) : t('pnl_calendar.detail.title')}
+        subtitle={
+          selectedDay
+            ? t('pnl_calendar.detail.subtitle', {
+                pnl: formatPnlValue(selectedDay.netPnl),
+                trades: selectedDay.tradeCount
+              })
+            : undefined
+        }
         onClose={handleCloseModal}
         size="lg"
         headerActions={
@@ -1363,7 +1307,7 @@ function PnLCalendarPage() {
               onClick={() => previousTradeDate && handleSelectDate(previousTradeDate)}
               disabled={!previousTradeDate}
             >
-              ← 前一交易日
+              {t('pnl_calendar.detail.prev_day')}
             </button>
             <button
               type="button"
@@ -1371,7 +1315,7 @@ function PnLCalendarPage() {
               onClick={() => nextTradeDate && handleSelectDate(nextTradeDate)}
               disabled={!nextTradeDate}
             >
-              后一交易日 →
+              {t('pnl_calendar.detail.next_day')}
             </button>
           </div>
         }
@@ -1380,7 +1324,7 @@ function PnLCalendarPage() {
           <div className={styles.modalContent}>
             <div className={styles.modalSummary}>
               <div className={styles.modalSummaryItem}>
-                <span>净盈亏</span>
+                <span>{t('pnl_calendar.detail.summary_net')}</span>
                 <strong className={clsx({
                   [styles.positive]: selectedDay.netPnl > 0,
                   [styles.negative]: selectedDay.netPnl < 0
@@ -1389,15 +1333,15 @@ function PnLCalendarPage() {
                 </strong>
               </div>
               <div className={styles.modalSummaryItem}>
-                <span>交易笔数 / 标的</span>
+                <span>{t('pnl_calendar.detail.summary_trades_symbols')}</span>
                 <strong>{selectedDay.tradeCount} / {selectedDay.symbolCount}</strong>
               </div>
               <div className={styles.modalSummaryItem}>
-                <span>胜率</span>
+                <span>{t('pnl_calendar.detail.summary_win_rate')}</span>
                 <strong>{formatPercent(selectedDay.winRate)}</strong>
               </div>
               <div className={styles.modalSummaryItem}>
-                <span>ROI</span>
+                <span>{t('pnl_calendar.detail.summary_roi')}</span>
                 <strong>{formatPercent(selectedDay.roi)}</strong>
               </div>
             </div>
@@ -1406,10 +1350,13 @@ function PnLCalendarPage() {
                 <div className={styles.detailHeader}>
                   <div>
                     <h3 className={styles.detailTitle}>
-                      {selectedGroup.symbol} · {selectedGroup.side}
+                      {selectedGroup.symbol} · {t(`pnl_calendar.detail.side.${selectedGroup.side.toLowerCase()}`)}
                     </h3>
                     <p className={styles.detailSubtitle}>
-                      合并 {selectedGroup.tradeTimes} 笔，净盈亏 {formatPnlValue(selectedGroup.netPnl)}
+                      {t('pnl_calendar.detail.merged_subtitle', {
+                        trades: selectedGroup.tradeTimes,
+                        pnl: formatPnlValue(selectedGroup.netPnl)
+                      })}
                     </p>
                   </div>
                   <button
@@ -1417,21 +1364,21 @@ function PnLCalendarPage() {
                     className={styles.linkButton}
                     onClick={() => setDetailGroupKey(null)}
                   >
-                    返回合并列表
+                    {t('pnl_calendar.detail.back_to_groups')}
                   </button>
                 </div>
                 <div className={styles.tableWrapper}>
                   <table className={styles.detailTable}>
                     <thead>
                       <tr>
-                        <th>Open Time</th>
-                        <th>Close Time</th>
-                        <th>Instrument</th>
-                        <th>方向</th>
-                        <th>数量</th>
-                        <th>Trade Times</th>
-                        <th>净盈亏</th>
-                        <th>Net ROI</th>
+                        <th>{t('pnl_calendar.detail.table.open_time')}</th>
+                        <th>{t('pnl_calendar.detail.table.close_time')}</th>
+                        <th>{t('pnl_calendar.detail.table.instrument')}</th>
+                        <th>{t('pnl_calendar.detail.table.side')}</th>
+                        <th>{t('pnl_calendar.detail.table.quantity')}</th>
+                        <th>{t('pnl_calendar.detail.table.trade_times')}</th>
+                        <th>{t('pnl_calendar.detail.table.net_pnl')}</th>
+                        <th>{t('pnl_calendar.detail.table.net_roi')}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1440,7 +1387,9 @@ function PnLCalendarPage() {
                           <td>{formatDateTime(trade.OpenDateTime)}</td>
                           <td>{formatDateTime(trade.DateTime)}</td>
                           <td>{formatInstrument(trade.Instrument)}</td>
-                          <td>{trade['Buy/Sell']} ({trade['Buy/Sell'] === 'Buy' ? 'Long' : 'Short'})</td>
+                          <td>
+                            {t(`pnl_calendar.detail.side.${trade['Buy/Sell'] === 'Buy' ? 'long' : 'short'}`)} ({trade['Buy/Sell']})
+                          </td>
                           <td>{trade.Quantity}</td>
                           <td>{formatTradeDuration(resolveTradeDurationMinutes(trade.OpenDateTime, trade.DateTime))}</td>
                           <td
@@ -1460,21 +1409,21 @@ function PnLCalendarPage() {
               </div>
             ) : (
               <div className={styles.detailSection}>
-                <h3 className={styles.detailTitle}>合并交易列表</h3>
+                <h3 className={styles.detailTitle}>{t('pnl_calendar.detail.group_title')}</h3>
                 <div className={styles.tableWrapper}>
                   <table className={styles.detailTable}>
                     <thead>
                       <tr>
-                        <th>Open Time</th>
-                        <th>Instrument</th>
-                        <th>标的</th>
-                        <th>方向</th>
-                        <th>合并笔数</th>
-                        <th>Trade Times</th>
-                        <th>净盈亏</th>
-                        <th>Net ROI</th>
-                        <th>胜率</th>
-                        <th>ROI</th>
+                        <th>{t('pnl_calendar.detail.table.open_time')}</th>
+                        <th>{t('pnl_calendar.detail.table.instrument')}</th>
+                        <th>{t('pnl_calendar.detail.table.symbol')}</th>
+                        <th>{t('pnl_calendar.detail.table.side')}</th>
+                        <th>{t('pnl_calendar.detail.table.merged_trades')}</th>
+                        <th>{t('pnl_calendar.detail.table.trade_times')}</th>
+                        <th>{t('pnl_calendar.detail.table.net_pnl')}</th>
+                        <th>{t('pnl_calendar.detail.table.net_roi')}</th>
+                        <th>{t('pnl_calendar.detail.table.win_rate')}</th>
+                        <th>{t('pnl_calendar.detail.table.roi')}</th>
                         <th />
                       </tr>
                     </thead>
@@ -1499,7 +1448,7 @@ function PnLCalendarPage() {
                             <td>{formatDateTime(group.openDateTime)}</td>
                             <td>{formatInstrument(group.instrument)}</td>
                             <td>{group.symbol}</td>
-                            <td>{group.side}</td>
+                            <td>{t(`pnl_calendar.detail.side.${group.side.toLowerCase()}`)}</td>
                             <td>{group.tradeTimes}</td>
                             <td>{formatTradeDuration(averageDuration)}</td>
                             <td
@@ -1519,7 +1468,7 @@ function PnLCalendarPage() {
                                 className={styles.linkButton}
                                 onClick={() => setDetailGroupKey(group.key)}
                               >
-                                View Details
+                                {t('pnl_calendar.detail.view_details')}
                               </button>
                             </td>
                           </tr>
@@ -1532,7 +1481,7 @@ function PnLCalendarPage() {
             )}
           </div>
         ) : (
-          <div className={styles.modalEmpty}>暂无交易明细。</div>
+          <div className={styles.modalEmpty}>{t('pnl_calendar.detail.empty')}</div>
         )}
       </Modal>
       <LogModal

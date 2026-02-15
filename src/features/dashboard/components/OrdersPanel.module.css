@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
+  width: 100%;
 }
 
 .meta {
@@ -21,13 +22,10 @@
 .headerControls {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.8rem;
   flex-wrap: wrap;
   min-width: 0;
-}
-
-.lastSync {
-  white-space: nowrap;
+  width: 100%;
 }
 
 .assetTags {
@@ -35,6 +33,33 @@
   align-items: center;
   gap: 0.4rem;
   flex-wrap: wrap;
+}
+
+.filterGroup {
+  display: grid;
+  grid-template-columns: repeat(2, max-content);
+  column-gap: 0.6rem;
+  row-gap: 0.5rem;
+  align-items: center;
+}
+
+.select {
+  width: max-content;
+  min-width: auto;
+  padding: 0.35rem 0.6rem;
+  border-radius: 8px;
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  font-size: 0.8rem;
+}
+
+.selectWide {
+  width: max-content;
+}
+
+.actionSelect {
+  width: max-content;
 }
 
 .tag {
@@ -63,24 +88,45 @@
 }
 
 .scrollArea {
-  /* 固定两行显示：每行高度由变量控制 */
-  --order-card-row-height: 180px;
-  max-height: calc(var(--order-card-row-height) * 2 + var(--spacing-md));
-  overflow-y: auto;
-  padding-right: 0.4rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 0.4rem;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 0.75rem;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
 }
 
 .cardList {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-auto-flow: column;
+  grid-auto-columns: 66.666vw;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
   gap: var(--spacing-md);
+  width: max-content;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  grid-auto-rows: minmax(var(--order-card-row-height), auto);
+  grid-auto-flow: column;
+  grid-auto-columns: 66.666vw;
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: minmax(0, 1fr);
   gap: var(--spacing-md);
+  width: max-content;
+}
+
+.grid > * {
+  scroll-snap-align: start;
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .grid,
+  .cardList {
+    grid-auto-columns: 66.666vw;
+  }
 }
 
 .empty {

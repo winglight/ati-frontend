@@ -1,10 +1,9 @@
-import PanelCard, { PanelAction } from './PanelCard';
+import PanelCard from './PanelCard';
 import { useTranslation } from '@i18n';
 import { useMemo, useState } from 'react';
 import styles from './OrdersPanel.module.css';
 import OrderSummaryCard from '@components/OrderSummaryCard';
 import type { OrderItem } from '../types';
-import { formatLocalDateTime } from '../../../utils/dateTime';
 
 interface OrdersPanelProps {
   orders: OrderItem[];
@@ -14,7 +13,6 @@ interface OrdersPanelProps {
   onRefresh?: () => void;
   onSync?: () => void;
   syncInProgress?: boolean;
-  lastUpdated?: string;
   onCreateOrder: () => void;
 }
 
@@ -26,28 +24,30 @@ function OrdersPanel({
   onRefresh,
   onSync,
   syncInProgress,
-  lastUpdated,
   onCreateOrder
 }: OrdersPanelProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [selectedSymbol, setSelectedSymbol] = useState<string>('__ALL__');
   const [selectedStrategy, setSelectedStrategy] = useState<string>('__ALL__');
   const [scope, setScope] = useState<'active' | 'all'>('active');
-  const actions: PanelAction[] = [
-    { label: t('dashboard.orders.actions.place_order'), onClick: onCreateOrder, variant: 'primary' },
-    onSync
-      ? {
-          label: syncInProgress ? t('dashboard.orders.actions.syncing') : t('dashboard.orders.actions.sync'),
-          onClick: syncInProgress ? undefined : onSync,
-          disabled: Boolean(syncInProgress)
-        }
-      : null,
-    onRefresh ? { label: t('dashboard.orders.actions.refresh'), onClick: onRefresh } : null
-  ].filter(Boolean) as PanelAction[];
+  const [actionSelection, setActionSelection] = useState<string>('');
+  const actionOptions = useMemo(
+    () =>
+      [
+        { value: 'create', label: t('dashboard.orders.actions.place_order'), onClick: onCreateOrder },
+        onSync
+          ? {
+              value: 'sync',
+              label: syncInProgress ? t('dashboard.orders.actions.syncing') : t('dashboard.orders.actions.sync'),
+              onClick: syncInProgress ? undefined : onSync,
+              disabled: Boolean(syncInProgress)
+            }
+          : null,
+        onRefresh ? { value: 'refresh', label: t('dashboard.orders.actions.refresh'), onClick: onRefresh } : null
+      ].filter(Boolean) as Array<{ value: string; label: string; onClick?: () => void; disabled?: boolean }>,
+    [onCreateOrder, onRefresh, onSync, syncInProgress, t]
+  );
 
-  const formattedUpdated = lastUpdated
-    ? formatLocalDateTime(lastUpdated, i18n.language)
-    : '—';
 
   const symbols = useMemo(() => {
     const uniq = Array.from(new Set(orders.map((o) => o.symbol)));
@@ -112,57 +112,62 @@ function OrdersPanel({
     <PanelCard
       title={t('dashboard.orders.title')}
       subtitle={<span className={styles.count}>{visibleOrders.length}</span>}
-      actions={actions}
       className={styles.card}
       headerMeta={
         <div className={styles.headerControls}>
-          <span className={styles.lastSync}>{t('dashboard.orders.last_sync_prefix')}{formattedUpdated}</span>
-          <div className={styles.assetTags}>
-            <button
-              type="button"
-              className={`${styles.tag} ${styles.tagSelected}`}
-              onClick={() => setScope(scope === 'active' ? 'all' : 'active')}
+          <div className={styles.filterGroup}>
+            <select
+              className={styles.select}
+              value={scope}
+              onChange={(event) => setScope(event.target.value as 'active' | 'all')}
             >
-              {scope === 'active' ? t('dashboard.orders.filter_active') : t('dashboard.orders.filter_all')}
-            </button>
-          </div>
-          <div className={styles.assetTags}>
-            <button
-              type="button"
-              className={`${styles.tag} ${selectedSymbol === '__ALL__' ? styles.tagSelected : ''}`}
-              onClick={() => handleSelectTag('__ALL__')}
+              <option value="active">{t('dashboard.orders.filter_active')}</option>
+              <option value="all">{t('dashboard.orders.filter_all')}</option>
+            </select>
+            <select
+              className={`${styles.select} ${styles.selectWide}`}
+              value={selectedSymbol}
+              onChange={(event) => handleSelectTag(event.target.value as '__ALL__' | string)}
             >
-              {t('dashboard.orders.filter_all')}
-            </button>
-            {symbols.map((sym) => (
-              <button
-                key={sym}
-                type="button"
-                className={`${styles.tag} ${selectedSymbol === sym ? styles.tagSelected : ''}`}
-                onClick={() => handleSelectTag(sym)}
-              >
-                {sym}
-              </button>
-            ))}
-          </div>
-          <div className={styles.assetTags}>
-            <button
-              type="button"
-              className={`${styles.tag} ${selectedStrategy === '__ALL__' ? styles.tagSelected : ''}`}
-              onClick={() => handleSelectStrategyTag('__ALL__')}
+              <option value="__ALL__">{t('dashboard.orders.filter_all')}</option>
+              {symbols.map((sym) => (
+                <option key={sym} value={sym}>
+                  {sym}
+                </option>
+              ))}
+            </select>
+            <select
+              className={`${styles.select} ${styles.selectWide}`}
+              value={selectedStrategy}
+              onChange={(event) => handleSelectStrategyTag(event.target.value as '__ALL__' | string)}
             >
-              {t('dashboard.orders.filter_all')}
-            </button>
-            {strategyOptions.map((opt) => (
-              <button
-                key={opt.id}
-                type="button"
-                className={`${styles.tag} ${selectedStrategy === opt.id ? styles.tagSelected : ''}`}
-                onClick={() => handleSelectStrategyTag(opt.id)}
-              >
-                {opt.label}
-              </button>
-            ))}
+              <option value="__ALL__">{t('dashboard.orders.filter_all')}</option>
+              {strategyOptions.map((opt) => (
+                <option key={opt.id} value={opt.id}>
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+            <select
+              className={`${styles.select} ${styles.actionSelect}`}
+              value={actionSelection}
+              onChange={(event) => {
+                const next = event.target.value;
+                setActionSelection(next);
+                const action = actionOptions.find((item) => item.value === next);
+                if (action && !action.disabled) {
+                  action.onClick?.();
+                }
+                setActionSelection('');
+              }}
+            >
+              <option value="">{t('dashboard.orders.actions.select_action')}</option>
+              {actionOptions.map((action) => (
+                <option key={action.value} value={action.value} disabled={action.disabled}>
+                  {action.label}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       }

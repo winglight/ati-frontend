@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import Modal from '@components/modals/Modal';
 import styles from './PnLCalendarPage.module.css';
 import type { TradeLogPayload, TradeLogRecord, TradeLogType } from '@services/tradeLogsApi';
+import { useTranslation } from '@i18n';
 
 interface LogDefaults {
   date: string;
@@ -166,6 +167,7 @@ function LogModal({
   onSave,
   onEdit
 }: LogModalProps) {
+  const { t } = useTranslation();
   const [form, setForm] = useState<LogFormState>(() =>
     getInitialFormState(log, date, dailyDefaults, weeklyDefaults)
   );
@@ -179,13 +181,18 @@ function LogModal({
 
   const readOnly = mode === 'view';
   const isWeekly = form.type === 'weekly';
-  const modalTitle = mode === 'create' ? '新建交易日志' : '交易日志';
+  const modalTitle = mode === 'create' ? t('pnl_calendar.log_modal.create_title') : t('pnl_calendar.log_modal.title');
   const modalSubtitle = useMemo(() => {
     if (mode === 'create') {
-      return '记录当日或当周的交易复盘。';
+      return t('pnl_calendar.log_modal.create_subtitle');
     }
-    return log ? `${log.date} · ${log.type === 'weekly' ? '周复盘' : '日复盘'}` : undefined;
-  }, [log, mode]);
+    return log
+      ? t('pnl_calendar.log_modal.subtitle_with_date', {
+          date: log.date,
+          type: log.type === 'weekly' ? t('pnl_calendar.logs.type_weekly') : t('pnl_calendar.logs.type_daily')
+        })
+      : undefined;
+  }, [log, mode, t]);
 
   const handleFieldChange = (key: keyof LogFormState) => (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const value = event.target.value;
@@ -244,29 +251,37 @@ function LogModal({
   const renderWeeklyMetrics = () => (
     <div className={styles.logMetrics}>
       <div className={styles.logMetricItem}>
-        <span>周交易数</span>
-        <strong>{form.weeklyTotalTrades || '—'}</strong>
+        <span>{t('pnl_calendar.log_modal.weekly_total_trades')}</span>
+        <strong>{form.weeklyTotalTrades || t('pnl_calendar.common.empty')}</strong>
       </div>
       <div className={styles.logMetricItem}>
-        <span>周盈亏</span>
-        <strong>{form.weeklyPnlResult || '—'}</strong>
+        <span>{t('pnl_calendar.log_modal.weekly_pnl')}</span>
+        <strong>{form.weeklyPnlResult || t('pnl_calendar.common.empty')}</strong>
       </div>
       <div className={styles.logMetricItem}>
-        <span>最大盈利</span>
-        <strong>{form.weeklyMaxWin || '—'}</strong>
+        <span>{t('pnl_calendar.log_modal.weekly_max_win')}</span>
+        <strong>{form.weeklyMaxWin || t('pnl_calendar.common.empty')}</strong>
       </div>
       <div className={styles.logMetricItem}>
-        <span>最大亏损</span>
-        <strong>{form.weeklyMaxLoss || '—'}</strong>
+        <span>{t('pnl_calendar.log_modal.weekly_max_loss')}</span>
+        <strong>{form.weeklyMaxLoss || t('pnl_calendar.common.empty')}</strong>
       </div>
       <div className={styles.logMetricItem}>
-        <span>胜率</span>
-        <strong>{form.weeklyWinRate ? `${(Number(form.weeklyWinRate) * 100).toFixed(1)}%` : '—'}</strong>
-      </div>
-      <div className={styles.logMetricItem}>
-        <span>遵守日限额</span>
+        <span>{t('pnl_calendar.log_modal.weekly_win_rate')}</span>
         <strong>
-          {form.followsDailyLimit === null ? '—' : form.followsDailyLimit ? '是' : '否'}
+          {form.weeklyWinRate
+            ? t('pnl_calendar.common.percent', { value: (Number(form.weeklyWinRate) * 100).toFixed(1) })
+            : t('pnl_calendar.common.empty')}
+        </strong>
+      </div>
+      <div className={styles.logMetricItem}>
+        <span>{t('pnl_calendar.log_modal.follows_daily_limit')}</span>
+        <strong>
+          {form.followsDailyLimit === null
+            ? t('pnl_calendar.common.empty')
+            : form.followsDailyLimit
+            ? t('pnl_calendar.common.yes')
+            : t('pnl_calendar.common.no')}
         </strong>
       </div>
     </div>
@@ -284,7 +299,7 @@ function LogModal({
         <div className={styles.logFormRow}>
           <div className={styles.logFormGroup}>
             <label className={styles.logFormLabel} htmlFor="trade-log-date">
-              日期
+              {t('pnl_calendar.log_modal.fields.date')}
             </label>
             <input
               id="trade-log-date"
@@ -297,7 +312,7 @@ function LogModal({
           </div>
           <div className={styles.logFormGroup}>
             <label className={styles.logFormLabel} htmlFor="trade-log-type">
-              类型
+              {t('pnl_calendar.log_modal.fields.type')}
             </label>
             <select
               id="trade-log-type"
@@ -306,13 +321,13 @@ function LogModal({
               onChange={handleTypeChange}
               disabled={readOnly}
             >
-              <option value="daily">日复盘</option>
-              <option value="weekly">周复盘</option>
+              <option value="daily">{t('pnl_calendar.logs.type_daily')}</option>
+              <option value="weekly">{t('pnl_calendar.logs.type_weekly')}</option>
             </select>
           </div>
           <div className={styles.logFormGroup}>
             <label className={styles.logFormLabel} htmlFor="trade-log-associated">
-              关联交易 ID
+              {t('pnl_calendar.log_modal.fields.associated_trades')}
             </label>
             <input
               id="trade-log-associated"
@@ -320,60 +335,60 @@ function LogModal({
               className={styles.logFormInput}
               value={form.associatedTrades}
               onChange={handleFieldChange('associatedTrades')}
-              placeholder="用逗号分隔"
+              placeholder={t('pnl_calendar.log_modal.placeholders.comma_split')}
               disabled={readOnly}
             />
-            <span className={styles.logFormHint}>默认填入当日/当周交易。</span>
+            <span className={styles.logFormHint}>{t('pnl_calendar.log_modal.hints.associated_trades')}</span>
           </div>
         </div>
 
         {isWeekly ? (
           <div className={styles.logSection}>
-            <h4 className={styles.logSectionTitle}>周度指标</h4>
+            <h4 className={styles.logSectionTitle}>{t('pnl_calendar.log_modal.weekly_section')}</h4>
             {renderWeeklyMetrics()}
             <div className={styles.logFormGrid}>
               <div className={styles.logFormGroup}>
                 <label className={styles.logFormLabel} htmlFor="trade-log-success">
-                  按计划执行
+                  {t('pnl_calendar.log_modal.weekly.success_planned')}
                 </label>
                 <textarea
                   id="trade-log-success"
                   className={styles.logFormTextarea}
                   value={form.successPlannedTrades}
                   onChange={handleFieldChange('successPlannedTrades')}
-                  placeholder="每行一项或用逗号分隔"
+                  placeholder={t('pnl_calendar.log_modal.placeholders.multi_line')}
                   disabled={readOnly}
                 />
               </div>
               <div className={styles.logFormGroup}>
                 <label className={styles.logFormLabel} htmlFor="trade-log-violated">
-                  违规次数
+                  {t('pnl_calendar.log_modal.weekly.mistake_violated')}
                 </label>
                 <textarea
                   id="trade-log-violated"
                   className={styles.logFormTextarea}
                   value={form.mistakeViolatedPlans}
                   onChange={handleFieldChange('mistakeViolatedPlans')}
-                  placeholder="每行一项或用逗号分隔"
+                  placeholder={t('pnl_calendar.log_modal.placeholders.multi_line')}
                   disabled={readOnly}
                 />
               </div>
               <div className={styles.logFormGroup}>
                 <label className={styles.logFormLabel} htmlFor="trade-log-emotional">
-                  情绪失控次数
+                  {t('pnl_calendar.log_modal.weekly.mistake_emotional')}
                 </label>
                 <textarea
                   id="trade-log-emotional"
                   className={styles.logFormTextarea}
                   value={form.mistakeEmotionalFactors}
                   onChange={handleFieldChange('mistakeEmotionalFactors')}
-                  placeholder="每行一项或用逗号分隔"
+                  placeholder={t('pnl_calendar.log_modal.placeholders.multi_line')}
                   disabled={readOnly}
                 />
               </div>
               <div className={styles.logFormGroup}>
                 <label className={styles.logFormLabel} htmlFor="trade-log-good-habit">
-                  下周好习惯
+                  {t('pnl_calendar.log_modal.weekly.next_good_habit')}
                 </label>
                 <input
                   id="trade-log-good-habit"
@@ -386,7 +401,7 @@ function LogModal({
               </div>
               <div className={styles.logFormGroup}>
                 <label className={styles.logFormLabel} htmlFor="trade-log-avoid">
-                  避免的错误
+                  {t('pnl_calendar.log_modal.weekly.next_mistake_avoid')}
                 </label>
                 <input
                   id="trade-log-avoid"
@@ -400,7 +415,7 @@ function LogModal({
             </div>
             <div className={styles.logFormGroup}>
               <label className={styles.logFormLabel} htmlFor="trade-log-actions">
-                具体行动
+                {t('pnl_calendar.log_modal.weekly.next_actions')}
               </label>
               <textarea
                 id="trade-log-actions"
@@ -412,7 +427,7 @@ function LogModal({
             </div>
             <div className={styles.logFormGroup}>
               <label className={styles.logFormLabel} htmlFor="trade-log-weekly-affirmation">
-                周度自我肯定
+                {t('pnl_calendar.log_modal.weekly.affirmation')}
               </label>
               <textarea
                 id="trade-log-weekly-affirmation"
@@ -425,11 +440,11 @@ function LogModal({
           </div>
         ) : (
           <div className={styles.logSection}>
-            <h4 className={styles.logSectionTitle}>日度记录</h4>
+            <h4 className={styles.logSectionTitle}>{t('pnl_calendar.log_modal.daily_section')}</h4>
             <div className={styles.logFormGrid}>
               <div className={styles.logFormGroup}>
                 <label className={styles.logFormLabel} htmlFor="trade-log-trades-count">
-                  交易笔数
+                  {t('pnl_calendar.log_modal.daily.trades_count')}
                 </label>
                 <input
                   id="trade-log-trades-count"
@@ -443,7 +458,7 @@ function LogModal({
               </div>
               <div className={styles.logFormGroup}>
                 <label className={styles.logFormLabel} htmlFor="trade-log-feeling">
-                  整体感受
+                  {t('pnl_calendar.log_modal.daily.overall_feeling')}
                 </label>
                 <input
                   id="trade-log-feeling"
@@ -457,7 +472,7 @@ function LogModal({
             </div>
             <div className={styles.logFormGroup}>
               <label className={styles.logFormLabel} htmlFor="trade-log-fact">
-                事实记录
+                {t('pnl_calendar.log_modal.daily.fact_record')}
               </label>
               <textarea
                 id="trade-log-fact"
@@ -469,7 +484,7 @@ function LogModal({
             </div>
             <div className={styles.logFormGroup}>
               <label className={styles.logFormLabel} htmlFor="trade-log-learning">
-                学习要点
+                {t('pnl_calendar.log_modal.daily.learning_points')}
               </label>
               <textarea
                 id="trade-log-learning"
@@ -481,7 +496,7 @@ function LogModal({
             </div>
             <div className={styles.logFormGroup}>
               <label className={styles.logFormLabel} htmlFor="trade-log-improvement">
-                改进方向
+                {t('pnl_calendar.log_modal.daily.improvement_direction')}
               </label>
               <textarea
                 id="trade-log-improvement"
@@ -493,7 +508,7 @@ function LogModal({
             </div>
             <div className={styles.logFormGroup}>
               <label className={styles.logFormLabel} htmlFor="trade-log-affirmation">
-                自我肯定
+                {t('pnl_calendar.log_modal.daily.self_affirmation')}
               </label>
               <textarea
                 id="trade-log-affirmation"
@@ -510,10 +525,10 @@ function LogModal({
           {mode === 'view' ? (
             <>
               <button type="button" className={styles.logSecondaryButton} onClick={onEdit}>
-                编辑
+                {t('pnl_calendar.log_modal.actions.edit')}
               </button>
               <button type="button" className={styles.logPrimaryButton} onClick={onClose}>
-                关闭
+                {t('pnl_calendar.log_modal.actions.close')}
               </button>
             </>
           ) : (
@@ -525,10 +540,10 @@ function LogModal({
                 })}
                 disabled={readOnly}
               >
-                保存日志
+                {t('pnl_calendar.log_modal.actions.save')}
               </button>
               <button type="button" className={styles.logSecondaryButton} onClick={onClose}>
-                取消
+                {t('pnl_calendar.log_modal.actions.cancel')}
               </button>
             </>
           )}

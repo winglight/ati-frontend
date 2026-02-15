@@ -8,7 +8,7 @@
     "unconfigured": "Not configured"
   },
   "topbar": {
-    "brand": { "title": "Algo Trader Console" },
+    "brand": { "title": "ATI" },
     "status": {
       "connected": "WebSocket Connected",
       "connecting": "Connecting",
@@ -26,7 +26,7 @@
       "logs": "Logs",
       "optimizerPlans": "Optimizer Plans"
     },
-    "user": { "guest": "Guest", "role_guest": "Guest Mode" },
+    "user": { "guest": "Guest", "role_guest": "Guest Mode", "version": "Version" },
     "lang": {
       "switch_to_en": "Switch to English",
       "switch_to_zh": "切换为中文"
@@ -364,6 +364,7 @@
     "orders": {
       "title": "Orders",
       "actions": {
+        "select_action": "Actions",
         "place_order": "New Order",
         "sync": "Sync",
         "syncing": "Syncing…",
@@ -443,6 +444,246 @@
       "doc_url_missing": "Documentation URL not configured"
     },
     "error_prefix": "Error:"
+  },
+
+  "pnl_calendar": {
+    "common": {
+      "empty": "—",
+      "yes": "Yes",
+      "no": "No",
+      "percent": "{{value}}%"
+    },
+    "duration": {
+      "minutes": "{{count}}m",
+      "hours": "{{count}}h",
+      "hours_minutes": "{{hours}}h {{minutes}}m"
+    },
+    "filters": {
+      "toggle": "Filters",
+      "start_date": "Start date",
+      "end_date": "End date",
+      "to": "to",
+      "symbol_placeholder": "e.g., MNQ or MNQ*",
+      "strategy_all": "All strategies",
+      "range_week": "This week",
+      "range_month": "This month",
+      "range_last30": "Last 30 days",
+      "range_quarter": "This quarter",
+      "range_ytd": "YTD"
+    },
+    "logs": {
+      "title": "Trade Logs",
+      "subtitle": "Review daily/weekly notes in reverse order.",
+      "loading": "Loading logs...",
+      "empty": "No logs for the current range.",
+      "open": "Open logs",
+      "create": "New log",
+      "edit": "Edit",
+      "delete": "Delete",
+      "close_sidebar": "Close log sidebar",
+      "confirm_delete": "Delete {{date}} {{type}} log?",
+      "weekly": "Weekly",
+      "daily": "Daily",
+      "type_weekly": "Weekly review",
+      "type_daily": "Daily review",
+      "weekly_summary": "Trades {{trades}} · Weekly PnL {{pnl}}",
+      "weekly_trades": "Trades {{trades}}",
+      "weekly_default": "Weekly review record",
+      "daily_summary": "Trades {{trades}} · Feeling {{feeling}}",
+      "daily_trades": "Trades {{trades}}",
+      "daily_feeling_only": "Feeling {{feeling}}",
+      "daily_default": "Daily review record"
+    },
+    "calendar": {
+      "title": "Calendar View",
+      "summary_net": "Net PnL",
+      "summary_trades_symbols": "Trades / Symbols",
+      "summary_win_rate": "Win rate",
+      "summary_roi": "ROI",
+      "prev_month": "← Previous",
+      "next_month": "Next →"
+    },
+    "weekdays": {
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri"
+    },
+    "overview": {
+      "feeling_none": "No trades",
+      "feeling_positive": "Good performance",
+      "feeling_negative": "Needs adjustment",
+      "feeling_flat": "Stable"
+    },
+    "detail": {
+      "title": "Trade Detail",
+      "title_with_date": "{{date}} Trade Detail",
+      "subtitle": "Net {{pnl}} · {{trades}} trades",
+      "prev_day": "← Previous day",
+      "next_day": "Next day →",
+      "summary_net": "Net PnL",
+      "summary_trades_symbols": "Trades / Symbols",
+      "summary_win_rate": "Win rate",
+      "summary_roi": "ROI",
+      "side": { "long": "Long", "short": "Short" },
+      "merged_subtitle": "Merged {{trades}} trades, Net {{pnl}}",
+      "back_to_groups": "Back to groups",
+      "group_title": "Merged trades",
+      "view_details": "View details",
+      "empty": "No trade details.",
+      "table": {
+        "open_time": "Open Time",
+        "close_time": "Close Time",
+        "instrument": "Instrument",
+        "side": "Side",
+        "quantity": "Qty",
+        "trade_times": "Trade Time",
+        "net_pnl": "Net PnL",
+        "net_roi": "Net ROI",
+        "symbol": "Symbol",
+        "merged_trades": "Merged trades",
+        "win_rate": "Win rate",
+        "roi": "ROI"
+      }
+    },
+    "log_modal": {
+      "create_title": "New Trade Log",
+      "title": "Trade Log",
+      "create_subtitle": "Record daily or weekly trade review.",
+      "subtitle_with_date": "{{date}} · {{type}}",
+      "weekly_total_trades": "Weekly trades",
+      "weekly_pnl": "Weekly PnL",
+      "weekly_max_win": "Max win",
+      "weekly_max_loss": "Max loss",
+      "weekly_win_rate": "Win rate",
+      "follows_daily_limit": "Follow daily limit",
+      "fields": {
+        "date": "Date",
+        "type": "Type",
+        "associated_trades": "Associated trade IDs"
+      },
+      "placeholders": {
+        "comma_split": "Comma separated",
+        "multi_line": "One per line or comma separated"
+      },
+      "hints": {
+        "associated_trades": "Prefilled with trades of the day/week."
+      },
+      "weekly_section": "Weekly metrics",
+      "weekly": {
+        "success_planned": "Followed plan",
+        "mistake_violated": "Violations",
+        "mistake_emotional": "Emotional mistakes",
+        "next_good_habit": "Next good habit",
+        "next_mistake_avoid": "Mistakes to avoid",
+        "next_actions": "Action items",
+        "affirmation": "Weekly affirmation"
+      },
+      "daily_section": "Daily notes",
+      "daily": {
+        "trades_count": "Trades count",
+        "overall_feeling": "Overall feeling",
+        "fact_record": "Facts",
+        "learning_points": "Learnings",
+        "improvement_direction": "Improvements",
+        "self_affirmation": "Self affirmation"
+      },
+      "actions": {
+        "edit": "Edit",
+        "close": "Close",
+        "save": "Save log",
+        "cancel": "Cancel"
+      }
+    },
+    "stats": {
+      "title": "Performance Overview",
+      "subtitle": "Key metrics update dynamically with filters.",
+      "net_pnl": "Net PnL",
+      "total_trades": "Trades",
+      "win_rate": "Win rate",
+      "profit_day_rate": "Profitable day rate",
+      "avg_trade_pnl": "Avg trade PnL",
+      "profit_factor": "Profit Factor",
+      "avg_win_loss_ratio": "Avg win/loss ratio",
+      "max_drawdown": "Max drawdown",
+      "avg_duration": "Avg holding time",
+      "avg_daily_pnl": "Avg daily PnL",
+      "footnote_range": "Summary for current range",
+      "footnote_trades": "Total trade count",
+      "footnote_win_loss": "Win/Flat/Loss: {{win}}/{{flat}}/{{loss}}",
+      "footnote_day_win_loss": "Win/Flat/Loss: {{win}}/{{flat}}/{{loss}}",
+      "footnote_avg_trade_pnl": "Average per-trade net PnL",
+      "footnote_profit_factor": "Total profit / total loss",
+      "footnote_avg_win_loss_ratio": "Avg profit / avg loss",
+      "footnote_drawdown": "Peak drawdown of equity",
+      "footnote_duration": "Including open/close time",
+      "footnote_daily_pnl": "Average by trading day"
+    },
+    "charts": {
+      "title": "Performance Charts",
+      "subtitle": "Break down PnL by time, trade traits, and risk.",
+      "empty": "Not enough data to draw charts. Adjust filters.",
+      "labels": {
+        "net_pnl": "Net PnL",
+        "win_rate": "Win rate",
+        "profit_amount": "Profit amount",
+        "loss_amount": "Loss amount",
+        "avg_win_loss_ratio": "Avg win/loss ratio",
+        "cumulative_pnl": "Cumulative net PnL",
+        "daily_net": "Daily net PnL",
+        "drawdown": "Drawdown",
+        "amount": "Amount"
+      },
+      "cumulative": {
+        "title": "Daily Net Cumulative PnL",
+        "subtitle": "Cumulative net PnL and equity curve."
+      },
+      "daily_net": {
+        "title": "Net Daily PnL",
+        "subtitle": "Daily net PnL distribution."
+      },
+      "duration": {
+        "title": "Trade Duration Performance",
+        "subtitle": "PnL and win rate by holding time (dual axis)."
+      },
+      "time": {
+        "title": "Trade Time Performance",
+        "subtitle": "PnL and win rate by time window (dual axis)."
+      },
+      "drawdown": {
+        "title": "Drawdown",
+        "subtitle": "Equity drawdown depth."
+      },
+      "symbols": {
+        "title": "Top Profitable / Most Loss Symbols",
+        "subtitle": "Symbols with highest and lowest contribution."
+      },
+      "top_profit": {
+        "title": "Top Profitable",
+        "subtitle": "Top contributing profitable symbols.",
+        "empty": "No profitable symbols to show."
+      },
+      "top_loss": {
+        "title": "Most Loss",
+        "subtitle": "Top contributing loss symbols.",
+        "empty": "No loss symbols to show."
+      },
+      "weekly_stats": {
+        "title": "Weekly Statistics",
+        "subtitle": "Weekly net PnL and win rate overview."
+      },
+      "weekly_win_loss": {
+        "title": "Weekly Win/Loss Analysis",
+        "subtitle": "Stacked profit/loss with avg win/loss line."
+      },
+      "table": {
+        "symbol": "Symbol",
+        "profit": "Profit",
+        "loss": "Loss",
+        "trades": "Trades"
+      }
+    }
   },
   
   "orders": {
@@ -605,7 +846,7 @@
 
   "dashboard_strategies": {
     "title": "Strategies",
-    "actions": { "add": "Add", "refresh": "Refresh" },
+    "actions": { "add": "Add", "refresh": "Refresh", "performance": "Performance", "select_action": "Actions" },
     "empty": "No strategies yet; click Add to create.",
     "card": {
       "status": { "running": "Running", "stopped": "Stopped", "error": "Error", "starting": "Starting" },

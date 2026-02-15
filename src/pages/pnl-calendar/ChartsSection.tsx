@@ -14,6 +14,7 @@ import {
 import { Bar, Chart, Line } from 'react-chartjs-2';
 import clsx from 'clsx';
 import styles from './PnLCalendarPage.module.css';
+import { useTranslation } from '@i18n';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, PointElement, LineElement, Tooltip, Legend, Filler);
 
@@ -99,15 +100,6 @@ const baseBarOptions: ChartOptions<'bar'> = {
   }
 };
 
-const formatPnlValue = (value: number): string => {
-  const formatter = new Intl.NumberFormat('zh-CN', {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
-  });
-  const sign = value > 0 ? '+' : '';
-  return `${sign}${formatter.format(value)}`;
-};
-
 const ChartsSection = ({
   dailyNet,
   dailyCumulative,
@@ -119,6 +111,18 @@ const ChartsSection = ({
   mostLossSymbols,
   weeklyStats
 }: ChartsSectionProps) => {
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language === 'en' ? 'en-US' : 'zh-CN';
+
+  const formatPnlValue = (value: number): string => {
+    const formatter = new Intl.NumberFormat(locale, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+    const sign = value > 0 ? '+' : '';
+    return `${sign}${formatter.format(value)}`;
+  };
+
   const isEmpty =
     dailyNet.labels.length === 0 &&
     durationPerformance.labels.length === 0 &&
@@ -132,7 +136,7 @@ const ChartsSection = ({
     labels: durationPerformance.labels,
     datasets: [
       {
-        label: '净盈亏',
+        label: t('pnl_calendar.charts.labels.net_pnl'),
         data: durationPerformance.net,
         backgroundColor: 'rgba(59, 130, 246, 0.6)',
         borderColor: 'rgba(59, 130, 246, 1)',
@@ -140,7 +144,7 @@ const ChartsSection = ({
         yAxisID: 'y'
       },
       {
-        label: '胜率',
+        label: t('pnl_calendar.charts.labels.win_rate'),
         data: durationPerformance.winRate,
         type: 'line',
         borderColor: '#f59e0b',
@@ -155,7 +159,7 @@ const ChartsSection = ({
     labels: timePerformance.labels,
     datasets: [
       {
-        label: '净盈亏',
+        label: t('pnl_calendar.charts.labels.net_pnl'),
         data: timePerformance.net,
         backgroundColor: 'rgba(14, 165, 233, 0.6)',
         borderColor: 'rgba(14, 165, 233, 1)',
@@ -163,7 +167,7 @@ const ChartsSection = ({
         yAxisID: 'y'
       },
       {
-        label: '胜率',
+        label: t('pnl_calendar.charts.labels.win_rate'),
         data: timePerformance.winRate,
         type: 'line',
         borderColor: '#f97316',
@@ -178,7 +182,7 @@ const ChartsSection = ({
     labels: weeklyStats.labels,
     datasets: [
       {
-        label: '净盈亏',
+        label: t('pnl_calendar.charts.labels.net_pnl'),
         data: weeklyStats.net,
         backgroundColor: 'rgba(99, 102, 241, 0.6)',
         borderColor: 'rgba(99, 102, 241, 1)',
@@ -186,7 +190,7 @@ const ChartsSection = ({
         yAxisID: 'y'
       },
       {
-        label: '胜率',
+        label: t('pnl_calendar.charts.labels.win_rate'),
         data: weeklyStats.winRate,
         type: 'line',
         borderColor: '#10b981',
@@ -201,7 +205,7 @@ const ChartsSection = ({
     labels: weeklyStats.labels,
     datasets: [
       {
-        label: '盈利金额',
+        label: t('pnl_calendar.charts.labels.profit_amount'),
         data: weeklyStats.profitAmount,
         backgroundColor: 'rgba(34, 197, 94, 0.7)',
         borderColor: 'rgba(34, 197, 94, 1)',
@@ -209,7 +213,7 @@ const ChartsSection = ({
         stack: 'amount'
       },
       {
-        label: '亏损金额',
+        label: t('pnl_calendar.charts.labels.loss_amount'),
         data: weeklyStats.lossAmount,
         backgroundColor: 'rgba(239, 68, 68, 0.7)',
         borderColor: 'rgba(239, 68, 68, 1)',
@@ -217,7 +221,7 @@ const ChartsSection = ({
         stack: 'amount'
       },
       {
-        label: '平均盈亏比',
+        label: t('pnl_calendar.charts.labels.avg_win_loss_ratio'),
         data: weeklyStats.avgWinLossRatio,
         type: 'line',
         borderColor: '#8b5cf6',
@@ -232,19 +236,19 @@ const ChartsSection = ({
     <section className={styles.chartsSection}>
       <div className={styles.sectionHeader}>
         <div>
-          <h2 className={styles.sectionTitle}>绩效图表</h2>
-          <p className={styles.sectionSubtitle}>通过时间、交易维度与风控视角拆解盈亏结构。</p>
+          <h2 className={styles.sectionTitle}>{t('pnl_calendar.charts.title')}</h2>
+          <p className={styles.sectionSubtitle}>{t('pnl_calendar.charts.subtitle')}</p>
         </div>
       </div>
       {isEmpty ? (
-        <div className={styles.emptyState}>暂无足够数据绘制图表，请调整筛选条件。</div>
+        <div className={styles.emptyState}>{t('pnl_calendar.charts.empty')}</div>
       ) : (
         <div className={styles.chartsGrid}>
           <article className={styles.chartCard}>
             <header className={styles.chartHeader}>
               <div>
-                <h3 className={styles.chartTitle}>Daily Net Cumulative P&amp;L</h3>
-                <p className={styles.chartSubtitle}>累计净盈亏走势与资金曲线。</p>
+                <h3 className={styles.chartTitle}>{t('pnl_calendar.charts.cumulative.title')}</h3>
+                <p className={styles.chartSubtitle}>{t('pnl_calendar.charts.cumulative.subtitle')}</p>
               </div>
             </header>
             <div className={styles.chartBody}>
@@ -254,7 +258,7 @@ const ChartsSection = ({
                   labels: dailyCumulative.labels,
                   datasets: [
                     {
-                      label: '累计净盈亏',
+                      label: t('pnl_calendar.charts.labels.cumulative_pnl'),
                       data: dailyCumulative.data,
                       borderColor: '#2563eb',
                       backgroundColor: 'rgba(37, 99, 235, 0.2)',
@@ -270,8 +274,8 @@ const ChartsSection = ({
           <article className={styles.chartCard}>
             <header className={styles.chartHeader}>
               <div>
-                <h3 className={styles.chartTitle}>Net Daily P&amp;L</h3>
-                <p className={styles.chartSubtitle}>每日净盈亏分布。</p>
+                <h3 className={styles.chartTitle}>{t('pnl_calendar.charts.daily_net.title')}</h3>
+                <p className={styles.chartSubtitle}>{t('pnl_calendar.charts.daily_net.subtitle')}</p>
               </div>
             </header>
             <div className={styles.chartBody}>
@@ -281,7 +285,7 @@ const ChartsSection = ({
                   labels: dailyNet.labels,
                   datasets: [
                     {
-                      label: '每日净盈亏',
+                      label: t('pnl_calendar.charts.labels.daily_net'),
                       data: dailyNet.data,
                       backgroundColor: dailyNet.data.map((value) =>
                         value >= 0 ? 'rgba(34, 197, 94, 0.6)' : 'rgba(239, 68, 68, 0.6)'
@@ -300,8 +304,8 @@ const ChartsSection = ({
           <article className={styles.chartCard}>
             <header className={styles.chartHeader}>
               <div>
-                <h3 className={styles.chartTitle}>Trade Duration Performance</h3>
-                <p className={styles.chartSubtitle}>持仓时间分段的盈亏与胜率表现（双轴）。</p>
+                <h3 className={styles.chartTitle}>{t('pnl_calendar.charts.duration.title')}</h3>
+                <p className={styles.chartSubtitle}>{t('pnl_calendar.charts.duration.subtitle')}</p>
               </div>
             </header>
             <div className={styles.chartBody}>
@@ -313,7 +317,7 @@ const ChartsSection = ({
                     y: {
                       title: {
                         display: true,
-                        text: '净盈亏'
+                        text: t('pnl_calendar.charts.labels.net_pnl')
                       }
                     },
                     y1: {
@@ -328,7 +332,7 @@ const ChartsSection = ({
                       },
                       title: {
                         display: true,
-                        text: '胜率'
+                        text: t('pnl_calendar.charts.labels.win_rate')
                       }
                     }
                   }
@@ -342,8 +346,8 @@ const ChartsSection = ({
           <article className={styles.chartCard}>
             <header className={styles.chartHeader}>
               <div>
-                <h3 className={styles.chartTitle}>Trade Time Performance</h3>
-                <p className={styles.chartSubtitle}>不同交易时间段的盈亏与胜率（双轴）。</p>
+                <h3 className={styles.chartTitle}>{t('pnl_calendar.charts.time.title')}</h3>
+                <p className={styles.chartSubtitle}>{t('pnl_calendar.charts.time.subtitle')}</p>
               </div>
             </header>
             <div className={styles.chartBody}>
@@ -355,7 +359,7 @@ const ChartsSection = ({
                     y: {
                       title: {
                         display: true,
-                        text: '净盈亏'
+                        text: t('pnl_calendar.charts.labels.net_pnl')
                       }
                     },
                     y1: {
@@ -370,7 +374,7 @@ const ChartsSection = ({
                       },
                       title: {
                         display: true,
-                        text: '胜率'
+                        text: t('pnl_calendar.charts.labels.win_rate')
                       }
                     }
                   }
@@ -384,8 +388,8 @@ const ChartsSection = ({
           <article className={styles.chartCard}>
             <header className={styles.chartHeader}>
               <div>
-                <h3 className={styles.chartTitle}>Drawdown</h3>
-                <p className={styles.chartSubtitle}>累计净值回撤深度。</p>
+                <h3 className={styles.chartTitle}>{t('pnl_calendar.charts.drawdown.title')}</h3>
+                <p className={styles.chartSubtitle}>{t('pnl_calendar.charts.drawdown.subtitle')}</p>
               </div>
             </header>
             <div className={styles.chartBody}>
@@ -405,7 +409,7 @@ const ChartsSection = ({
                   labels: drawdown.labels,
                   datasets: [
                     {
-                      label: '回撤',
+                      label: t('pnl_calendar.charts.labels.drawdown'),
                       data: drawdown.data,
                       borderColor: '#ef4444',
                       backgroundColor: 'rgba(239, 68, 68, 0.2)',
@@ -421,8 +425,8 @@ const ChartsSection = ({
           <article className={styles.chartCard}>
             <header className={styles.chartHeader}>
               <div>
-                <h3 className={styles.chartTitle}>Top Profitable / Most Loss Symbols</h3>
-                <p className={styles.chartSubtitle}>盈亏贡献最高与最低的标的。</p>
+                <h3 className={styles.chartTitle}>{t('pnl_calendar.charts.symbols.title')}</h3>
+                <p className={styles.chartSubtitle}>{t('pnl_calendar.charts.symbols.subtitle')}</p>
               </div>
             </header>
             <div className={styles.chartBody}>
@@ -432,7 +436,7 @@ const ChartsSection = ({
                   labels: symbolPerformance.labels,
                   datasets: [
                     {
-                      label: '净盈亏',
+                      label: t('pnl_calendar.charts.labels.net_pnl'),
                       data: symbolPerformance.data,
                       backgroundColor: symbolPerformance.data.map((value) =>
                         value >= 0 ? 'rgba(34, 197, 94, 0.6)' : 'rgba(239, 68, 68, 0.6)'
@@ -451,8 +455,8 @@ const ChartsSection = ({
           <article className={styles.chartCard}>
             <header className={styles.chartHeader}>
               <div>
-                <h3 className={styles.chartTitle}>Top Profitable</h3>
-                <p className={styles.chartSubtitle}>盈利贡献最高的标的明细。</p>
+                <h3 className={styles.chartTitle}>{t('pnl_calendar.charts.top_profit.title')}</h3>
+                <p className={styles.chartSubtitle}>{t('pnl_calendar.charts.top_profit.subtitle')}</p>
               </div>
             </header>
             <div className={styles.chartBody}>
@@ -461,10 +465,10 @@ const ChartsSection = ({
                   <table className={styles.detailTable}>
                     <thead>
                       <tr>
-                        <th>Symbol</th>
-                        <th>Profit</th>
-                        <th>Loss</th>
-                        <th>Trades</th>
+                        <th>{t('pnl_calendar.charts.table.symbol')}</th>
+                        <th>{t('pnl_calendar.charts.table.profit')}</th>
+                        <th>{t('pnl_calendar.charts.table.loss')}</th>
+                        <th>{t('pnl_calendar.charts.table.trades')}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -494,7 +498,7 @@ const ChartsSection = ({
                   </table>
                 </div>
               ) : (
-                <div className={styles.emptyState}>暂无可展示的盈利标的。</div>
+                <div className={styles.emptyState}>{t('pnl_calendar.charts.top_profit.empty')}</div>
               )}
             </div>
           </article>
@@ -502,8 +506,8 @@ const ChartsSection = ({
           <article className={styles.chartCard}>
             <header className={styles.chartHeader}>
               <div>
-                <h3 className={styles.chartTitle}>Most Loss</h3>
-                <p className={styles.chartSubtitle}>亏损贡献最高的标的明细。</p>
+                <h3 className={styles.chartTitle}>{t('pnl_calendar.charts.top_loss.title')}</h3>
+                <p className={styles.chartSubtitle}>{t('pnl_calendar.charts.top_loss.subtitle')}</p>
               </div>
             </header>
             <div className={styles.chartBody}>
@@ -512,10 +516,10 @@ const ChartsSection = ({
                   <table className={styles.detailTable}>
                     <thead>
                       <tr>
-                        <th>Symbol</th>
-                        <th>Profit</th>
-                        <th>Loss</th>
-                        <th>Trades</th>
+                        <th>{t('pnl_calendar.charts.table.symbol')}</th>
+                        <th>{t('pnl_calendar.charts.table.profit')}</th>
+                        <th>{t('pnl_calendar.charts.table.loss')}</th>
+                        <th>{t('pnl_calendar.charts.table.trades')}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -545,7 +549,7 @@ const ChartsSection = ({
                   </table>
                 </div>
               ) : (
-                <div className={styles.emptyState}>暂无可展示的亏损标的。</div>
+                <div className={styles.emptyState}>{t('pnl_calendar.charts.top_loss.empty')}</div>
               )}
             </div>
           </article>
@@ -553,8 +557,8 @@ const ChartsSection = ({
           <article className={styles.chartCard}>
             <header className={styles.chartHeader}>
               <div>
-                <h3 className={styles.chartTitle}>Weekly Statistics</h3>
-                <p className={styles.chartSubtitle}>周度净盈亏与交易胜率概览。</p>
+                <h3 className={styles.chartTitle}>{t('pnl_calendar.charts.weekly_stats.title')}</h3>
+                <p className={styles.chartSubtitle}>{t('pnl_calendar.charts.weekly_stats.subtitle')}</p>
               </div>
             </header>
             <div className={styles.chartBody}>
@@ -566,7 +570,7 @@ const ChartsSection = ({
                     y: {
                       title: {
                         display: true,
-                        text: '净盈亏'
+                        text: t('pnl_calendar.charts.labels.net_pnl')
                       }
                     },
                     y1: {
@@ -581,7 +585,7 @@ const ChartsSection = ({
                       },
                       title: {
                         display: true,
-                        text: '胜率'
+                        text: t('pnl_calendar.charts.labels.win_rate')
                       }
                     }
                   }
@@ -595,8 +599,8 @@ const ChartsSection = ({
           <article className={styles.chartCard}>
             <header className={styles.chartHeader}>
               <div>
-                <h3 className={styles.chartTitle}>Weekly Win/Loss Analysis</h3>
-                <p className={styles.chartSubtitle}>盈利金额/亏损金额堆叠柱 + 平均盈亏比折线。</p>
+                <h3 className={styles.chartTitle}>{t('pnl_calendar.charts.weekly_win_loss.title')}</h3>
+                <p className={styles.chartSubtitle}>{t('pnl_calendar.charts.weekly_win_loss.subtitle')}</p>
               </div>
             </header>
             <div className={styles.chartBody}>
@@ -609,7 +613,7 @@ const ChartsSection = ({
                       stacked: true,
                       title: {
                         display: true,
-                        text: '金额'
+                        text: t('pnl_calendar.charts.labels.amount')
                       }
                     },
                     y1: {
@@ -619,7 +623,7 @@ const ChartsSection = ({
                       },
                       title: {
                         display: true,
-                        text: '平均盈亏比'
+                        text: t('pnl_calendar.charts.labels.avg_win_loss_ratio')
                       }
                     }
                   }

@@ -1327,7 +1327,6 @@ function DashboardPage() {
               onRefresh={handleRefreshOrders}
               onSync={handleSyncOrders}
               syncInProgress={ordersState.syncStatus === 'loading'}
-              lastUpdated={ordersState.lastUpdated}
               onCreateOrder={handleOpenOrderEntry}
             />
           </div>

@@ -27,6 +27,8 @@ function TopBar({ onOpenData, onOpenNotifications, onOpenLogs, onOpenConfigurati
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement | null>(null);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement | null>(null);
 
   // 节流订阅数据以减少顶部按钮文本频繁刷新造成的闪烁
   const throttledSubscriptions = useThrottledValue(subscriptions, 1000);
@@ -46,13 +48,14 @@ function TopBar({ onOpenData, onOpenNotifications, onOpenLogs, onOpenConfigurati
 
   const roleLabel = user?.roles?.length ? user.roles.join(', ') : '';
   const versionLabel = systemInfo?.displayVersion || (systemInfo?.version ? `v${systemInfo.version}` : '');
-  const isConnected = status === 'connected';
   const statusText =
     status === 'connected'
       ? t('topbar.status.connected')
       : status === 'connecting'
         ? t('topbar.status.connecting')
         : t('topbar.status.offline');
+  const statusToneClass =
+    status === 'connected' ? styles.statusIconOk : status === 'connecting' ? styles.statusIconPending : styles.statusIconError;
   const heartbeatLabel = lastHeartbeat
     ? new Date(lastHeartbeat).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
     : status === 'connecting'
@@ -91,6 +94,33 @@ function TopBar({ onOpenData, onOpenNotifications, onOpenLogs, onOpenConfigurati
     };
   }, [mobileMenuOpen]);
 
+  useEffect(() => {
+    if (!userMenuOpen) {
+      return;
+    }
+
+    const handleDocumentClick = (event: MouseEvent) => {
+      const target = event.target as Node | null;
+      if (target && userMenuRef.current?.contains(target)) {
+        return;
+      }
+      setUserMenuOpen(false);
+    };
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setUserMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleDocumentClick);
+    document.addEventListener('keydown', handleEscape);
+    return () => {
+      document.removeEventListener('mousedown', handleDocumentClick);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, [userMenuOpen]);
+
   return (
     <header className={styles.topBar}>
       <div className={styles.leftGroup}>
@@ -104,13 +134,25 @@ function TopBar({ onOpenData, onOpenNotifications, onOpenLogs, onOpenConfigurati
         </div>
       </div>
       <div className={styles.centerGroup}>
-        <div className={styles.statusPill}>
-          <span className={clsx(styles.statusDot, { [styles.statusDotDanger]: !isConnected })} />
-          <span className={styles.statusText}>{statusText}</span>
-        </div>
-        <div className={styles.statusPill}>
-          <span className={clsx(styles.statusDot, { [styles.statusDotDanger]: !isConnected })} />
-          <span className={styles.statusText}>{t('topbar.heartbeat.prefix')}{heartbeatLabel}</span>
+        <div className={styles.statusIcons}>
+          <div
+            className={clsx(styles.statusIcon, statusToneClass)}
+            title={statusText}
+            aria-label={statusText}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 12h16M7 7a7 7 0 0 1 10 0M9.8 9.8a4 4 0 0 1 4.4 0M12 17h0" />
+            </svg>
+          </div>
+          <div
+            className={clsx(styles.statusIcon, statusToneClass)}
+            title={`${t('topbar.heartbeat.prefix')}${heartbeatLabel}`}
+            aria-label={`${t('topbar.heartbeat.prefix')}${heartbeatLabel}`}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 12h4l2.5-6 5 12 2.5-6H21" />
+            </svg>
+          </div>
         </div>
       </div>
       <div className={styles.rightGroup}>
@@ -224,13 +266,31 @@ function TopBar({ onOpenData, onOpenNotifications, onOpenLogs, onOpenConfigurati
             </div>
           ) : null}
         </div>
-        <div className={styles.userBadge}>
-          <div className={styles.userInfo}>
-            <span className={styles.userName}>{user?.username ?? t('topbar.user.guest')}</span>
-            <span className={styles.userRole}>
-              {roleLabel || (versionLabel ? versionLabel : t('topbar.user.role_guest'))}
-            </span>
-          </div>
+        <div className={styles.userMenuWrap} ref={userMenuRef}>
+          <button
+            type="button"
+            className={styles.userMenuButton}
+            onClick={() => setUserMenuOpen((previous) => !previous)}
+            aria-expanded={userMenuOpen}
+            aria-haspopup="menu"
+          >
+            <span className={styles.userMenuName}>{user?.username ?? t('topbar.user.guest')}</span>
+            <span className={styles.userMenuCaret}>▾</span>
+          </button>
+          {userMenuOpen ? (
+            <div className={styles.userMenuDropdown} role="menu">
+              <div className={styles.userMenuItem}>
+                <span className={styles.userMenuTitle}>{user?.username ?? t('topbar.user.guest')}</span>
+                <span className={styles.userMenuSubtitle}>{roleLabel || t('topbar.user.role_guest')}</span>
+              </div>
+              {versionLabel ? (
+                <div className={styles.userMenuItem}>
+                  <span className={styles.userMenuTitle}>{versionLabel}</span>
+                  <span className={styles.userMenuSubtitle}>{t('topbar.user.version')}</span>
+                </div>
+              ) : null}
+            </div>
+          ) : null}
         </div>
       </div>
     </header>

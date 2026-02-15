@@ -8,7 +8,7 @@
     "unconfigured": "未配置"
   },
   "topbar": {
-    "brand": { "title": "Algo Trader 控制台" },
+    "brand": { "title": "ATI" },
     "status": {
       "connected": "WebSocket 已连接",
       "connecting": "正在连接",
@@ -26,7 +26,7 @@
       "logs": "日志",
       "optimizerPlans": "优化计划"
     },
-    "user": { "guest": "访客用户", "role_guest": "访客模式" },
+    "user": { "guest": "访客用户", "role_guest": "访客模式", "version": "版本" },
     "lang": {
       "switch_to_en": "Switch to English",
       "switch_to_zh": "切换为中文"
@@ -364,6 +364,7 @@
     "orders": {
       "title": "订单列表",
       "actions": {
+        "select_action": "操作",
         "place_order": "下单",
         "sync": "同步",
         "syncing": "同步中…",
@@ -443,6 +444,245 @@
       "doc_url_missing": "未配置文档地址"
     },
     "error_prefix": "错误："
+  },
+  "pnl_calendar": {
+    "common": {
+      "empty": "—",
+      "yes": "是",
+      "no": "否",
+      "percent": "{{value}}%"
+    },
+    "duration": {
+      "minutes": "{{count}} 分钟",
+      "hours": "{{count}} 小时",
+      "hours_minutes": "{{hours}} 小时 {{minutes}} 分钟"
+    },
+    "filters": {
+      "toggle": "筛选条件",
+      "start_date": "开始日期",
+      "end_date": "结束日期",
+      "to": "至",
+      "symbol_placeholder": "例如 MNQ 或 MNQ*",
+      "strategy_all": "全部策略",
+      "range_week": "本周",
+      "range_month": "本月",
+      "range_last30": "近30天",
+      "range_quarter": "本季度",
+      "range_ytd": "年初至今"
+    },
+    "logs": {
+      "title": "交易日志",
+      "subtitle": "按时间倒序查看每日/每周复盘。",
+      "loading": "正在加载日志...",
+      "empty": "当前范围暂无日志。",
+      "open": "打开日志",
+      "create": "新建日志",
+      "edit": "编辑",
+      "delete": "删除",
+      "close_sidebar": "关闭日志侧栏",
+      "confirm_delete": "确定删除 {{date}} 的{{type}}日志吗？",
+      "weekly": "周",
+      "daily": "日",
+      "type_weekly": "周复盘",
+      "type_daily": "日复盘",
+      "weekly_summary": "交易 {{trades}} 笔 · 周盈亏 {{pnl}}",
+      "weekly_trades": "交易 {{trades}} 笔",
+      "weekly_default": "周度复盘记录",
+      "daily_summary": "交易 {{trades}} 笔 · 感受 {{feeling}}",
+      "daily_trades": "交易 {{trades}} 笔",
+      "daily_feeling_only": "感受 {{feeling}}",
+      "daily_default": "日度复盘记录"
+    },
+    "calendar": {
+      "title": "日历视图",
+      "summary_net": "净盈亏",
+      "summary_trades_symbols": "交易/标的",
+      "summary_win_rate": "胜率",
+      "summary_roi": "ROI",
+      "prev_month": "← 上个月",
+      "next_month": "下个月 →"
+    },
+    "weekdays": {
+      "mon": "周一",
+      "tue": "周二",
+      "wed": "周三",
+      "thu": "周四",
+      "fri": "周五"
+    },
+    "overview": {
+      "feeling_none": "无交易",
+      "feeling_positive": "表现不错",
+      "feeling_negative": "需要调整",
+      "feeling_flat": "保持稳定"
+    },
+    "detail": {
+      "title": "交易明细",
+      "title_with_date": "{{date}} 交易明细",
+      "subtitle": "净盈亏 {{pnl}} · 交易 {{trades}} 笔",
+      "prev_day": "← 前一交易日",
+      "next_day": "后一交易日 →",
+      "summary_net": "净盈亏",
+      "summary_trades_symbols": "交易笔数 / 标的",
+      "summary_win_rate": "胜率",
+      "summary_roi": "ROI",
+      "side": { "long": "多头", "short": "空头" },
+      "merged_subtitle": "合并 {{trades}} 笔，净盈亏 {{pnl}}",
+      "back_to_groups": "返回合并列表",
+      "group_title": "合并交易列表",
+      "view_details": "查看明细",
+      "empty": "暂无交易明细。",
+      "table": {
+        "open_time": "开仓时间",
+        "close_time": "平仓时间",
+        "instrument": "合约",
+        "side": "方向",
+        "quantity": "数量",
+        "trade_times": "持仓时间",
+        "net_pnl": "净盈亏",
+        "net_roi": "净 ROI",
+        "symbol": "标的",
+        "merged_trades": "合并笔数",
+        "win_rate": "胜率",
+        "roi": "ROI"
+      }
+    },
+    "log_modal": {
+      "create_title": "新建交易日志",
+      "title": "交易日志",
+      "create_subtitle": "记录当日或当周的交易复盘。",
+      "subtitle_with_date": "{{date}} · {{type}}",
+      "weekly_total_trades": "周交易数",
+      "weekly_pnl": "周盈亏",
+      "weekly_max_win": "最大盈利",
+      "weekly_max_loss": "最大亏损",
+      "weekly_win_rate": "胜率",
+      "follows_daily_limit": "遵守日限额",
+      "fields": {
+        "date": "日期",
+        "type": "类型",
+        "associated_trades": "关联交易 ID"
+      },
+      "placeholders": {
+        "comma_split": "用逗号分隔",
+        "multi_line": "每行一项或用逗号分隔"
+      },
+      "hints": {
+        "associated_trades": "默认填入当日/当周交易。"
+      },
+      "weekly_section": "周度指标",
+      "weekly": {
+        "success_planned": "按计划执行",
+        "mistake_violated": "违规次数",
+        "mistake_emotional": "情绪失控次数",
+        "next_good_habit": "下周好习惯",
+        "next_mistake_avoid": "避免的错误",
+        "next_actions": "具体行动",
+        "affirmation": "周度自我肯定"
+      },
+      "daily_section": "日度记录",
+      "daily": {
+        "trades_count": "交易笔数",
+        "overall_feeling": "整体感受",
+        "fact_record": "事实记录",
+        "learning_points": "学习要点",
+        "improvement_direction": "改进方向",
+        "self_affirmation": "自我肯定"
+      },
+      "actions": {
+        "edit": "编辑",
+        "close": "关闭",
+        "save": "保存日志",
+        "cancel": "取消"
+      }
+    },
+    "stats": {
+      "title": "绩效概览",
+      "subtitle": "核心指标与进阶统计随筛选条件动态更新。",
+      "net_pnl": "净盈亏",
+      "total_trades": "交易笔数",
+      "win_rate": "胜率",
+      "profit_day_rate": "盈利日率",
+      "avg_trade_pnl": "平均单笔盈亏",
+      "profit_factor": "Profit Factor",
+      "avg_win_loss_ratio": "平均盈利/亏损比",
+      "max_drawdown": "最大回撤",
+      "avg_duration": "平均持仓时长",
+      "avg_daily_pnl": "平均每日盈亏",
+      "footnote_range": "筛选范围汇总",
+      "footnote_trades": "成交笔数统计",
+      "footnote_win_loss": "胜/平/负：{{win}}/{{flat}}/{{loss}}",
+      "footnote_day_win_loss": "胜/平/负：{{win}}/{{flat}}/{{loss}}",
+      "footnote_avg_trade_pnl": "单笔净盈亏均值",
+      "footnote_profit_factor": "总盈利 / 总亏损",
+      "footnote_avg_win_loss_ratio": "平均盈利 / 平均亏损",
+      "footnote_drawdown": "累计净值回撤峰值",
+      "footnote_duration": "含开平仓时间",
+      "footnote_daily_pnl": "按交易日均摊"
+    },
+    "charts": {
+      "title": "绩效图表",
+      "subtitle": "通过时间、交易维度与风控视角拆解盈亏结构。",
+      "empty": "暂无足够数据绘制图表，请调整筛选条件。",
+      "labels": {
+        "net_pnl": "净盈亏",
+        "win_rate": "胜率",
+        "profit_amount": "盈利金额",
+        "loss_amount": "亏损金额",
+        "avg_win_loss_ratio": "平均盈亏比",
+        "cumulative_pnl": "累计净盈亏",
+        "daily_net": "每日净盈亏",
+        "drawdown": "回撤",
+        "amount": "金额"
+      },
+      "cumulative": {
+        "title": "累计净盈亏走势",
+        "subtitle": "累计净盈亏走势与资金曲线。"
+      },
+      "daily_net": {
+        "title": "每日净盈亏",
+        "subtitle": "每日净盈亏分布。"
+      },
+      "duration": {
+        "title": "持仓时长表现",
+        "subtitle": "持仓时间分段的盈亏与胜率表现（双轴）。"
+      },
+      "time": {
+        "title": "交易时段表现",
+        "subtitle": "不同交易时间段的盈亏与胜率（双轴）。"
+      },
+      "drawdown": {
+        "title": "回撤",
+        "subtitle": "累计净值回撤深度。"
+      },
+      "symbols": {
+        "title": "盈亏贡献标的",
+        "subtitle": "盈亏贡献最高与最低的标的。"
+      },
+      "top_profit": {
+        "title": "盈利贡献最高",
+        "subtitle": "盈利贡献最高的标的明细。",
+        "empty": "暂无可展示的盈利标的。"
+      },
+      "top_loss": {
+        "title": "亏损贡献最高",
+        "subtitle": "亏损贡献最高的标的明细。",
+        "empty": "暂无可展示的亏损标的。"
+      },
+      "weekly_stats": {
+        "title": "周度统计",
+        "subtitle": "周度净盈亏与交易胜率概览。"
+      },
+      "weekly_win_loss": {
+        "title": "周度盈亏分析",
+        "subtitle": "盈利金额/亏损金额堆叠柱 + 平均盈亏比折线。"
+      },
+      "table": {
+        "symbol": "标的",
+        "profit": "盈利",
+        "loss": "亏损",
+        "trades": "交易笔数"
+      }
+    }
   },
   
   "orders": {
@@ -605,7 +845,7 @@
 
   "dashboard_strategies": {
     "title": "策略列表",
-    "actions": { "add": "新增", "refresh": "刷新" },
+    "actions": { "add": "新增", "refresh": "刷新", "performance": "绩效", "select_action": "操作" },
     "empty": "暂无策略，点击“新增”快速创建。",
     "card": {
       "status": { "running": "运行中", "stopped": "已停止", "error": "异常", "starting": "启动中" },

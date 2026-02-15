@@ -36,12 +36,19 @@
 }
 
 .cardsList {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(260px, calc(50% - 0.5rem));
   gap: 0.75rem;
+  overflow-x: auto;
+  padding-bottom: 0.4rem;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 0.75rem;
+  -webkit-overflow-scrolling: touch;
 }
 
 .positionCard {
+  scroll-snap-align: start;
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
@@ -50,6 +57,12 @@
   border: 1px solid var(--color-border-subtle);
   border-radius: 14px;
   box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+}
+
+@media (max-width: 900px) {
+  .cardsList {
+    grid-auto-columns: 88%;
+  }
 }
 
 .positionHeader {
@@ -105,7 +118,7 @@
 
 .positionDetails {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 0.6rem 1.1rem;
 }
 

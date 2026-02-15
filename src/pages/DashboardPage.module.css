@@ -31,8 +31,8 @@
 }
 
 .layout {
-  display: grid;
-  grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
+  display: flex;
+  flex-direction: column;
   gap: 1.25rem;
   align-items: start;
 }
@@ -45,11 +45,11 @@
 }
 
 .leftColumn {
-  grid-column: 1;
+  width: 100%;
 }
 
 .centerColumn {
-  grid-column: 2;
+  width: 100%;
 }
 
 .panelSlot {
@@ -59,7 +59,7 @@
 
 @media (max-width: 1380px) {
   .layout {
-    grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+    gap: 1.15rem;
   }
 }
 
@@ -70,28 +70,10 @@
   }
 
   .layout {
-    display: flex;
-    gap: 0.75rem;
-    overflow-x: auto;
-    padding-bottom: 0.25rem;
-    scroll-snap-type: x mandatory;
-    overscroll-behavior-x: contain;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .layout::-webkit-scrollbar {
-    height: 6px;
-  }
-
-  .layout::-webkit-scrollbar-thumb {
-    background: rgba(148, 163, 184, 0.55);
-    border-radius: 999px;
+    gap: 0.85rem;
   }
 
   .panelSlide {
-    flex: 0 0 92%;
-    max-width: 92%;
-    scroll-snap-align: start;
     gap: 0.75rem;
   }
 

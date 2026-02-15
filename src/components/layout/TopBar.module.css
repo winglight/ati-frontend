@@ -1,9 +1,10 @@
 .topBar {
   position: sticky;
   top: 0;
-  z-index: 20;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+  z-index: 200;
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-between;
   align-items: center;
   gap: clamp(0.5rem, 1.5vw, 1.5rem);
   padding: clamp(0.35rem, 0.8vw, 0.6rem) clamp(0.9rem, 1.6vw, 1.8rem);
@@ -11,12 +12,14 @@
   border-bottom: 1px solid var(--color-border-subtle);
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
   color: var(--color-text-primary);
+  overflow: visible;
 }
 
 .leftGroup {
   display: flex;
   align-items: center;
   gap: 1rem;
+  flex-shrink: 0;
 }
 
 .branding {
@@ -57,37 +60,63 @@
   align-items: center;
   justify-content: center;
   gap: 0.85rem;
+  flex: 1;
+  min-width: 0;
 }
 
-.statusPill {
+.statusIcons {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  padding: 0.45rem 0.85rem;
-  border-radius: 999px;
-  background: #f8fafc;
-  border: 1px solid #dbeafe;
-  font-size: 0.8rem;
+  gap: 0.5rem;
+}
+
+.statusIcon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 10px;
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-surface);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: var(--color-text-secondary);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
 }
 
-.statusDot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #10b981;
-  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+.statusIcon svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.statusDotDanger {
-  background: #ef4444;
-  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.18);
+.statusIconOk {
+  color: #10b981;
+  border-color: rgba(16, 185, 129, 0.4);
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.statusIconPending {
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.45);
+  background: rgba(245, 158, 11, 0.12);
+}
+
+.statusIconError {
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.45);
+  background: rgba(239, 68, 68, 0.1);
 }
 
 .rightGroup {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  overflow: visible;
+  flex-shrink: 0;
 }
 
 .desktopActions {
@@ -182,7 +211,7 @@
   border: 1px solid var(--color-border-subtle);
   background: var(--color-surface);
   box-shadow: 0 16px 30px rgba(15, 23, 42, 0.14);
-  z-index: 40;
+  z-index: 210;
 }
 
 .mobileMenuItem {
@@ -201,26 +230,61 @@
   background: var(--color-primary-soft);
 }
 
-.userBadge {
+.userMenuWrap {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding-left: 0.65rem;
-  border-left: 1px solid var(--color-border-subtle);
 }
 
-.userInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  text-align: right;
+.userMenuButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 10px;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  padding: 0.35rem 0.6rem;
+  font-size: 0.85rem;
+  cursor: pointer;
 }
 
-.userName {
+.userMenuName {
   font-weight: 600;
 }
 
-.userRole {
+.userMenuCaret {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+}
+
+.userMenuDropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.5rem);
+  min-width: 200px;
+  padding: 0.4rem;
+  border-radius: 12px;
+  border: 1px solid var(--color-border-subtle);
+  background: var(--color-surface);
+  box-shadow: 0 16px 30px rgba(15, 23, 42, 0.14);
+  z-index: 220;
+}
+
+.userMenuItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 10px;
+}
+
+.userMenuTitle {
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.userMenuSubtitle {
   font-size: 0.75rem;
   color: var(--color-text-secondary);
 }
@@ -243,19 +307,17 @@
 
 @media (max-width: 960px) {
   .topBar {
-    grid-template-columns: 1fr;
-    justify-items: stretch;
+    flex-wrap: nowrap;
     gap: 0.45rem;
   }
 
   .centerGroup {
     justify-content: flex-start;
-    flex-wrap: wrap;
     gap: 0.45rem;
   }
 
   .rightGroup {
-    justify-content: space-between;
+    justify-content: flex-end;
   }
 
   .statusPill {
