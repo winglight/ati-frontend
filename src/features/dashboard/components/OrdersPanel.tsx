@@ -30,7 +30,6 @@ function OrdersPanel({
   const [selectedSymbol, setSelectedSymbol] = useState<string>('__ALL__');
   const [selectedStrategy, setSelectedStrategy] = useState<string>('__ALL__');
   const [scope, setScope] = useState<'active' | 'all'>('active');
-  const [actionSelection, setActionSelection] = useState<string>('');
   const actionOptions = useMemo(
     () =>
       [
@@ -116,58 +115,72 @@ function OrdersPanel({
       headerMeta={
         <div className={styles.headerControls}>
           <div className={styles.filterGroup}>
-            <select
-              className={styles.select}
-              value={scope}
-              onChange={(event) => setScope(event.target.value as 'active' | 'all')}
-            >
-              <option value="active">{t('dashboard.orders.filter_active')}</option>
-              <option value="all">{t('dashboard.orders.filter_all')}</option>
-            </select>
-            <select
-              className={`${styles.select} ${styles.selectWide}`}
-              value={selectedSymbol}
-              onChange={(event) => handleSelectTag(event.target.value as '__ALL__' | string)}
-            >
-              <option value="__ALL__">{t('dashboard.orders.filter_all')}</option>
+            <div className={styles.tagGroup}>
+              {[
+                { key: 'active', label: t('dashboard.orders.filter_active') },
+                { key: 'all', label: t('dashboard.orders.filter_all') }
+              ].map((item) => (
+                <button
+                  key={item.key}
+                  type="button"
+                  className={`${styles.tag} ${scope === item.key ? styles.tagSelected : ''}`}
+                  onClick={() => setScope(item.key as 'active' | 'all')}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </div>
+            <div className={styles.tagGroup}>
+              <button
+                type="button"
+                className={`${styles.tag} ${selectedSymbol === '__ALL__' ? styles.tagSelected : ''}`}
+                onClick={() => handleSelectTag('__ALL__')}
+              >
+                {t('dashboard.orders.filter_all')}
+              </button>
               {symbols.map((sym) => (
-                <option key={sym} value={sym}>
+                <button
+                  key={sym}
+                  type="button"
+                  className={`${styles.tag} ${selectedSymbol === sym ? styles.tagSelected : ''}`}
+                  onClick={() => handleSelectTag(sym)}
+                >
                   {sym}
-                </option>
+                </button>
               ))}
-            </select>
-            <select
-              className={`${styles.select} ${styles.selectWide}`}
-              value={selectedStrategy}
-              onChange={(event) => handleSelectStrategyTag(event.target.value as '__ALL__' | string)}
-            >
-              <option value="__ALL__">{t('dashboard.orders.filter_all')}</option>
+            </div>
+            <div className={styles.tagGroup}>
+              <button
+                type="button"
+                className={`${styles.tag} ${selectedStrategy === '__ALL__' ? styles.tagSelected : ''}`}
+                onClick={() => handleSelectStrategyTag('__ALL__')}
+              >
+                {t('dashboard.orders.filter_all')}
+              </button>
               {strategyOptions.map((opt) => (
-                <option key={opt.id} value={opt.id}>
+                <button
+                  key={opt.id}
+                  type="button"
+                  className={`${styles.tag} ${selectedStrategy === opt.id ? styles.tagSelected : ''}`}
+                  onClick={() => handleSelectStrategyTag(opt.id)}
+                >
                   {opt.label}
-                </option>
+                </button>
               ))}
-            </select>
-            <select
-              className={`${styles.select} ${styles.actionSelect}`}
-              value={actionSelection}
-              onChange={(event) => {
-                const next = event.target.value;
-                setActionSelection(next);
-                const action = actionOptions.find((item) => item.value === next);
-                if (action && !action.disabled) {
-                  action.onClick?.();
-                }
-                setActionSelection('');
-              }}
-            >
-              <option value="">{t('dashboard.orders.actions.select_action')}</option>
-              {actionOptions.map((action) => (
-                <option key={action.value} value={action.value} disabled={action.disabled}>
-                  {action.label}
-                </option>
-              ))}
-            </select>
+            </div>
+          </div>
+          <div className={styles.actionGroup}>
+            {actionOptions.map((action) => (
+              <button
+                key={action.value}
+                type="button"
+                className={styles.actionButton}
+                onClick={action.onClick}
+                disabled={action.disabled}
+              >
+                {action.label}
+              </button>
+            ))}
           </div>
         </div>
       }

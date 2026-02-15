@@ -157,23 +157,21 @@ const StatsCards = ({
           <p className={styles.sectionSubtitle}>{t('pnl_calendar.stats.subtitle')}</p>
         </div>
       </div>
-      <div className={styles.statsScroller}>
-        <div className={styles.statsGrid}>
-          {cards.map((card) => (
-            <article key={card.label} className={styles.statsCard}>
-              <span className={styles.statsLabel}>{card.label}</span>
-              <strong
-                className={clsx(styles.statsValue, {
-                  [styles.positive]: card.tone === 'positive',
-                  [styles.negative]: card.tone === 'negative'
-                })}
-              >
-                {card.value}
-              </strong>
-              <span className={styles.statsFootnote}>{card.footnote}</span>
-            </article>
-          ))}
-        </div>
+      <div className={styles.statsGrid}>
+        {cards.map((card) => (
+          <article key={card.label} className={styles.statsCard}>
+            <span className={styles.statsLabel}>{card.label}</span>
+            <strong
+              className={clsx(styles.statsValue, {
+                [styles.positive]: card.tone === 'positive',
+                [styles.negative]: card.tone === 'negative'
+              })}
+            >
+              {card.value}
+            </strong>
+            <span className={styles.statsFootnote}>{card.footnote}</span>
+          </article>
+        ))}
       </div>
     </section>
   );

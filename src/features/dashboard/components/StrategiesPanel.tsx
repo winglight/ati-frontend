@@ -269,7 +269,6 @@ function StrategiesPanel({
   const { statusById: subscriptionResyncStatus, resync } = useStrategiesResyncController();
   const statusLabelMap = buildStatusLabelMap(t);
   const modeLabelMap = buildModeLabelMap(t);
-  const [actionSelection, setActionSelection] = useState<string>('');
   const actionOptions = useMemo(
     () =>
       [
@@ -318,36 +317,27 @@ function StrategiesPanel({
         headerMeta={
           <div className={styles.headerControls}>
             <div className={styles.filterGroup}>
-              <select
-                className={styles.select}
-                value={selectedFilter}
-                onChange={(event) => setSelectedFilter(event.target.value as '__ALL__' | 'DOM' | 'Bar' | 'AI' | 'Screener')}
-              >
-                <option value="__ALL__">{t('strategies.filters.all')}</option>
-                {['DOM', 'Bar', 'AI', 'Screener'].map((label) => (
-                  <option key={label} value={label}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-              <select
-                className={styles.select}
-                value={actionSelection}
-                onChange={(event) => {
-                  const next = event.target.value;
-                  setActionSelection(next);
-                  const action = actionOptions.find((item) => item.value === next);
-                  action?.onClick?.();
-                  setActionSelection('');
-                }}
-              >
-                <option value="">{t('dashboard_strategies.actions.select_action')}</option>
-                {actionOptions.map((action) => (
-                  <option key={action.value} value={action.value}>
-                    {action.label}
-                  </option>
-                ))}
-              </select>
+              <div className={styles.tagGroup}>
+                {[{ key: '__ALL__', label: t('strategies.filters.all') }, ...['DOM', 'Bar', 'AI', 'Screener'].map((label) => ({ key: label, label }))].map(
+                  (item) => (
+                    <button
+                      key={item.key}
+                      type="button"
+                      className={`${styles.tag} ${selectedFilter === item.key ? styles.tagSelected : ''}`}
+                      onClick={() => setSelectedFilter(item.key as '__ALL__' | 'DOM' | 'Bar' | 'AI' | 'Screener')}
+                    >
+                      {item.label}
+                    </button>
+                  )
+                )}
+              </div>
+            </div>
+            <div className={styles.actionGroup}>
+              {actionOptions.map((action) => (
+                <button key={action.value} type="button" className={styles.actionButton} onClick={action.onClick}>
+                  {action.label}
+                </button>
+              ))}
             </div>
           </div>
         }

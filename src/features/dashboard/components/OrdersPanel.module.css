@@ -21,7 +21,7 @@
 
 .headerControls {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.8rem;
   flex-wrap: wrap;
   min-width: 0;
@@ -36,30 +36,55 @@
 }
 
 .filterGroup {
-  display: grid;
-  grid-template-columns: repeat(2, max-content);
-  column-gap: 0.6rem;
-  row-gap: 0.5rem;
-  align-items: center;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: flex-start;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
-.select {
-  width: max-content;
-  min-width: auto;
-  padding: 0.35rem 0.6rem;
-  border-radius: 8px;
+@media (max-width: 900px) {
+  .filterGroup {
+    flex-direction: column;
+  }
+}
+
+.tagGroup {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.actionGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.actionButton {
   border: 1px solid var(--color-border-subtle);
   background: var(--color-surface);
   color: var(--color-text-primary);
-  font-size: 0.8rem;
+  border-radius: 10px;
+  padding: 0.28rem 0.7rem;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
-.selectWide {
-  width: max-content;
+.actionButton:hover {
+  background: var(--color-surface-hover);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
-.actionSelect {
-  width: max-content;
+.actionButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 .tag {
@@ -88,44 +113,66 @@
 }
 
 .scrollArea {
-  overflow-x: auto;
-  overflow-y: hidden;
+  --order-card-height: 9.5rem;
+  --order-list-gap: var(--spacing-md);
+  overflow-x: hidden;
+  overflow-y: auto;
   padding-bottom: 0.4rem;
-  scroll-snap-type: x mandatory;
-  scroll-padding: 0.75rem;
   -webkit-overflow-scrolling: touch;
-  width: 100%;
+  max-height: calc((var(--order-card-height) + var(--order-list-gap)) * 2 - var(--order-list-gap));
 }
 
 .cardList {
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 66.666vw;
-  grid-template-rows: repeat(2, minmax(0, 1fr));
-  grid-auto-rows: minmax(0, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-auto-rows: minmax(var(--order-card-height), auto);
   gap: var(--spacing-md);
-  width: max-content;
 }
 
 .grid {
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 66.666vw;
-  grid-template-rows: repeat(2, minmax(0, 1fr));
-  grid-auto-rows: minmax(0, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-auto-rows: minmax(var(--order-card-height), auto);
   gap: var(--spacing-md);
-  width: max-content;
 }
 
 .grid > * {
-  scroll-snap-align: start;
   min-width: 0;
 }
 
+.cardList,
+.grid {
+  width: 100%;
+}
+
+@media (max-width: 1700px) {
+  .cardList,
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1500px) {
+  .cardList,
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 900px) {
+  .scrollArea {
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-snap-type: none;
+    scroll-padding: 0;
+    max-height: calc((var(--order-card-height) + var(--order-list-gap)) * 2 - var(--order-list-gap));
+  }
+
   .grid,
   .cardList {
-    grid-auto-columns: 66.666vw;
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: minmax(var(--order-card-height), auto);
+    width: 100%;
   }
 }
 

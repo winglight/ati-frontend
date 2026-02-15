@@ -249,8 +249,20 @@
   cursor: pointer;
 }
 
+.userMenuInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.15;
+}
+
 .userMenuName {
   font-weight: 600;
+}
+
+.userMenuVersion {
+  font-size: 0.72rem;
+  color: var(--color-text-secondary);
 }
 
 .userMenuCaret {

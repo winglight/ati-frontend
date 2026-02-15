@@ -1269,8 +1269,6 @@ function DashboardPage() {
               loadWatchlistQuote={handleLoadWatchlistQuote}
             />
           </div>
-        </section>
-        <section className={clsx(styles.panelSlide, styles.centerColumn)}>
           <div className={styles.panelSlot}>
             <RiskRulesPanel
               rules={riskRules}
@@ -1286,6 +1284,8 @@ function DashboardPage() {
               onRefresh={handleRefreshRiskRules}
             />
           </div>
+        </section>
+        <section className={clsx(styles.panelSlide, styles.rightColumn)}>
           {monitorActive ? (
             <div className={styles.panelSlot}>
               <MarketMonitorPanel
@@ -1316,8 +1316,6 @@ function DashboardPage() {
               />
             </div>
           ) : null}
-        </section>
-        <section className={styles.panelSlide}>
           <div className={styles.panelSlot}>
             <OrdersPanel
               orders={orders}

@@ -499,6 +499,8 @@
       "summary_trades_symbols": "交易/标的",
       "summary_win_rate": "胜率",
       "summary_roi": "ROI",
+      "week_summary": "周汇总",
+      "week_summary_trades": "交易 {{count}} 笔",
       "prev_month": "← 上个月",
       "next_month": "下个月 →"
     },
@@ -507,7 +509,9 @@
       "tue": "周二",
       "wed": "周三",
       "thu": "周四",
-      "fri": "周五"
+      "fri": "周五",
+      "sat": "周六",
+      "sun": "周日"
     },
     "overview": {
       "feeling_none": "无交易",

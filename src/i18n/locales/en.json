@@ -500,6 +500,8 @@
       "summary_trades_symbols": "Trades / Symbols",
       "summary_win_rate": "Win rate",
       "summary_roi": "ROI",
+      "week_summary": "Week summary",
+      "week_summary_trades": "Trades {{count}}",
       "prev_month": "← Previous",
       "next_month": "Next →"
     },
@@ -508,7 +510,9 @@
       "tue": "Tue",
       "wed": "Wed",
       "thu": "Thu",
-      "fri": "Fri"
+      "fri": "Fri",
+      "sat": "Sat",
+      "sun": "Sun"
     },
     "overview": {
       "feeling_none": "No trades",

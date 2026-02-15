@@ -36,19 +36,15 @@
 }
 
 .cardsList {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(260px, calc(50% - 0.5rem));
+  display: flex;
+  flex-direction: column;
   gap: 0.75rem;
-  overflow-x: auto;
-  padding-bottom: 0.4rem;
-  scroll-snap-type: x mandatory;
-  scroll-padding: 0.75rem;
-  -webkit-overflow-scrolling: touch;
+  overflow-y: visible;
+  max-height: none;
+  padding-right: 0;
 }
 
 .positionCard {
-  scroll-snap-align: start;
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
@@ -61,7 +57,9 @@
 
 @media (max-width: 900px) {
   .cardsList {
-    grid-auto-columns: 88%;
+    overflow-y: auto;
+    max-height: min(320px, 55vh);
+    padding-right: 0.2rem;
   }
 }
 
@@ -118,8 +116,15 @@
 
 .positionDetails {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 0.6rem 1.1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.45rem 0.8rem;
+}
+
+@media (max-width: 900px) {
+  .positionDetails {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.4rem 0.6rem;
+  }
 }
 
 .detailItem {
@@ -129,14 +134,14 @@
 }
 
 .detailLabel {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--color-text-tertiary);
 }
 
 .detailValue {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 600;
   color: var(--color-text-primary);
 }
@@ -223,6 +228,26 @@
   font-weight: 600;
   letter-spacing: 0.04em;
   transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.riskButtonInline {
+  display: none;
+  border: 1px solid rgba(20, 184, 166, 0.35);
+  background: rgba(20, 184, 166, 0.12);
+  color: #0f766e;
+  border-radius: 999px;
+  padding: 0.25rem 0.7rem;
+  font-size: 0.68rem;
+  cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+
+.riskButtonInline:hover,
+.riskButtonInline:focus {
+  background: rgba(20, 184, 166, 0.28);
+  transform: translateY(-1px);
 }
 
 .riskButton:hover,
@@ -614,12 +639,22 @@
   }
 
   .positionHeader {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
   }
 
   .positionDetails {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .riskButton {
+    display: none;
+  }
+
+  .riskButtonInline {
+    display: inline-flex;
+    align-items: center;
   }
 
   .cardFooter {

@@ -650,6 +650,13 @@ function PositionsPanel({
                 >
                   {position.symbol}
                 </button>
+                <button
+                  type="button"
+                  className={styles.riskButtonInline}
+                  onClick={() => onConfigureRiskRule(position)}
+                >
+                  {t('dashboard.positions.configure_risk')}
+                </button>
                 <span
                   className={`${styles.directionTag} ${
                     position.direction === 'long' ? styles.directionLong : styles.directionShort

@@ -31,27 +31,11 @@
   color: var(--text-secondary);
 }
 
-.statsScroller {
-  width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding-bottom: 4px;
-  scroll-snap-type: x mandatory;
-  scroll-padding: 12px;
-  -webkit-overflow-scrolling: touch;
-}
-
 .statsGrid {
   --stats-card-height: 112px;
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: calc(100vw / 3);
-  grid-template-rows: repeat(2, minmax(0, 1fr));
-  grid-auto-rows: minmax(0, 1fr);
+  grid-template-columns: repeat(10, minmax(0, 1fr));
   gap: 16px;
-  height: calc((var(--stats-card-height) * 2) + 16px);
-  width: max-content;
-  min-width: 100%;
 }
 
 .statsCard {
@@ -64,7 +48,6 @@
   gap: 6px;
   min-height: var(--stats-card-height);
   box-shadow: 0 10px 20px rgba(15, 23, 42, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.6);
-  scroll-snap-align: start;
 }
 
 .statsLabel {
@@ -84,7 +67,7 @@
 
 .chartsGrid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
   width: 100%;
 }
@@ -104,7 +87,7 @@
 }
 
 .chartCardWide {
-  grid-column: 1 / -1;
+  grid-column: auto;
 }
 
 .chartHeader {
@@ -146,35 +129,33 @@
   background: var(--panel-bg);
   border: 1px solid var(--border-subtle);
   border-radius: 18px;
-  padding: 8px 12px;
+  padding: 12px 16px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 6px;
-  margin-bottom: 0;
+  gap: 10px;
+  margin-bottom: 8px;
 }
 
 .filterToolbarHeader {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 6px;
+  justify-content: space-between;
+  gap: 10px;
   width: 100%;
-  flex-wrap: nowrap;
 }
 
 .filterHeaderActions {
   display: flex;
   align-items: center;
-  gap: 6px;
-  margin-left: auto;
+  gap: 8px;
 }
 
 .filterToggleButton {
   border: 1px solid var(--border-subtle);
   border-radius: 999px;
-  padding: 4px 8px;
-  font-size: 12px;
+  padding: 6px 12px;
+  font-size: 13px;
   background: var(--panel-muted);
   color: var(--text-secondary);
   cursor: pointer;
@@ -235,8 +216,8 @@
 .iconToolbarButton {
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -246,8 +227,8 @@
 }
 
 .iconToolbarButton svg {
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
 }
 
 .iconToolbarButton:hover {
@@ -258,7 +239,7 @@
 .langToggleButton {
   border: 1px solid var(--border-subtle);
   border-radius: 999px;
-  padding: 4px 8px;
+  padding: 6px 10px;
   font-size: 12px;
   background: var(--panel-bg);
   color: var(--text-secondary);
@@ -389,7 +370,7 @@
   grid-template-columns: minmax(0, 1fr) 320px;
   gap: 12px;
   align-items: start;
-  margin-top: -16px;
+  margin-top: 0;
 }
 
 .calendarLayoutExpanded {
@@ -452,7 +433,7 @@
 
 .weekdayHeader {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(7, minmax(0, 1fr)) minmax(120px, 1.1fr);
   gap: 6px;
   margin-bottom: 8px;
 }
@@ -468,9 +449,14 @@
   border-radius: 8px;
 }
 
+.weekSummaryHeader {
+  text-transform: none;
+  text-align: center;
+}
+
 .calendarGrid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(7, minmax(0, 1fr)) minmax(120px, 1.1fr);
   gap: 6px;
 }
 
@@ -645,12 +631,13 @@
 
 .logSidebarWrapper {
   position: fixed;
-  top: 0;
+  top: 64px;
   right: 0;
   width: min(360px, 90vw);
-  height: 100vh;
-  z-index: 200;
-  background: var(--panel-bg);
+  height: calc(100vh - 64px);
+  z-index: 190;
+  background: var(--color-surface);
+  border-left: 1px solid var(--border-subtle);
   box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateX(0);
@@ -666,10 +653,17 @@
   position: fixed;
   inset: 0;
   border: none;
-  background: rgba(15, 23, 42, 0.35);
-  z-index: 150;
-  backdrop-filter: blur(2px);
+  background: transparent;
+  z-index: 180;
+  backdrop-filter: none;
   cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .logSidebarWrapper {
+    top: 56px;
+    height: calc(100vh - 56px);
+  }
 }
 
 .logList {
@@ -1011,18 +1005,41 @@
 
 @media (max-width: 960px) {
   .filterToolbar {
-    padding: 8px 10px;
+    padding: 8px 12px;
     gap: 6px;
+    margin-bottom: 8px;
   }
 
   .filterToolbarHeader {
     flex-wrap: nowrap;
     justify-content: flex-start;
+    gap: 6px;
   }
 
   .filterHeaderActions {
     width: auto;
     justify-content: flex-end;
+    gap: 6px;
+    margin-left: auto;
+  }
+
+  .filterToggleButton {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
+  .iconToolbarButton {
+    width: 28px;
+    height: 28px;
+  }
+
+  .iconToolbarButton svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .langToggleButton {
+    padding: 4px 8px;
   }
 
   .filterRow {
@@ -1047,6 +1064,10 @@
     padding: 14px;
     gap: 12px;
     border-radius: 14px;
+  }
+
+  .calendarLayout {
+    margin-top: -16px;
   }
 
   .calendarHeader {
@@ -1098,7 +1119,7 @@
 
   .weekdayHeader,
   .calendarGrid {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(7, minmax(0, 1fr)) minmax(96px, 1fr);
     gap: 4px;
   }
 
@@ -1147,9 +1168,8 @@
 
   .statsGrid {
     --stats-card-height: 96px;
-    grid-auto-columns: calc(100vw / 3);
+    grid-template-columns: repeat(10, minmax(0, 1fr));
     gap: 10px;
-    height: calc((var(--stats-card-height) * 2) + 10px);
   }
 
   .statsCard {
@@ -1192,10 +1212,18 @@
 }
 
 @media (max-width: 640px) {
+  .weekdayHeader,
+  .calendarGrid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .weekendHidden {
+    display: none;
+  }
+
   .statsGrid {
     --stats-card-height: 90px;
-    grid-auto-columns: calc(100vw / 3);
-    height: calc((var(--stats-card-height) * 2) + 10px);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .toolbarActions {

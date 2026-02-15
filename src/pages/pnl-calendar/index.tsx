@@ -21,7 +21,15 @@ import {
   type TradeLogRecord
 } from '@services/tradeLogsApi';
 
-const WEEKDAYS: Array<'mon' | 'tue' | 'wed' | 'thu' | 'fri'> = ['mon', 'tue', 'wed', 'thu', 'fri'];
+const WEEKDAYS: Array<'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun'> = [
+  'mon',
+  'tue',
+  'wed',
+  'thu',
+  'fri',
+  'sat',
+  'sun'
+];
 
 interface MergedTradeGroup {
   key: string;
@@ -1169,67 +1177,95 @@ function PnLCalendarPage() {
         <div className={styles.calendarGrid} role="grid">
         <div className={styles.weekdayHeader} style={{ gridColumn: '1 / -1' }}>
           {WEEKDAYS.map((day) => (
-            <div key={day} className={styles.weekday}>
+            <div key={day} className={clsx(styles.weekday, (day === 'sat' || day === 'sun') && styles.weekendHidden)}>
               {t(`pnl_calendar.weekdays.${day}`)}
             </div>
           ))}
+          <div className={clsx(styles.weekday, styles.weekSummaryHeader, styles.weekendHidden)}>
+            {t('pnl_calendar.calendar.week_summary')}
+          </div>
         </div>
         {monthWeeks.map((week, weekIndex) => {
-              return (
-                <Fragment key={`week-${weekIndex}`}>
-                  {week.map((date, dayIndex) => {
-                    if (dayIndex === 0 || dayIndex === 6) {
-                      return null;
-                    }
-                    if (!date) {
-                      return <div key={`empty-${weekIndex}-${dayIndex}`} className={styles.emptyCell} />;
-                    }
-                    const dayData = dayMap.get(date);
-                    const hasTrades = Boolean(dayData && dayData.tradeCount > 0);
-                    const cellContent = (
-                      <>
-                        <div className={styles.dayNumber}>{formatDayNumber(date)}</div>
-                        <div
-                          className={clsx(styles.dayPnl, {
-                            [styles.positive]: dayData && dayData.netPnl > 0,
-                            [styles.negative]: dayData && dayData.netPnl < 0
-                          })}
-                        >
-                          {dayData ? formatPnlValue(dayData.netPnl) : null}
-                        </div>
-                      </>
-                    );
+          const weekDates = week.filter((date): date is string => Boolean(date));
+          const weekTradeCount = weekDates.reduce((total, date) => total + (dayMap.get(date)?.tradeCount ?? 0), 0);
+          const weekNetPnl = weekDates.reduce((total, date) => total + (dayMap.get(date)?.netPnl ?? 0), 0);
+          return (
+            <Fragment key={`week-${weekIndex}`}>
+              {week.map((date, dayIndex) => {
+                const isWeekend = dayIndex === 5 || dayIndex === 6;
+                if (!date) {
+                  return (
+                    <div
+                      key={`empty-${weekIndex}-${dayIndex}`}
+                      className={clsx(styles.emptyCell, isWeekend && styles.weekendHidden)}
+                    />
+                  );
+                }
+                const dayData = dayMap.get(date);
+                const hasTrades = Boolean(dayData && dayData.tradeCount > 0);
+                const cellContent = (
+                  <>
+                    <div className={styles.dayNumber}>{formatDayNumber(date)}</div>
+                    <div
+                      className={clsx(styles.dayPnl, {
+                        [styles.positive]: dayData && dayData.netPnl > 0,
+                        [styles.negative]: dayData && dayData.netPnl < 0
+                      })}
+                    >
+                      {dayData ? formatPnlValue(dayData.netPnl) : null}
+                    </div>
+                  </>
+                );
 
-                    if (!hasTrades) {
-                      return (
-                        <div key={date} className={clsx(styles.dayCell, styles.dayCellInactive)}>
-                          {cellContent}
-                        </div>
-                      );
-                    }
+                if (!hasTrades) {
+                  return (
+                    <div
+                      key={date}
+                      className={clsx(styles.dayCell, styles.dayCellInactive, isWeekend && styles.weekendHidden)}
+                    >
+                      {cellContent}
+                    </div>
+                  );
+                }
 
-                    return (
-                      <div
-                        key={date}
-                        role="button"
-                        tabIndex={0}
-                        className={clsx(styles.dayCell, styles.dayCellActive)}
-                        title={date}
-                        onClick={() => handleSelectDate(date)}
-                        onKeyDown={(event) => {
-                          if (event.key === 'Enter' || event.key === ' ') {
-                            event.preventDefault();
-                            handleSelectDate(date);
-                          }
-                        }}
-                      >
-                        {cellContent}
-                      </div>
-                    );
+                return (
+                  <div
+                    key={date}
+                    role="button"
+                    tabIndex={0}
+                    className={clsx(styles.dayCell, styles.dayCellActive, isWeekend && styles.weekendHidden)}
+                    title={date}
+                    onClick={() => handleSelectDate(date)}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        handleSelectDate(date);
+                      }
+                    }}
+                  >
+                    {cellContent}
+                  </div>
+                );
+              })}
+              <div className={clsx(styles.weekSummaryCell, styles.weekendHidden)}>
+                <span className={styles.weekSummaryTitle}>{t('pnl_calendar.calendar.week_summary')}</span>
+                <strong
+                  className={clsx(styles.weekSummaryValue, {
+                    [styles.positive]: weekNetPnl > 0,
+                    [styles.negative]: weekNetPnl < 0
                   })}
-                </Fragment>
-              );
-            })}
+                >
+                  {formatPnlValue(weekNetPnl)}
+                </strong>
+                <div className={styles.weekSummaryMeta}>
+                  <span className={styles.weekSummaryMetaPrimary}>
+                    {t('pnl_calendar.calendar.week_summary_trades', { count: weekTradeCount })}
+                  </span>
+                </div>
+              </div>
+            </Fragment>
+          );
+        })}
           </div>
         </div>
         <div

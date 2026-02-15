@@ -274,7 +274,10 @@ function TopBar({ onOpenData, onOpenNotifications, onOpenLogs, onOpenConfigurati
             aria-expanded={userMenuOpen}
             aria-haspopup="menu"
           >
-            <span className={styles.userMenuName}>{user?.username ?? t('topbar.user.guest')}</span>
+            <span className={styles.userMenuInfo}>
+              <span className={styles.userMenuName}>{user?.username ?? t('topbar.user.guest')}</span>
+              <span className={styles.userMenuVersion}>{versionLabel || '—'}</span>
+            </span>
             <span className={styles.userMenuCaret}>▾</span>
           </button>
           {userMenuOpen ? (
